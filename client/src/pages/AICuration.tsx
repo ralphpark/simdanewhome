@@ -76,8 +76,13 @@ export default function AICuration() {
         return [...withoutPlaceholder, { role: "assistant", content: aiReply }];
       });
 
-      // Check if AI has made recommendations (simple heuristic)
-      if (aiReply.includes("추천") || aiReply.includes("https://")) {
+      // Check if AI has completed recommendations with specific completion markers
+      // Only show buttons when recommendation is fully complete
+      const hasCompletionMarkers = 
+        (aiReply.includes("추천합니다") || aiReply.includes("추천드립니다")) &&
+        (aiReply.includes("https://simgo.kr") || aiReply.includes("simda.me") || aiReply.includes("온라인샵") || aiReply.includes("마켓플레이스"));
+      
+      if (hasCompletionMarkers) {
         setRecommendationText(aiReply);
         setShowActions(true);
       }
