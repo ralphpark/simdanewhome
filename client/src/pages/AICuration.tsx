@@ -47,13 +47,17 @@ export default function AICuration() {
 
     const userMessage = input.trim();
     
-    // 먼저 상태를 업데이트한 후 입력창을 비움
     const newUserMessage = { role: "user" as const, content: userMessage };
     const loadingPlaceholder = { role: "assistant" as const, content: "" };
 
     setMessages((prev) => [...prev, newUserMessage, loadingPlaceholder]);
-    setInput(""); // 메시지 추가 후 입력창 비우기
     setIsLoading(true);
+    
+    // 폼 리셋 (모든 입력값 초기화)
+    if (e.target instanceof HTMLFormElement) {
+      e.target.reset();
+    }
+    setInput("");
 
     try {
       const res = await apiRequest("POST", "/api/chat", {

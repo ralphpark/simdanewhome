@@ -63,7 +63,7 @@ export async function chatWithAI(userMessage: string, history: Message[] = []): 
     });
 
     const response = await ai.models.generateContent({
-      model: "gemini-3-pro-preview",
+      model: "gemini-2.5-pro",
       contents,
     });
 
