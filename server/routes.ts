@@ -8,6 +8,7 @@ import {
   insertB2bProposalSchema,
   insertPortfolioSchema,
   insertPostSchema,
+  insertCommentSchema,
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -263,6 +264,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Delete post error:", error);
       res.status(500).json({ error: "Failed to delete post" });
+    }
+  });
+
+  // Comments endpoints
+  app.get("/api/posts/:postId/comments", async (req, res) => {
+    try {
+      const comments = await storage.getCommentsByPostId(req.params.postId);
+      res.json(comments);
+    } catch (error) {
+      console.error("Get comments error:", error);
+      res.status(500).json({ error: "Failed to fetch comments" });
+    }
+  });
+
+  app.post("/api/posts/:postId/comments", async (req, res) => {
+    try {
+      const validatedData = insertCommentSchema.parse({
+        ...req.body,
+        postId: req.params.postId,
+      });
+      const comment = await storage.createComment(validatedData);
+      res.json(comment);
+    } catch (error) {
+      console.error("Create comment error:", error);
+      res.status(400).json({ error: "Invalid comment data" });
+    }
+  });
+
+  app.patch("/api/comments/:id/approve", async (req, res) => {
+    try {
+      const comment = await storage.approveComment(req.params.id);
+      if (!comment) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+      res.json(comment);
+    } catch (error) {
+      console.error("Approve comment error:", error);
+      res.status(500).json({ error: "Failed to approve comment" });
+    }
+  });
+
+  app.delete("/api/comments/:id", async (req, res) => {
+    try {
+      await storage.deleteComment(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete comment error:", error);
+      res.status(500).json({ error: "Failed to delete comment" });
     }
   });
 

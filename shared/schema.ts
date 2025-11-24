@@ -73,6 +73,17 @@ export const posts = pgTable("posts", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Comments table for blog posts
+export const comments = pgTable("comments", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  postId: varchar("post_id").notNull().references(() => posts.id, { onDelete: "cascade" }),
+  authorName: text("author_name").notNull(),
+  authorEmail: text("author_email").notNull(),
+  content: text("content").notNull(),
+  approved: boolean("approved").default(false).notNull(), // Moderation flag
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertChatHistorySchema = createInsertSchema(chatHistories).omit({
   id: true,
@@ -116,6 +127,16 @@ export const insertPostSchema = createInsertSchema(posts).omit({
   updatedAt: true,
 });
 
+export const insertCommentSchema = createInsertSchema(comments).omit({
+  id: true,
+  approved: true,
+  createdAt: true,
+}).extend({
+  authorName: z.string().min(2, "이름을 입력해주세요"),
+  authorEmail: z.string().email("유효한 이메일 주소를 입력해주세요"),
+  content: z.string().min(10, "댓글은 최소 10자 이상 입력해주세요"),
+});
+
 // Types
 export type ChatHistory = typeof chatHistories.$inferSelect;
 export type InsertChatHistory = z.infer<typeof insertChatHistorySchema>;
@@ -131,3 +152,6 @@ export type InsertPortfolio = z.infer<typeof insertPortfolioSchema>;
 
 export type Post = typeof posts.$inferSelect;
 export type InsertPost = z.infer<typeof insertPostSchema>;
+
+export type Comment = typeof comments.$inferSelect;
+export type InsertComment = z.infer<typeof insertCommentSchema>;

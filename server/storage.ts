@@ -9,10 +9,12 @@ import type {
   InsertPortfolio,
   Post,
   InsertPost,
+  Comment,
+  InsertComment,
 } from "@shared/schema";
 import { db } from "./db";
 import * as schema from "@shared/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 export interface IStorage {
   // Chat histories
@@ -45,6 +47,12 @@ export interface IStorage {
   updatePost(id: string, data: Partial<InsertPost>): Promise<Post | undefined>;
   deletePost(id: string): Promise<void>;
   incrementPostViewCount(id: string): Promise<void>;
+
+  // Comments
+  createComment(data: InsertComment): Promise<Comment>;
+  getCommentsByPostId(postId: string): Promise<Comment[]>;
+  approveComment(id: string): Promise<Comment | undefined>;
+  deleteComment(id: string): Promise<void>;
 }
 
 // In-memory storage implementation
@@ -330,6 +338,30 @@ export class MemStorage implements IStorage {
       this.posts.set(id, post);
     }
   }
+
+  // Comments (stub for MemStorage - not persisted)
+  async createComment(data: InsertComment): Promise<Comment> {
+    const id = `comment-${Date.now()}`;
+    const comment: Comment = {
+      id,
+      ...data,
+      approved: false,
+      createdAt: new Date(),
+    };
+    return comment;
+  }
+
+  async getCommentsByPostId(postId: string): Promise<Comment[]> {
+    return [];
+  }
+
+  async approveComment(id: string): Promise<Comment | undefined> {
+    return undefined;
+  }
+
+  async deleteComment(id: string): Promise<void> {
+    // No-op for MemStorage
+  }
 }
 
 // Database storage implementation using Drizzle ORM
@@ -471,6 +503,35 @@ export class DbStorage implements IStorage {
         .set({ viewCount: post.viewCount + 1 })
         .where(eq(schema.posts.id, id));
     }
+  }
+
+  // Comments
+  async createComment(data: InsertComment): Promise<Comment> {
+    const [result] = await db.insert(schema.comments).values(data).returning();
+    return result;
+  }
+
+  async getCommentsByPostId(postId: string): Promise<Comment[]> {
+    return await db.query.comments.findMany({
+      where: and(
+        eq(schema.comments.postId, postId),
+        eq(schema.comments.approved, true)
+      ),
+      orderBy: [desc(schema.comments.createdAt)],
+    });
+  }
+
+  async approveComment(id: string): Promise<Comment | undefined> {
+    const [result] = await db
+      .update(schema.comments)
+      .set({ approved: true })
+      .where(eq(schema.comments.id, id))
+      .returning();
+    return result;
+  }
+
+  async deleteComment(id: string): Promise<void> {
+    await db.delete(schema.comments).where(eq(schema.comments.id, id));
   }
 }
 
