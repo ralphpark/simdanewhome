@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { chatWithAI } from "./gemini";
+import { sendBookingConfirmation, sendB2BProposalNotification } from "./email";
 import {
   insertBookingSchema,
   insertB2bProposalSchema,
@@ -40,6 +41,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertBookingSchema.parse(req.body);
       const booking = await storage.createBooking(validatedData);
+      
+      // Send confirmation email (non-blocking)
+      sendBookingConfirmation(booking).catch(err => 
+        console.error("Failed to send booking confirmation email:", err)
+      );
+      
       res.json(booking);
     } catch (error) {
       console.error("Create booking error:", error);
@@ -89,6 +96,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertB2bProposalSchema.parse(req.body);
       const proposal = await storage.createB2bProposal(validatedData);
+      
+      // Send notification email (non-blocking)
+      sendB2BProposalNotification(proposal).catch(err =>
+        console.error("Failed to send B2B proposal notification email:", err)
+      );
+      
       res.json(proposal);
     } catch (error) {
       console.error("Create B2B proposal error:", error);
