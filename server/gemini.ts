@@ -1,15 +1,9 @@
-// Reference: javascript_gemini_ai_integrations blueprint
-import { GoogleGenAI } from "@google/genai";
+// Using user's own Gemini API key
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// This is using Replit's AI Integrations service, which provides Gemini-compatible API access without requiring your own Gemini API key.
-const ai = process.env.AI_INTEGRATIONS_GEMINI_API_KEY && process.env.AI_INTEGRATIONS_GEMINI_BASE_URL
-  ? new GoogleGenAI({
-      apiKey: process.env.AI_INTEGRATIONS_GEMINI_API_KEY,
-      httpOptions: {
-        apiVersion: "",
-        baseUrl: process.env.AI_INTEGRATIONS_GEMINI_BASE_URL,
-      },
-    })
+// Initialize with user's Gemini API key
+const ai = process.env.GEMINI_API_KEY
+  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
   : null;
 
 interface Message {
@@ -19,36 +13,35 @@ interface Message {
 
 export async function chatWithAI(userMessage: string, history: Message[] = []): Promise<string> {
   if (!ai) {
-    return "AI 서비스가 현재 사용 불가능합니다. 잠시 후 다시 시도해주세요.";
+    return "AI 서비스가 현재 사용 불가능합니다. GEMINI_API_KEY 환경 변수를 확인해주세요.";
   }
 
   try {
-    const systemPrompt = `당신은 simda의 AI 식물 큐레이터입니다. 고객의 환경과 취향을 분석하여 최적의 식물을 추천하는 전문가입니다.
+    const systemPrompt = `당신은 "심다(SIMDA)"의 AI 식물 큐레이터입니다. 다음 순서로 대화를 진행하세요:
+1. 사용자의 거주 환경 파악 (실내/실외, 햇빛 양, 습도, 공간 크기)
+2. 식물 관리 경험 수준 확인 (초보/중급/고급)
+3. 선호하는 식물 스타일 (관엽/다육/허브/꽃/공기정화 식물)
+4. 특별한 요구사항 (반려동물 유무, 알레르기, 인테리어 스타일)
+5. 최종 추천: 3가지 식물 (이름, 특징, 관리 방법, 추천 이유, 구매처)
 
-대화 가이드:
-1. 먼저 거주 환경을 파악합니다 (실내/실외, 공간 크기, 햇빛 조건, 습도)
-2. 식물 관리 경험 수준을 확인합니다 (초보/중급/고급)
-3. 선호하는 식물 스타일을 물어봅니다 (관엽/다육/허브/꽃/공기정화)
-4. 구체적인 식물 3-5종을 추천하고 각각의 특징, 관리법, 가격대를 설명합니다
-5. simgo.kr 온라인샵에서 구매하거나 simda.me 마켓플레이스에서 지역 판매자의 입찰을 받을 수 있다고 안내합니다
+구매처 안내:
+* 온라인샵: https://simgo.kr/ (전국 배송)
+* 지역 기반 샵: https://simda.me/ (직거래 가능)
 
-항상 친근하고 전문적인 톤으로 대화하며, 한국어로 답변합니다.`;
+친절하고 전문적으로 답변하며, 각 질문은 하나씩만 하세요.`;
+
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: systemPrompt });
 
     const conversationHistory = history.map((msg) => ({
-      role: msg.role,
+      role: msg.role === "assistant" ? "model" : msg.role,
       parts: [{ text: msg.content }],
     }));
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [
-        { role: "user", parts: [{ text: systemPrompt }] },
-        ...conversationHistory,
-        { role: "user", parts: [{ text: userMessage }] },
-      ],
-    });
+    const chat = model.startChat({ history: conversationHistory });
+    const result = await chat.sendMessage(userMessage);
+    const response = result.response;
 
-    return response.text || "죄송합니다. 응답을 생성할 수 없습니다.";
+    return response.text() || "죄송합니다. 응답을 생성할 수 없습니다.";
   } catch (error) {
     console.error("Gemini AI error:", error);
     return "AI 응답 생성 중 오류가 발생했습니다. 다시 시도해주세요.";

@@ -4,10 +4,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowRight, Leaf, MessageSquare, Calendar, Sprout, ExternalLink, ShoppingBag, BookOpen, Building2, Zap, Users, Leaf as LeafIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import type { Portfolio, Post } from "@shared/schema";
-import { useChatbot } from "@/contexts/ChatbotContext";
 
 export default function Home() {
-  const { openChatbot } = useChatbot();
   const { data: portfolios } = useQuery<Portfolio[]>({
     queryKey: ["/api/portfolios"],
   });
@@ -62,21 +60,23 @@ export default function Home() {
 
           {/* 선택 카드들 - Glass Morphism */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            <div data-testid="card-choice-buy" className="group relative overflow-hidden rounded-2xl animate-scale-in" style={{animationDelay: '0.2s'}}>
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-              <div className="relative backdrop-blur-xl bg-white/40 border border-primary/20 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300 group-hover:shadow-2xl">
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
-                <ShoppingBag className="h-14 w-14 mx-auto mb-6 text-primary group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-xl font-semibold mb-3 text-foreground">식물을 사고 싶으신가요?</h3>
-                <p className="text-sm text-muted-foreground mb-6">
-                  AI 큐레이터의 추천을 받고<br />완벽한 식물을 구매하세요
-                </p>
-                <Button data-testid="button-ai-recommendation" onClick={openChatbot} className="w-full gap-2 bg-primary hover:bg-primary/90">
-                  추천받고 구매하기
-                  <MessageSquare className="h-4 w-4" />
-                </Button>
+            <Link href="/ai-curation">
+              <div data-testid="card-choice-buy" className="group relative overflow-hidden rounded-2xl animate-scale-in cursor-pointer" style={{animationDelay: '0.2s'}}>
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                <div className="relative backdrop-blur-xl bg-white/40 border border-primary/20 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300 group-hover:shadow-2xl">
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+                  <ShoppingBag className="h-14 w-14 mx-auto mb-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+                  <h3 className="text-xl font-semibold mb-3 text-foreground">식물을 사고 싶으신가요?</h3>
+                  <p className="text-sm text-muted-foreground mb-6">
+                    AI 큐레이터의 추천을 받고<br />완벽한 식물을 구매하세요
+                  </p>
+                  <Button data-testid="button-ai-recommendation" className="w-full gap-2 bg-primary hover:bg-primary/90">
+                    추천받고 구매하기
+                    <MessageSquare className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
+            </Link>
 
             <div data-testid="card-choice-manage" className="group relative overflow-hidden rounded-2xl animate-scale-in" style={{animationDelay: '0.4s'}}>
               <div className="absolute inset-0 bg-gradient-to-br from-secondary/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
