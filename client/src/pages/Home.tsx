@@ -88,9 +88,7 @@ export default function Home() {
                   AI 추천과 구독 관리<br />서비스를 경험하세요
                 </p>
                 <Link href="/services#ai-curation">
-                  <Button data-testid="button-ai-curation" variant="outline" className="w-full border-primary/30 hover:bg-primary/5">
-                    AI 큐레이션 시작하기
-                  </Button>
+                  <Button data-testid="button-ai-curation" variant="outline" className="w-full border-primary/30 hover:bg-primary/5">식물관리 상담하기</Button>
                 </Link>
               </div>
             </div>
@@ -123,7 +121,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       <section className="py-20 bg-card">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="text-center mb-12">
@@ -210,7 +207,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       {latestPortfolios.length > 0 && (
         <section className="py-20">
           <div className="max-w-7xl mx-auto px-6 md:px-8">
@@ -248,7 +244,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
       {latestPosts.length > 0 && (
         <section className="py-20 bg-card">
           <div className="max-w-7xl mx-auto px-6 md:px-8">
@@ -291,7 +286,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
       {/* 신뢰도 섹션 */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
@@ -321,7 +315,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
       <section className="py-20 bg-primary text-primary-foreground relative overflow-hidden">
         {/* 배경 장식 */}
         <div className="absolute inset-0 opacity-10">
