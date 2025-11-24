@@ -315,6 +315,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // SEO Sitemap endpoint
+  app.get("/sitemap.xml", async (req, res) => {
+    try {
+      const posts = await storage.getAllPosts();
+      const portfolios = await storage.getAllPortfolios();
+      
+      const baseUrl = `${req.protocol}://${req.hostname}`;
+      const now = new Date().toISOString();
+      
+      let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${baseUrl}/</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/services</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/portfolio</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/magazine</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/booking</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/b2b</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/shop</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>${baseUrl}/support</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+
+      // Add published posts
+      posts.filter(p => p.published).forEach(post => {
+        sitemap += `
+  <url>
+    <loc>${baseUrl}/magazine/${post.id}</loc>
+    <lastmod>${post.updatedAt.toISOString()}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+      });
+
+      // Add portfolios
+      portfolios.forEach(portfolio => {
+        sitemap += `
+  <url>
+    <loc>${baseUrl}/portfolio/${portfolio.id}</loc>
+    <lastmod>${portfolio.updatedAt.toISOString()}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>`;
+      });
+
+      sitemap += `
+</urlset>`;
+
+      res.header("Content-Type", "application/xml");
+      res.send(sitemap);
+    } catch (error) {
+      console.error("Sitemap generation error:", error);
+      res.status(500).send("Failed to generate sitemap");
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
