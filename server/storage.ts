@@ -10,6 +10,9 @@ import type {
   Post,
   InsertPost,
 } from "@shared/schema";
+import { db } from "./db";
+import * as schema from "@shared/schema";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   // Chat histories
@@ -329,4 +332,146 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database storage implementation using Drizzle ORM
+export class DbStorage implements IStorage {
+  // Chat histories
+  async createChatHistory(data: InsertChatHistory): Promise<ChatHistory> {
+    const [result] = await db.insert(schema.chatHistories).values(data).returning();
+    return result;
+  }
+
+  async getChatHistoriesBySession(sessionId: string): Promise<ChatHistory[]> {
+    return await db.query.chatHistories.findMany({
+      where: eq(schema.chatHistories.sessionId, sessionId),
+      orderBy: [desc(schema.chatHistories.createdAt)],
+    });
+  }
+
+  // Bookings
+  async createBooking(data: InsertBooking): Promise<Booking> {
+    const [result] = await db.insert(schema.bookings).values(data).returning();
+    return result;
+  }
+
+  async getAllBookings(): Promise<Booking[]> {
+    return await db.query.bookings.findMany({
+      orderBy: [desc(schema.bookings.createdAt)],
+    });
+  }
+
+  async getBookingById(id: string): Promise<Booking | undefined> {
+    return await db.query.bookings.findFirst({
+      where: eq(schema.bookings.id, id),
+    });
+  }
+
+  async updateBookingStatus(id: string, status: string): Promise<Booking | undefined> {
+    const [result] = await db
+      .update(schema.bookings)
+      .set({ status })
+      .where(eq(schema.bookings.id, id))
+      .returning();
+    return result;
+  }
+
+  // B2B proposals
+  async createB2bProposal(data: InsertB2bProposal): Promise<B2bProposal> {
+    const [result] = await db.insert(schema.b2bProposals).values(data).returning();
+    return result;
+  }
+
+  async getAllB2bProposals(): Promise<B2bProposal[]> {
+    return await db.query.b2bProposals.findMany({
+      orderBy: [desc(schema.b2bProposals.createdAt)],
+    });
+  }
+
+  async getB2bProposalById(id: string): Promise<B2bProposal | undefined> {
+    return await db.query.b2bProposals.findFirst({
+      where: eq(schema.b2bProposals.id, id),
+    });
+  }
+
+  async updateB2bProposalStatus(id: string, status: string): Promise<B2bProposal | undefined> {
+    const [result] = await db
+      .update(schema.b2bProposals)
+      .set({ status })
+      .where(eq(schema.b2bProposals.id, id))
+      .returning();
+    return result;
+  }
+
+  // Portfolios
+  async createPortfolio(data: InsertPortfolio): Promise<Portfolio> {
+    const [result] = await db.insert(schema.portfolios).values(data).returning();
+    return result;
+  }
+
+  async getAllPortfolios(): Promise<Portfolio[]> {
+    return await db.query.portfolios.findMany({
+      orderBy: [desc(schema.portfolios.createdAt)],
+    });
+  }
+
+  async getPortfolioById(id: string): Promise<Portfolio | undefined> {
+    return await db.query.portfolios.findFirst({
+      where: eq(schema.portfolios.id, id),
+    });
+  }
+
+  async updatePortfolio(id: string, data: Partial<InsertPortfolio>): Promise<Portfolio | undefined> {
+    const [result] = await db
+      .update(schema.portfolios)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(schema.portfolios.id, id))
+      .returning();
+    return result;
+  }
+
+  async deletePortfolio(id: string): Promise<void> {
+    await db.delete(schema.portfolios).where(eq(schema.portfolios.id, id));
+  }
+
+  // Posts
+  async createPost(data: InsertPost): Promise<Post> {
+    const [result] = await db.insert(schema.posts).values(data).returning();
+    return result;
+  }
+
+  async getAllPosts(): Promise<Post[]> {
+    return await db.query.posts.findMany({
+      orderBy: [desc(schema.posts.createdAt)],
+    });
+  }
+
+  async getPostById(id: string): Promise<Post | undefined> {
+    return await db.query.posts.findFirst({
+      where: eq(schema.posts.id, id),
+    });
+  }
+
+  async updatePost(id: string, data: Partial<InsertPost>): Promise<Post | undefined> {
+    const [result] = await db
+      .update(schema.posts)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(schema.posts.id, id))
+      .returning();
+    return result;
+  }
+
+  async deletePost(id: string): Promise<void> {
+    await db.delete(schema.posts).where(eq(schema.posts.id, id));
+  }
+
+  async incrementPostViewCount(id: string): Promise<void> {
+    const post = await this.getPostById(id);
+    if (post) {
+      await db
+        .update(schema.posts)
+        .set({ viewCount: post.viewCount + 1 })
+        .where(eq(schema.posts.id, id));
+    }
+  }
+}
+
+export const storage = new DbStorage();
