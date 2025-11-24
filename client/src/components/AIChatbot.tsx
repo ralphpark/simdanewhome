@@ -38,21 +38,35 @@ export function AIChatbot() {
 
     const userMessage = input.trim();
     setInput("");
-    setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
+    
+    // Add user message and loading placeholder
+    const newUserMessage = { role: "user" as const, content: userMessage };
+    const loadingPlaceholder = { role: "assistant" as const, content: "" };
+    
+    setMessages((prev) => [...prev, newUserMessage, loadingPlaceholder]);
     setIsLoading(true);
 
     try {
-      const response = await apiRequest("POST", "/api/chat", {
+      const res = await apiRequest("POST", "/api/chat", {
         message: userMessage,
         sessionId,
-        history: messages,
+        history: [...messages, newUserMessage], // Send full history including current message
       });
 
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: response.response },
-      ]);
+      const response = await res.json();
+
+      // Ensure we have a non-empty reply
+      const aiReply = response.reply || "죄송합니다. 응답을 생성할 수 없습니다.";
+
+      // Replace loading placeholder with actual reply
+      setMessages((prev) => {
+        const withoutPlaceholder = prev.slice(0, -1);
+        return [...withoutPlaceholder, { role: "assistant", content: aiReply }];
+      });
     } catch (error) {
+      // Remove loading placeholder on error
+      setMessages((prev) => prev.slice(0, -1));
+      
       toast({
         title: "오류",
         description: "AI 응답을 받는 중 오류가 발생했습니다. 다시 시도해주세요.",

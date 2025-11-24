@@ -19,16 +19,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Message and sessionId are required" });
       }
 
-      const response = await chatWithAI(message, history);
+      const reply = await chatWithAI(message, history);
 
       // Save to database
       await storage.createChatHistory({
         sessionId,
         userMessage: message,
-        aiResponse: response,
+        aiResponse: reply,
       });
 
-      res.json({ response });
+      res.json({ reply, sessionId });
     } catch (error) {
       console.error("Chat error:", error);
       res.status(500).json({ error: "Failed to process chat message" });

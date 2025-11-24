@@ -88,6 +88,7 @@ export const insertBookingSchema = createInsertSchema(bookings).omit({
   phone: z.string().min(10, "유효한 전화번호를 입력해주세요"),
   name: z.string().min(2, "이름을 입력해주세요"),
   message: z.string().min(10, "문의 내용을 입력해주세요"),
+  preferredDate: z.coerce.date(),
 });
 
 export const insertB2bProposalSchema = createInsertSchema(b2bProposals).omit({
