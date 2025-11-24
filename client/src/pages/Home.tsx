@@ -87,7 +87,7 @@ export default function Home() {
                 <p className="text-sm text-muted-foreground mb-6">
                   AI 추천과 구독 관리<br />서비스를 경험하세요
                 </p>
-                <Link href="/services#ai-curation">
+                <Link href="/plant-care-consultation">
                   <Button data-testid="button-ai-curation" variant="outline" className="w-full border-primary/30 hover:bg-primary/5">식물관리 상담하기</Button>
                 </Link>
               </div>

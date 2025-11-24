@@ -16,6 +16,7 @@ import Shop from "@/pages/Shop";
 import Support from "@/pages/Support";
 import Admin from "@/pages/Admin";
 import AICuration from "@/pages/AICuration";
+import PlantCareConsultation from "@/pages/PlantCareConsultation";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/support" component={Support} />
       <Route path="/admin" component={Admin} />
       <Route path="/ai-curation" component={AICuration} />
+      <Route path="/plant-care-consultation" component={PlantCareConsultation} />
       <Route component={NotFound} />
     </Switch>
   );

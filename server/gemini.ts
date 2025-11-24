@@ -6,7 +6,11 @@ interface Message {
   content: string;
 }
 
-export async function chatWithAI(userMessage: string, history: Message[] = []): Promise<string> {
+export async function chatWithAI(
+  userMessage: string,
+  history: Message[] = [],
+  consultationType: "ai-curation" | "plant-care" = "ai-curation"
+): Promise<string> {
   if (!process.env.GEMINI_API_KEY) {
     return "AI 서비스가 현재 사용 불가능합니다. GEMINI_API_KEY 환경 변수를 확인해주세요.";
   }
@@ -16,7 +20,29 @@ export async function chatWithAI(userMessage: string, history: Message[] = []): 
       apiKey: process.env.GEMINI_API_KEY,
     });
 
-    const systemPrompt = `당신은 "심다(SIMDA)"의 AI 식물 큐레이터입니다. 친절하고 따뜻하며 밝은 톤으로 대화하세요.
+    let systemPrompt = "";
+
+    if (consultationType === "plant-care") {
+      systemPrompt = `당신은 "심다(SIMDA)"의 식물관리 상담사입니다. 친절하고 따뜻하며 밝은 톤으로 대화하세요.
+
+[중요] 처음 응답부터 인사를 생략하고 첫 번째 질문부터 바로 시작하세요.
+
+다음 순서로 대화를 진행하세요:
+1. 사용자가 현재 관리하는 식물 확인 (종류, 상태)
+2. 각 식물의 관리 현황 파악 (급수 주기, 채광 환경, 발생한 문제)
+3. 식물의 건강 상태 분석 및 개선 방안 제시
+4. 계절별 관리 팁 제공
+5. 상담 마무리 및 추가 도움 제안
+
+중요 지시사항:
+- 절대 마크다운 포맷팅(***, **, __, ~~ 등)을 사용하지 마세요
+- 일반 텍스트만 사용하세요
+- 친절하고 전문적으로 답변하며, 각 질문은 하나씩만 하세요
+- 적절한 이모티콘(🌱, 🌿, 🪴, 💚, ✨ 등)을 사용해 따뜻함을 표현하세요
+- 5번 상담 질문 후 마지막에 마무리 조언을 주고 "[상담완료]"를 붙이세요`;
+    } else {
+      // ai-curation (default)
+      systemPrompt = `당신은 "심다(SIMDA)"의 AI 식물 큐레이터입니다. 친절하고 따뜻하며 밝은 톤으로 대화하세요.
 
 [중요] 처음 응답부터 인사를 생략하고 첫 번째 질문부터 바로 시작하세요.
 
@@ -37,6 +63,7 @@ export async function chatWithAI(userMessage: string, history: Message[] = []): 
 - 친절하고 전문적으로 답변하며, 각 질문은 하나씩만 하세요
 - 적절한 이모티콘(🌱, 🌿, 🪴, 💚, ✨ 등)을 사용해 따뜻함을 표현하세요
 - 5번 최종 추천까지 완료한 후 항상 마지막 줄에 "[추천완료]"를 붙이세요`;
+    }
 
     // Build contents array with system prompt and history
     const contents = [

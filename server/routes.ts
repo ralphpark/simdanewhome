@@ -30,13 +30,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // AI Chat endpoint
   app.post("/api/chat", async (req, res) => {
     try {
-      const { message, sessionId, history = [] } = req.body;
+      const { message, sessionId, history = [], consultationType = "ai-curation" } = req.body;
 
       if (!message || !sessionId) {
         return res.status(400).json({ error: "Message and sessionId are required" });
       }
 
-      const reply = await chatWithAI(message, history);
+      const reply = await chatWithAI(message, history, consultationType);
 
       // Save to database
       await storage.createChatHistory({
