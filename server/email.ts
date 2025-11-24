@@ -26,7 +26,7 @@ const transporter = createTransporter();
 // Email templates
 const bookingConfirmationTemplate = (booking: Booking) => {
   return {
-    subject: `[SIMDA] 상담 예약 확인 - ${booking.name}님`,
+    subject: `[simda] 상담 예약 확인 - ${booking.name}님`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -45,12 +45,12 @@ const bookingConfirmationTemplate = (booking: Booking) => {
         <body>
           <div class="container">
             <div class="header">
-              <h1 style="margin: 0; font-size: 28px;">🌿 SIMDA</h1>
+              <h1 style="margin: 0; font-size: 28px;">🌿 simda</h1>
               <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">상담 예약이 접수되었습니다</p>
             </div>
             <div class="content">
               <h2 style="color: #16a34a; margin-top: 0;">안녕하세요, ${booking.name}님!</h2>
-              <p>SIMDA에 상담을 요청해 주셔서 감사합니다. 예약하신 내용을 확인해 주세요.</p>
+              <p>simda에 상담을 요청해 주셔서 감사합니다. 예약하신 내용을 확인해 주세요.</p>
               
               <div class="info-box">
                 <div class="info-row">
@@ -83,7 +83,7 @@ const bookingConfirmationTemplate = (booking: Booking) => {
               </p>
             </div>
             <div class="footer">
-              <p><strong>SIMDA</strong> - 식물과 함께하는 더 나은 공간</p>
+              <p><strong>simda</strong> - 식물과 함께하는 더 나은 공간</p>
               <p>이메일: contact@simda.kr | 전화: 1588-0000</p>
             </div>
           </div>
@@ -93,7 +93,7 @@ const bookingConfirmationTemplate = (booking: Booking) => {
     text: `
 안녕하세요, ${booking.name}님!
 
-SIMDA에 상담을 요청해 주셔서 감사합니다.
+simda에 상담을 요청해 주셔서 감사합니다.
 
 [예약 정보]
 - 예약번호: ${booking.id}
@@ -108,7 +108,7 @@ ${booking.message ? `[문의 내용]\n${booking.message}\n` : ''}
 급하신 경우 고객센터(1588-0000)로 문의해 주세요.
 
 ---
-SIMDA - 식물과 함께하는 더 나은 공간
+simda - 식물과 함께하는 더 나은 공간
 이메일: contact@simda.kr | 전화: 1588-0000
     `,
   };
@@ -116,7 +116,7 @@ SIMDA - 식물과 함께하는 더 나은 공간
 
 const b2bProposalNotificationTemplate = (proposal: B2bProposal) => {
   return {
-    subject: `[SIMDA] B2B 협업 제안 접수 - ${proposal.companyName}`,
+    subject: `[simda] B2B 협업 제안 접수 - ${proposal.companyName}`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -135,12 +135,12 @@ const b2bProposalNotificationTemplate = (proposal: B2bProposal) => {
         <body>
           <div class="container">
             <div class="header">
-              <h1 style="margin: 0; font-size: 28px;">🌿 SIMDA</h1>
+              <h1 style="margin: 0; font-size: 28px;">🌿 simda</h1>
               <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">B2B 협업 제안이 접수되었습니다</p>
             </div>
             <div class="content">
               <h2 style="color: #16a34a; margin-top: 0;">안녕하세요, ${proposal.contactName}님!</h2>
-              <p>SIMDA에 협업 제안을 보내주셔서 감사합니다. 제안하신 내용을 확인해 주세요.</p>
+              <p>simda에 협업 제안을 보내주셔서 감사합니다. 제안하신 내용을 확인해 주세요.</p>
               
               <div class="info-box">
                 <div class="info-row">
@@ -176,7 +176,7 @@ const b2bProposalNotificationTemplate = (proposal: B2bProposal) => {
               </p>
             </div>
             <div class="footer">
-              <p><strong>SIMDA</strong> - 식물과 함께하는 더 나은 공간</p>
+              <p><strong>simda</strong> - 식물과 함께하는 더 나은 공간</p>
               <p>B2B 문의: b2b@simda.kr | 전화: 02-1234-5678</p>
             </div>
           </div>
@@ -186,7 +186,7 @@ const b2bProposalNotificationTemplate = (proposal: B2bProposal) => {
     text: `
 안녕하세요, ${proposal.contactName}님!
 
-SIMDA에 협업 제안을 보내주셔서 감사합니다.
+simda에 협업 제안을 보내주셔서 감사합니다.
 
 [제안 정보]
 - 제안번호: ${proposal.id}
@@ -202,7 +202,7 @@ ${proposal.proposalContent}
 급하신 경우 B2B 전용 라인(02-1234-5678)으로 문의해 주세요.
 
 ---
-SIMDA - 식물과 함께하는 더 나은 공간
+simda - 식물과 함께하는 더 나은 공간
 B2B 문의: b2b@simda.kr | 전화: 02-1234-5678
     `,
   };
@@ -213,14 +213,14 @@ export async function sendBookingConfirmation(booking: Booking): Promise<void> {
   if (!transporter) {
     console.log("📧 Email would be sent (SMTP not configured):");
     console.log(`To: ${booking.email}`);
-    console.log(`Subject: [SIMDA] 상담 예약 확인 - ${booking.name}님`);
+    console.log(`Subject: [simda] 상담 예약 확인 - ${booking.name}님`);
     return;
   }
 
   try {
     const template = bookingConfirmationTemplate(booking);
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"SIMDA" <noreply@simda.kr>',
+      from: process.env.SMTP_FROM || '"simda" <noreply@simda.kr>',
       to: booking.email,
       subject: template.subject,
       html: template.html,
@@ -237,14 +237,14 @@ export async function sendB2BProposalNotification(proposal: B2bProposal): Promis
   if (!transporter) {
     console.log("📧 Email would be sent (SMTP not configured):");
     console.log(`To: ${proposal.email}`);
-    console.log(`Subject: [SIMDA] B2B 협업 제안 접수 - ${proposal.companyName}`);
+    console.log(`Subject: [simda] B2B 협업 제안 접수 - ${proposal.companyName}`);
     return;
   }
 
   try {
     const template = b2bProposalNotificationTemplate(proposal);
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"SIMDA" <noreply@simda.kr>',
+      from: process.env.SMTP_FROM || '"simda" <noreply@simda.kr>',
       to: proposal.email,
       subject: template.subject,
       html: template.html,

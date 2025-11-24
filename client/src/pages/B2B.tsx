@@ -58,7 +58,7 @@ export default function B2B() {
             B2B 협업
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground">
-            SIMDA와 함께 비즈니스 공간을 특별하게 만드세요
+            simda와 함께 비즈니스 공간을 특별하게 만드세요
           </p>
         </div>
       </section>
@@ -106,7 +106,7 @@ export default function B2B() {
           <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                SIMDA B2B 서비스의 특별함
+                simda B2B 서비스의 특별함
               </h2>
               <ul className="space-y-4">
                 {[
@@ -133,7 +133,7 @@ export default function B2B() {
             <CardHeader className="text-center">
               <CardTitle className="text-2xl">회사 소개서 다운로드</CardTitle>
               <CardDescription>
-                SIMDA의 B2B 서비스에 대한 자세한 정보를 확인하세요
+                simda의 B2B 서비스에 대한 자세한 정보를 확인하세요
               </CardDescription>
             </CardHeader>
             <CardContent className="flex justify-center gap-4">

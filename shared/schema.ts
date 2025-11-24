@@ -88,7 +88,7 @@ export const posts = pgTable("posts", {
   thumbnailUrl: text("thumbnail_url").notNull(), // Object storage path
   category: text("category").notNull(), // plant care, project story, trends, interior, etc.
   tags: text("tags").array().notNull(),
-  author: text("author").default("SIMDA Team").notNull(),
+  author: text("author").default("simda Team").notNull(),
   viewCount: integer("view_count").default(0).notNull(),
   published: boolean("published").default(true).notNull(),
   publishedAt: timestamp("published_at"), // For scheduled publishing

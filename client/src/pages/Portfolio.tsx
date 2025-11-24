@@ -33,7 +33,7 @@ export default function PortfolioPage() {
             포트폴리오
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground">
-            SIMDA의 프로젝트 사례를 만나보세요
+            simda의 프로젝트 사례를 만나보세요
           </p>
         </div>
       </section>

@@ -9,7 +9,7 @@ export default function Shop() {
         <div className="max-w-4xl mx-auto px-6 md:px-8 text-center">
           <Leaf className="h-16 w-16 text-primary mx-auto mb-6" />
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-            SIMDA 온라인샵
+            simda 온라인샵
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-8">
             엄선된 식물을 안전하게 배송받으세요
@@ -77,7 +77,7 @@ export default function Shop() {
             <CardContent className="pt-6">
               <div className="text-center">
                 <h3 className="text-xl font-bold mb-4">
-                  새 탭에서 SIMDA 온라인샵이 열립니다
+                  새 탭에서 simda 온라인샵이 열립니다
                 </h3>
                 <p className="text-muted-foreground mb-6">
                   전국 어디서나 주문 가능한 공식 쇼핑몰 simgo.kr

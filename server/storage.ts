@@ -139,7 +139,7 @@ export class MemStorage implements IStorage {
         thumbnailUrl: "https://placehold.co/1200x630/22c55e/ffffff?text=Winter+Care",
         category: "Plant Care",
         tags: ["겨울", "관리", "초보"],
-        author: "SIMDA Team",
+        author: "simda Team",
         viewCount: 1245,
         published: true,
         createdAt: new Date("2024-11-01"),

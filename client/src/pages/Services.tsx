@@ -12,7 +12,7 @@ export default function Services() {
             서비스 소개
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground">
-            SIMDA의 프리미엄 식물 관리 서비스
+            simda의 프리미엄 식물 관리 서비스
           </p>
         </div>
       </section>

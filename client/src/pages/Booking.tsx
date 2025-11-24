@@ -77,7 +77,7 @@ export default function Booking() {
             예약 · 상담
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground">
-            SIMDA 전문가와 1:1 상담을 예약하세요
+            simda 전문가와 1:1 상담을 예약하세요
           </p>
         </div>
       </section>

@@ -32,7 +32,7 @@ export function Header() {
         <div className="flex h-16 items-center justify-between">
           <Link href="/">
             <div data-testid="link-home-logo" className="hover-elevate active-elevate-2 px-2 py-1 rounded-md -ml-2 cursor-pointer">
-              <img src={simdaLogo} alt="SIMDA" className="h-10 w-auto" />
+              <img src={simdaLogo} alt="simda" className="h-10 w-auto" />
             </div>
           </Link>
 

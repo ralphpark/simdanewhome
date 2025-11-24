@@ -10,7 +10,7 @@ export default function About() {
             브랜드 스토리
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground">
-            자연과 사람을 연결하는 SIMDA의 이야기
+            자연과 사람을 연결하는 simda의 이야기
           </p>
         </div>
       </section>
@@ -24,7 +24,7 @@ export default function About() {
               </h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  SIMDA는 2020년, 도시 생활 속에서 자연과의 연결이 필요하다는 믿음으로 시작되었습니다.
+                  simda는 2020년, 도시 생활 속에서 자연과의 연결이 필요하다는 믿음으로 시작되었습니다.
                 </p>
                 <p>
                   우리는 단순히 식물을 판매하는 것이 아닌, 사람들이 식물과 함께 성장하고 
@@ -83,7 +83,7 @@ export default function About() {
 
           <div className="bg-card rounded-lg p-8 md:p-12">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">
-              SIMDA의 차별점
+              simda의 차별점
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">

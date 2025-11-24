@@ -45,7 +45,7 @@ export default function Home() {
           <div className="mb-12 space-y-6 animate-fade-in">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-primary/5 border border-primary/30 mb-6">
               <Leaf className="h-4 w-4 text-primary animate-bounce" style={{animationDelay: '0.2s'}} />
-              <span className="text-sm font-medium text-primary">SIMDA와 함께 시작하기</span>
+              <span className="text-sm font-medium text-primary">simda와 함께 시작하기</span>
             </div>
 
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
@@ -54,7 +54,7 @@ export default function Home() {
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed">
               AI 큐레이션으로 당신의 환경에 완벽한 식물을 찾아드립니다.<br />
-              <span className="text-foreground font-medium">SIMDA와 함께 자연을 일상으로 초대하세요.</span>
+              <span className="text-foreground font-medium">simda와 함께 자연을 일상으로 초대하세요.</span>
             </p>
           </div>
 
@@ -128,7 +128,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-slide-up">주요 서비스</h2>
-            <p className="text-muted-foreground animate-slide-up" style={{animationDelay: '0.1s'}}>SIMDA가 제공하는 프리미엄 서비스</p>
+            <p className="text-muted-foreground animate-slide-up" style={{animationDelay: '0.1s'}}>simda가 제공하는 프리미엄 서비스</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -217,7 +217,7 @@ export default function Home() {
             <div className="flex justify-between items-center mb-12">
               <div>
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">최신 포트폴리오</h2>
-                <p className="text-muted-foreground">SIMDA의 프로젝트 사례를 확인하세요</p>
+                <p className="text-muted-foreground">simda의 프로젝트 사례를 확인하세요</p>
               </div>
               <Link href="/portfolio">
                 <Button variant="outline" data-testid="button-view-all-portfolios" className="gap-2">
@@ -296,9 +296,9 @@ export default function Home() {
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-slide-up">왜 SIMDA를 선택할까요?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-slide-up">왜 simda를 선택할까요?</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto animate-slide-up" style={{animationDelay: '0.1s'}}>
-              프리미엄 식물 관리의 새로운 기준을 제시하는 SIMDA의 특별한 가치
+              프리미엄 식물 관리의 새로운 기준을 제시하는 simda의 특별한 가치
             </p>
           </div>
 
@@ -333,7 +333,7 @@ export default function Home() {
             기업 협업이 필요하신가요?
           </h2>
           <p className="text-lg mb-8 text-primary-foreground/90 animate-slide-up" style={{animationDelay: '0.1s'}}>
-            SIMDA는 오피스, 상업 공간, 대규모 조경 프로젝트를 전문적으로 관리합니다.<br />
+            simda는 오피스, 상업 공간, 대규모 조경 프로젝트를 전문적으로 관리합니다.<br />
             당신의 비즈니스 공간을 특별하게 만들어드립니다.
           </p>
           <Link href="/b2b">

@@ -17,7 +17,7 @@ export function AIChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "안녕하세요! SIMDA의 AI 식물 큐레이터입니다. 당신의 공간에 완벽한 식물을 찾아드리겠습니다. 먼저 거주 환경에 대해 알려주세요. 실내인가요, 실외인가요?",
+      content: "안녕하세요! simda의 AI 식물 큐레이터입니다. 당신의 공간에 완벽한 식물을 찾아드리겠습니다. 먼저 거주 환경에 대해 알려주세요. 실내인가요, 실외인가요?",
     },
   ]);
   const [input, setInput] = useState("");

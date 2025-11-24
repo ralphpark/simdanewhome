@@ -1,8 +1,8 @@
-# SIMDA Plant Brand - Premium Plant Lifestyle Platform
+# simda Plant Brand - Premium Plant Lifestyle Platform
 
 ## Overview
 
-SIMDA is a premium Korean plant brand that combines AI-powered plant curation, subscription services, educational programs, and B2B collaboration. The platform serves as a comprehensive ecosystem connecting plant enthusiasts with expert guidance, curated products, and a community marketplace.
+simda is a premium Korean plant brand that combines AI-powered plant curation, subscription services, educational programs, and B2B collaboration. The platform serves as a comprehensive ecosystem connecting plant enthusiasts with expert guidance, curated products, and a community marketplace.
 
 The application features an AI chatbot powered by Google Gemini that provides personalized plant recommendations based on user environment, experience level, and preferences. Users can book consultations, explore portfolios, read plant care content, and access both a direct online shop (simgo.kr) and a regional marketplace (simda.me).
 
@@ -226,7 +226,7 @@ Preferred communication style: Simple, everyday language.
    - Implemented Nodemailer with Gmail SMTP transport (`server/email.ts`)
    - Booking confirmation emails sent to users upon consultation booking
    - B2B proposal notification emails sent to admin upon submission
-   - HTML email templates with SIMDA branding and details
+   - HTML email templates with simda branding and details
    - Environment variables: EMAIL_USER, EMAIL_PASS
 
 3. **ChannelTalk Live Chat Integration**
