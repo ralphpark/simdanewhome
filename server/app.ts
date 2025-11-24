@@ -1,4 +1,5 @@
 import { type Server } from "node:http";
+import path from "node:path";
 
 import express, {
   type Express,
@@ -76,6 +77,9 @@ export default async function runApp(
     res.status(status).json({ message });
     throw err;
   });
+
+  // Serve static files from public directory
+  app.use(express.static(path.resolve(import.meta.dirname, "..", "public")));
 
   // importantly run the final setup after setting up all the other routes so
   // the catch-all route doesn't interfere with the other routes
