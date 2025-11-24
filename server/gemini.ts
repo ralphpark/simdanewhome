@@ -30,12 +30,15 @@ export async function chatWithAI(userMessage: string, history: Message[] = []): 
 
 친절하고 전문적으로 답변하며, 각 질문은 하나씩만 하세요.`;
 
-    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash", systemInstruction: systemPrompt });
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-pro", systemInstruction: systemPrompt });
 
-    const conversationHistory = history.map((msg) => ({
-      role: msg.role === "assistant" ? "model" : msg.role,
-      parts: [{ text: msg.content }],
-    }));
+    // Filter history to only include user messages (first one must be user role)
+    const conversationHistory = history
+      .filter((msg) => msg.role === "user" || msg.role === "assistant")
+      .map((msg) => ({
+        role: msg.role === "assistant" ? "model" : "user",
+        parts: [{ text: msg.content }],
+      }));
 
     const chat = model.startChat({ history: conversationHistory });
     const result = await chat.sendMessage(userMessage);
