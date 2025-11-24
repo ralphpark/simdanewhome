@@ -48,17 +48,18 @@ export default function AICuration() {
 
     const userMessage = input.trim();
     
+    // 메시지 추가 전에 입력값 비우기
+    setInput("");
+    if (textareaRef.current) {
+      textareaRef.current.value = "";
+      textareaRef.current.innerHTML = "";
+    }
+    
     const newUserMessage = { role: "user" as const, content: userMessage };
     const loadingPlaceholder = { role: "assistant" as const, content: "" };
 
     setMessages((prev) => [...prev, newUserMessage, loadingPlaceholder]);
     setIsLoading(true);
-    
-    // 상태와 DOM 동시에 초기화
-    setInput("");
-    if (textareaRef.current) {
-      textareaRef.current.value = "";
-    }
 
     try {
       const res = await apiRequest("POST", "/api/chat", {
@@ -204,15 +205,19 @@ export default function AICuration() {
             <form onSubmit={handleSubmit} className="flex w-full gap-2">
               <Textarea
                 ref={textareaRef}
+                key={`textarea-${messages.length}`}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  setInput(newValue);
+                }}
                 placeholder="메시지를 입력하세요..."
                 data-testid="input-chat-message"
                 className="resize-none min-h-[60px]"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
-                    handleSubmit(e);
+                    handleSubmit(e as any);
                   }
                 }}
               />
