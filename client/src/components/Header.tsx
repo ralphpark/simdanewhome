@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, ExternalLink } from "lucide-react";
 import { useState } from "react";
+import simdaLogo from "@assets/simda_logo_green_1763991528464.png";
 
 const navigation = [
   { name: "홈", href: "/" },
@@ -30,11 +31,8 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/">
-            <div data-testid="link-home-logo" className="flex items-center space-x-2 hover-elevate active-elevate-2 px-3 py-2 rounded-md -ml-3 cursor-pointer">
-              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-lg">S</span>
-              </div>
-              <span className="font-bold text-xl">SIMDA</span>
+            <div data-testid="link-home-logo" className="hover-elevate active-elevate-2 px-2 py-1 rounded-md -ml-2 cursor-pointer">
+              <img src={simdaLogo} alt="SIMDA" className="h-10 w-auto" />
             </div>
           </Link>
 

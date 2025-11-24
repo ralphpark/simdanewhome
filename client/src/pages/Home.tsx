@@ -22,20 +22,20 @@ export default function Home() {
       <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-white to-accent/5 overflow-hidden">
         {/* 배경 장식 요소 */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-20 right-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/8 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto px-6 md:px-8 py-20 text-center">
           {/* 헤더 애니메이션 */}
           <div className="mb-12 space-y-6 animate-fade-in">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/50 border border-primary/20 mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-primary/5 border border-primary/30 mb-6">
               <Leaf className="h-4 w-4 text-primary animate-bounce" style={{animationDelay: '0.2s'}} />
               <span className="text-sm font-medium text-primary">SIMDA와 함께 시작하기</span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight bg-gradient-to-r from-primary via-primary to-primary/70 bg-clip-text text-transparent">
-              식물과 함께하는<br />
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-primary via-primary to-primary/70 bg-clip-text text-transparent">식물과 함께하는</span><br />
               <span className="text-foreground">더 나은 공간</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed">
@@ -48,10 +48,10 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <div data-testid="card-choice-buy" className="group relative overflow-hidden rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-              <div className="relative backdrop-blur-xl bg-white/40 border border-white/60 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300">
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
+              <div className="relative backdrop-blur-xl bg-white/40 border border-primary/20 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                 <ShoppingBag className="h-14 w-14 mx-auto mb-6 text-primary group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-xl font-semibold mb-3">식물을 사고 싶으신가요?</h3>
+                <h3 className="text-xl font-semibold mb-3 text-foreground">식물을 사고 싶으신가요?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
                   엄선된 프리미엄 식물을<br />안전하게 배송받으세요
                 </p>
@@ -65,16 +65,16 @@ export default function Home() {
             </div>
 
             <div data-testid="card-choice-manage" className="group relative overflow-hidden rounded-2xl">
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-              <div className="relative backdrop-blur-xl bg-white/40 border border-white/60 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300">
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-secondary/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              <div className="relative backdrop-blur-xl bg-white/40 border border-primary/20 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                 <Leaf className="h-14 w-14 mx-auto mb-6 text-primary group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-xl font-semibold mb-3">관리하고 싶으신가요?</h3>
+                <h3 className="text-xl font-semibold mb-3 text-foreground">관리하고 싶으신가요?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
                   AI 추천과 구독 관리<br />서비스를 경험하세요
                 </p>
                 <Link href="/services#ai-curation">
-                  <Button data-testid="button-ai-curation" variant="outline" className="w-full border-white/40 hover:bg-white/20">
+                  <Button data-testid="button-ai-curation" variant="outline" className="w-full border-primary/30 hover:bg-primary/5">
                     AI 큐레이션 시작하기
                   </Button>
                 </Link>
@@ -83,15 +83,15 @@ export default function Home() {
 
             <div data-testid="card-choice-learn" className="group relative overflow-hidden rounded-2xl">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-              <div className="relative backdrop-blur-xl bg-white/40 border border-white/60 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300">
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
+              <div className="relative backdrop-blur-xl bg-white/40 border border-primary/20 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
                 <BookOpen className="h-14 w-14 mx-auto mb-6 text-primary group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-xl font-semibold mb-3">배우고 싶으신가요?</h3>
+                <h3 className="text-xl font-semibold mb-3 text-foreground">배우고 싶으신가요?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
                   전문가의 식물 케어<br />교육 프로그램
                 </p>
                 <Link href="/services#education">
-                  <Button data-testid="button-education" variant="outline" className="w-full border-white/40 hover:bg-white/20">
+                  <Button data-testid="button-education" variant="outline" className="w-full border-primary/30 hover:bg-primary/5">
                     교육 프로그램 보기
                   </Button>
                 </Link>
