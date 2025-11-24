@@ -11,6 +11,8 @@ import type {
   InsertPost,
   Comment,
   InsertComment,
+  User,
+  UpsertUser,
 } from "@shared/schema";
 import { db } from "./db";
 import * as schema from "@shared/schema";
@@ -53,6 +55,10 @@ export interface IStorage {
   getCommentsByPostId(postId: string): Promise<Comment[]>;
   approveComment(id: string): Promise<Comment | undefined>;
   deleteComment(id: string): Promise<void>;
+
+  // Users (Replit Auth)
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
 }
 
 // In-memory storage implementation
@@ -362,6 +368,18 @@ export class MemStorage implements IStorage {
   async deleteComment(id: string): Promise<void> {
     // No-op for MemStorage
   }
+
+  async getUser(id: string): Promise<User | undefined> {
+    return undefined;
+  }
+
+  async upsertUser(user: UpsertUser): Promise<User> {
+    return {
+      ...user,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    } as User;
+  }
 }
 
 // Database storage implementation using Drizzle ORM
@@ -532,6 +550,28 @@ export class DbStorage implements IStorage {
 
   async deleteComment(id: string): Promise<void> {
     await db.delete(schema.comments).where(eq(schema.comments.id, id));
+  }
+
+  // Users (Replit Auth)
+  async getUser(id: string): Promise<User | undefined> {
+    return await db.query.users.findFirst({
+      where: eq(schema.users.id, id),
+    });
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(schema.users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: schema.users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
   }
 }
 

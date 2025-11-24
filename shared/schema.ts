@@ -1,8 +1,30 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean, jsonb, index } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
+
+// Session storage table for Replit Auth
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: varchar("sid").primaryKey(),
+    sess: jsonb("sess").notNull(),
+    expire: timestamp("expire").notNull(),
+  },
+  (table) => [index("IDX_session_expire").on(table.expire)],
+);
+
+// User storage table for Replit Auth
+export const users = pgTable("users", {
+  id: varchar("id").primaryKey(),
+  email: varchar("email").unique(),
+  firstName: varchar("first_name"),
+  lastName: varchar("last_name"),
+  profileImageUrl: varchar("profile_image_url"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
 
 // Chat histories table for AI plant curation conversations
 export const chatHistories = pgTable("chat_histories", {
@@ -69,6 +91,7 @@ export const posts = pgTable("posts", {
   author: text("author").default("SIMDA Team").notNull(),
   viewCount: integer("view_count").default(0).notNull(),
   published: boolean("published").default(true).notNull(),
+  publishedAt: timestamp("published_at"), // For scheduled publishing
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -125,6 +148,8 @@ export const insertPostSchema = createInsertSchema(posts).omit({
   viewCount: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  publishedAt: z.date().optional().nullable(),
 });
 
 export const insertCommentSchema = createInsertSchema(comments).omit({
@@ -155,3 +180,6 @@ export type InsertPost = z.infer<typeof insertPostSchema>;
 
 export type Comment = typeof comments.$inferSelect;
 export type InsertComment = z.infer<typeof insertCommentSchema>;
+
+export type User = typeof users.$inferSelect;
+export type UpsertUser = typeof users.$inferInsert;

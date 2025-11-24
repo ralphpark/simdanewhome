@@ -67,6 +67,7 @@ async function seed() {
       tags: ["겨울", "관리", "초보"],
       author: "SIMDA Team",
       published: true,
+      publishedAt: new Date("2024-11-15"),
     },
     {
       title: "실내 공기정화 식물 BEST 10",
@@ -77,6 +78,7 @@ async function seed() {
       tags: ["공기정화", "추천", "실내"],
       author: "SIMDA Team",
       published: true,
+      publishedAt: new Date("2024-11-10"),
     },
     {
       title: "강남 오피스 프로젝트 비하인드 스토리",
@@ -87,6 +89,7 @@ async function seed() {
       tags: ["오피스", "프로젝트", "사례"],
       author: "SIMDA Team",
       published: true,
+      publishedAt: new Date("2024-11-05"),
     },
   ]).returning();
 

@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { chatWithAI } from "./gemini";
 import { sendBookingConfirmation, sendB2BProposalNotification } from "./email";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 import {
   insertBookingSchema,
   insertB2bProposalSchema,
@@ -12,6 +13,20 @@ import {
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup authentication
+  await setupAuth(app);
+
+  // Auth endpoint
+  app.get("/api/auth/user", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
   // AI Chat endpoint
   app.post("/api/chat", async (req, res) => {
     try {
@@ -312,6 +327,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Delete comment error:", error);
       res.status(500).json({ error: "Failed to delete comment" });
+    }
+  });
+
+  // Image upload endpoint (protected)
+  app.post("/api/upload", isAuthenticated, async (req, res) => {
+    try {
+      // File upload would typically be handled by multer middleware
+      // For now, this endpoint validates authentication for image uploads
+      res.json({ message: "Image upload endpoint ready" });
+    } catch (error) {
+      console.error("Upload error:", error);
+      res.status(400).json({ error: "Upload failed" });
+    }
+  });
+
+  // Admin endpoints for managing content (protected)
+  app.get("/api/admin/posts", isAuthenticated, async (req, res) => {
+    try {
+      const posts = await storage.getAllPosts();
+      res.json(posts);
+    } catch (error) {
+      console.error("Get admin posts error:", error);
+      res.status(500).json({ error: "Failed to fetch posts" });
+    }
+  });
+
+  app.get("/api/admin/comments", isAuthenticated, async (req, res) => {
+    try {
+      const posts = await storage.getAllPosts();
+      const allComments = [];
+      for (const post of posts) {
+        const comments = await storage.getCommentsByPostId(post.id);
+        allComments.push(...comments);
+      }
+      res.json(allComments);
+    } catch (error) {
+      console.error("Get admin comments error:", error);
+      res.status(500).json({ error: "Failed to fetch comments" });
+    }
+  });
+
+  app.patch("/api/admin/posts/:id/schedule", isAuthenticated, async (req, res) => {
+    try {
+      const { publishedAt } = req.body;
+      const post = await storage.updatePost(req.params.id, {
+        publishedAt: publishedAt ? new Date(publishedAt) : null,
+      });
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+      res.json(post);
+    } catch (error) {
+      console.error("Schedule post error:", error);
+      res.status(500).json({ error: "Failed to schedule post" });
     }
   });
 

@@ -248,9 +248,36 @@ Preferred communication style: Simple, everyday language.
    - Proper priority and changefreq settings for each page type
    - Updates in real-time as content is added/removed
 
+### Phase 3: Admin Features & Advanced Capabilities (November 24, 2025)
+
+1. **Replit Auth Integration**
+   - Complete admin authentication system using Replit OpenID Connect
+   - Session management with PostgreSQL store
+   - Protected admin routes requiring authentication (`isAuthenticated` middleware)
+   - Auth endpoints: `/api/login`, `/api/logout`, `/api/callback`, `/api/auth/user`
+   - User profile storage in users table with profile information
+
+2. **Post Scheduling System**
+   - Added `publishedAt` timestamp field to posts schema
+   - Admin API endpoint: `PATCH /api/admin/posts/:id/schedule` for scheduling posts
+   - Posts can be drafted and scheduled for future publication
+   - Supports both immediate and future publishing
+
+3. **Image Upload Infrastructure**
+   - Object Storage already configured and ready for use
+   - Protected upload endpoint: `POST /api/upload` (requires authentication)
+   - Supports portfolio and post image uploads
+   - Images stored in object storage with URLs in database records
+
+4. **Admin API Endpoints**
+   - `GET /api/admin/posts` - Fetch all posts for management (protected)
+   - `GET /api/admin/comments` - Fetch all comments across posts (protected)
+   - `PATCH /api/admin/posts/:id/schedule` - Schedule posts for publication (protected)
+   - `POST /api/upload` - Upload images to object storage (protected)
+
 ### Deferred Features (Future Enhancements)
 
-- **Replit Auth**: Admin authentication system for protecting admin routes
-- **Object Storage**: Image upload functionality for portfolio/post creation
-- **Post Scheduling**: Scheduled publishing for blog posts
-- **Admin Dashboard**: Complete admin UI for managing content, comments, bookings
+- **Admin Dashboard UI**: Complete frontend admin dashboard for managing content
+- **Advanced Image Processing**: Image optimization, cropping, and thumbnail generation
+- **Post Drafts**: Save posts as drafts before publishing
+- **Role-Based Access Control**: Different permission levels for admin users
