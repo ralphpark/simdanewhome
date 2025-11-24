@@ -53,15 +53,17 @@ Preferred communication style: Simple, everyday language.
 **API Structure**:
 - RESTful endpoints under `/api/*` prefix
 - Chat endpoint: POST `/api/chat` for AI conversations
-- Bookings: POST/GET `/api/bookings` with status updates
-- B2B Proposals: POST/GET `/api/b2b-proposals` with status management
+- Bookings: POST/GET `/api/bookings` with status updates and email notifications
+- B2B Proposals: POST/GET `/api/b2b-proposals` with status management and email notifications
 - Portfolios: Full CRUD operations
 - Posts: Full CRUD with view count tracking
+- Comments: POST/GET/PATCH/DELETE `/api/posts/:postId/comments` with approval workflow
+- SEO: GET `/sitemap.xml` for dynamic sitemap generation
 
 **Storage Layer**:
 - Interface-based storage abstraction (IStorage)
-- In-memory storage implementation (MemStorage) for development
-- Database-backed storage ready for production (db.ts uses Drizzle ORM)
+- **Production**: DbStorage implementation using PostgreSQL database (actively used)
+- **Fallback**: MemStorage implementation for development (legacy)
 
 **Logging**: Custom timestamp-based logging middleware tracking request duration and JSON responses
 
@@ -82,10 +84,12 @@ Preferred communication style: Simple, everyday language.
    - Contact info, consultation type, preferred date/time
    - Status workflow (pending → confirmed → completed/cancelled)
    - Optional AI recommendation field
+   - Email notifications sent on creation
 
 3. **b2b_proposals**: Corporate partnership requests
    - Company details, proposal content, attachment URLs
    - Status workflow (pending → reviewing → accepted/rejected)
+   - Email notifications sent on submission
 
 4. **portfolios**: Project showcase
    - Title, description, category, client, location
@@ -95,7 +99,14 @@ Preferred communication style: Simple, everyday language.
    - Title, content, excerpt, category, author
    - Featured image, tags, published status, view count
 
+6. **comments**: User comments on blog posts
+   - Author name, email, content, postId reference
+   - Approval workflow (approved field defaults to false)
+   - Only approved comments displayed publicly
+
 **Schema Validation**: Zod schemas generated from Drizzle schema using drizzle-zod for runtime validation
+
+**Database Seeding**: Initial sample data populated via `server/seed.ts` (run with `npm run db:seed`)
 
 ### AI Integration
 
@@ -150,7 +161,19 @@ Preferred communication style: Simple, everyday language.
    - Integration: @neondatabase/serverless with WebSocket support
    - Environment: DATABASE_URL
 
-3. **External Platforms**:
+3. **Nodemailer** (Email Service)
+   - Purpose: Sending transactional emails for bookings and B2B proposals
+   - Integration: Gmail SMTP transport
+   - Environment: EMAIL_USER, EMAIL_PASS
+   - Email types: Booking confirmations, B2B proposal notifications
+
+4. **ChannelTalk** (Live Chat)
+   - Purpose: Real-time customer support and engagement
+   - Integration: ChannelTalk SDK loaded via script tag
+   - Environment: VITE_CHANNELTALK_PLUGIN_KEY
+   - Features: Live chat widget, automated responses, conversation history
+
+5. **External Platforms**:
    - simgo.kr: Direct plant purchase e-commerce platform
    - simda.me: Regional marketplace for competitive bidding on plants
 
@@ -181,9 +204,53 @@ Preferred communication style: Simple, everyday language.
 - **Wouter**: Lightweight client-side routing
 - **class-variance-authority**: Component variant management
 - **tailwind-merge**: Conditional Tailwind class merging
+- **Nodemailer**: Email sending service for transactional notifications
 
 ### Build and Production
 
 - **esbuild**: Production backend bundling
 - **PostCSS**: CSS processing with Tailwind and Autoprefixer
 - **tsx**: TypeScript execution for development server
+
+## Recent Updates (November 24, 2025)
+
+### Phase 2: Database Persistence & Communication Features
+
+1. **Database Migration to PostgreSQL**
+   - Migrated from MemStorage to DbStorage using Drizzle ORM
+   - All data now persisted in Neon PostgreSQL database
+   - Created seed script (`server/seed.ts`) with sample portfolios and posts
+   - Database push workflow: `npm run db:push` and `npm run db:seed`
+
+2. **Email Notification System**
+   - Implemented Nodemailer with Gmail SMTP transport (`server/email.ts`)
+   - Booking confirmation emails sent to users upon consultation booking
+   - B2B proposal notification emails sent to admin upon submission
+   - HTML email templates with SIMDA branding and details
+   - Environment variables: EMAIL_USER, EMAIL_PASS
+
+3. **ChannelTalk Live Chat Integration**
+   - Integrated ChannelTalk SDK for real-time customer support
+   - Chat widget available across all pages
+   - Plugin key stored in VITE_CHANNELTALK_PLUGIN_KEY environment variable
+   - Automatic user tracking and conversation history
+
+4. **Comments System for Magazine Posts**
+   - Added comments schema with approval workflow
+   - Comments require admin approval before being displayed publicly
+   - API endpoints: POST/GET comments, PATCH approve, DELETE remove
+   - Comments displayed with author name, timestamp, and content
+   - Frontend UI ready for implementation
+
+5. **SEO Optimization with Dynamic Sitemap**
+   - Dynamic sitemap.xml generation at `/sitemap.xml`
+   - Automatically includes all published posts and portfolios
+   - Proper priority and changefreq settings for each page type
+   - Updates in real-time as content is added/removed
+
+### Deferred Features (Future Enhancements)
+
+- **Replit Auth**: Admin authentication system for protecting admin routes
+- **Object Storage**: Image upload functionality for portfolio/post creation
+- **Post Scheduling**: Scheduled publishing for blog posts
+- **Admin Dashboard**: Complete admin UI for managing content, comments, bookings
