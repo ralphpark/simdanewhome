@@ -16,7 +16,7 @@ export default function PlantCareConsultation() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "안녕하세요! 🌿 simda의 식물관리 상담사입니다. 현재 당신이 관리하고 있는 식물들에 대해 알려주세요. 어떤 식물들을 키우고 있으신가요?",
+      content: "안녕하세요! 🌿 simda의 식물관리 상담사입니다. 식물관리에 대해서 궁금하신가요?",
     },
   ]);
   const [input, setInput] = useState("");
