@@ -27,6 +27,7 @@ export default function AICuration() {
   const [recommendationText, setRecommendationText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
   // Auto-scroll to bottom on new messages
@@ -53,11 +54,11 @@ export default function AICuration() {
     setMessages((prev) => [...prev, newUserMessage, loadingPlaceholder]);
     setIsLoading(true);
     
-    // 폼 리셋 (모든 입력값 초기화)
-    if (e.target instanceof HTMLFormElement) {
-      e.target.reset();
-    }
+    // 상태와 DOM 동시에 초기화
     setInput("");
+    if (textareaRef.current) {
+      textareaRef.current.value = "";
+    }
 
     try {
       const res = await apiRequest("POST", "/api/chat", {
@@ -202,6 +203,7 @@ export default function AICuration() {
             {/* Input Form */}
             <form onSubmit={handleSubmit} className="flex w-full gap-2">
               <Textarea
+                ref={textareaRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="메시지를 입력하세요..."
