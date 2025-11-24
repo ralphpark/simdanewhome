@@ -2,174 +2,131 @@
 
 ## Design Approach
 
-**Reference-Based Approach**: Drawing inspiration from premium lifestyle e-commerce (Airbnb's trust elements, The Sill's plant aesthetics, Notion's clean interfaces) to create a sophisticated yet approachable plant brand experience.
+**Reference-Based**: Premium plant lifestyle combining The Sill's botanical elegance, Airbnb's trust-building, and Linear's refined minimalism. Korean-optimized with glass-morphism accents for modern sophistication.
 
-**Core Principles**: Natural sophistication, breathing room, trust-building through imagery, seamless transitions between consumer and B2B contexts.
+**Core Principles**: Natural serenity, generous breathing room, botanical professionalism, glass-morphism depth, smooth micro-interactions.
+
+---
+
+## Color System
+
+**Primary Green**: `hsl(142, 76%, 36%)` - Natural, vibrant botanical green
+**Variants**:
+- Light: `hsl(142, 60%, 90%)` - Soft backgrounds
+- Dark: `hsl(142, 80%, 25%)` - Accent elements
+- Glass overlay: `hsl(142, 50%, 96%, 0.7)` - Frosted glass effects
+
+**Neutrals**: White, gray-50 through gray-900 for text hierarchy
+**Accents**: Warm terracotta `hsl(15, 70%, 60%)` for CTAs, soft blue `hsl(200, 70%, 50%)` for information
 
 ---
 
 ## Typography
 
-**Font Stack**: 
-- Primary: Inter or Pretendard (Korean excellence) - clean, modern sans-serif
-- Headings: 600-700 weight
-- Body: 400-500 weight
-- UI elements: 500 weight
+**Font Stack**: Pretendard (Korean excellence) fallback to Inter
+- Hero: `text-5xl md:text-7xl`, weight-700
+- Section titles: `text-3xl md:text-5xl`, weight-600
+- Card titles: `text-xl md:text-2xl`, weight-600
+- Body: `text-base md:text-lg`, weight-400
+- Small/meta: `text-sm`, weight-500
 
-**Scale**:
-- Hero headlines: text-5xl md:text-6xl lg:text-7xl
-- Section titles: text-3xl md:text-4xl
-- Card titles: text-xl md:text-2xl
-- Body text: text-base md:text-lg
-- Small text/metadata: text-sm
+**Line Height**: Generous breathing - 1.7 for body, 1.2 for headings
 
 ---
 
 ## Layout System
 
-**Spacing Primitives**: Tailwind units of 4, 6, 8, 12, 16, 20, 24 (e.g., p-4, gap-6, mt-12, py-20)
+**Spacing**: Tailwind units 4, 8, 12, 16, 24, 32 (py-24 for sections, gap-8 for grids)
 
-**Containers**:
-- Full-width sections: `w-full` with inner `max-w-7xl mx-auto px-6 md:px-8`
-- Content sections: `max-w-6xl mx-auto`
-- Text-heavy areas: `max-w-prose mx-auto`
+**Containers**: 
+- Full-width: `max-w-7xl mx-auto px-6 md:px-12`
+- Content: `max-w-6xl mx-auto`
+- Text: `max-w-3xl mx-auto`
 
 **Grid Patterns**:
-- Service cards: `grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6`
-- Portfolio: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8`
-- Magazine: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6`
+- Services: `grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8`
+- Portfolio: `grid-cols-1 md:grid-cols-3 gap-12`
+- Magazine: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8`
 
 ---
 
 ## Component Library
 
 ### Navigation
-- Sticky header with blur backdrop (`backdrop-blur-md`)
-- Logo left, nav center/right split
-- Mobile: hamburger menu with slide-out drawer
-- External link indicators (small icon for simgo.kr, simda.me)
+Sticky with glass-morphism: `backdrop-blur-xl bg-white/80 border-b border-green-100/50`, logo left, bilingual nav (KO/EN toggle), mobile slide-out drawer with frosted background.
 
-### Hero Section (Landing)
-- **Layout**: Full viewport height (min-h-screen) with centered 3-choice card layout
-- **Structure**: Large background image (plant lifestyle photography, slightly desaturated), overlay gradient for readability
-- **Three Choice Cards**: Glass-morphism effect cards (`backdrop-blur-lg bg-white/10 border border-white/20`), each 350px wide, hover lift effect (translate-y-[-8px])
-- **Card Content**: Icon/emoji top, question text, brief description, CTA button with blurred background
+### Landing Page Hero
+**Layout**: Full viewport (min-h-screen), large botanical lifestyle image (modern interior with lush plants, 2560x1440, soft natural light), gradient overlay `from-black/40 to-transparent`.
+
+**Content**: Centered vertical stack, large Korean headline with English subtitle, three glass-morphism choice cards below (350px each, `backdrop-blur-lg bg-white/10 border border-white/30 shadow-2xl`), cards float with hover lift (`translate-y-[-12px]` smooth transition).
 
 ### Service Cards
-- White cards with subtle shadow (`shadow-lg hover:shadow-2xl`)
-- Icon/illustration top (80px height)
-- Title, 2-3 line description
-- CTA link/button bottom
-- 16px padding, 12px border-radius equivalent
+White cards with botanical shadow (`shadow-lg shadow-green-100/20`), rounded-2xl, 80px illustrated icon top, title/description, green CTA link bottom, hover: shadow-2xl with slight scale.
 
-### AI Chatbot Interface
-- **Container**: Fixed bottom-right, 400px width (mobile: full-width drawer)
-- **Chat Window**: White background, message bubbles with distinct styling
-- **User Messages**: Right-aligned, blue-tinted background (`bg-blue-50 border-l-4 border-blue-400`)
-- **AI Messages**: Left-aligned, neutral background (`bg-gray-50 border-l-4 border-green-400`)
-- **Input Area**: Sticky bottom, textarea with send button
-- **Typing Indicator**: Animated dots (3 bouncing circles)
+### Glass-Morphism Elements
+Chat interface, modal overlays, floating buttons: `backdrop-blur-xl bg-white/70 border border-white/40 shadow-xl`, subtle inner glow effect.
 
-### Forms (Booking, B2B)
-- **Layout**: Two-column on desktop (md:grid-cols-2), single column mobile
-- **Inputs**: Full-width, consistent height (h-12), border style (`border-2 border-gray-200 focus:border-blue-500`)
-- **Labels**: Above inputs, medium weight, small margin-bottom
-- **Date/Time Pickers**: Custom styled to match brand
-- **File Upload**: Drag-and-drop zone with dashed border
-- **Submit Button**: Large, full-width on mobile, fixed width desktop (min-w-[200px])
+### AI Chatbot
+Fixed bottom-right (400px), glass container, messages with green accent borders (user: `border-l-4 border-green-500`, AI: `border-l-4 border-green-300`), typing indicator with bouncing green dots.
+
+### Forms
+Two-column desktop, glass input backgrounds (`bg-white/50 backdrop-blur-sm border-2 border-green-100 focus:border-green-500`), h-14 inputs, green submit button with hover scale.
 
 ### Portfolio Grid
-- **Card Structure**: Image-first, hover reveal overlay with project details
-- **Image**: aspect-ratio-[4/3], object-cover
-- **Overlay**: Gradient from transparent to dark on hover
-- **Modal/Detail**: Full-screen overlay with image gallery carousel, details sidebar
+Masonry layout option, image-first cards (aspect-[4/3]), hover overlay with gradient and green accent line, modal with full-screen gallery carousel.
 
 ### Magazine Cards
-- **Layout**: Vertical card, image top (aspect-ratio-[16/9])
-- **Meta**: Date, category tag (small pill badges)
-- **Title**: 2-line clamp
-- **Description**: 3-line clamp
-- **Read More**: Text link with arrow icon
+Vertical, image 16:9 ratio, date/category pills with green background, title (2-line clamp), excerpt (3-line), green arrow link.
 
-### FAQ Accordion
-- **Item**: Border-bottom separated, padding py-6
-- **Question**: Flex layout with expand icon right
-- **Answer**: Collapsible with smooth transition, pl-4 for indentation
-
-### External Link Cards (Shop, Marketplace)
-- **Hero-style Feature Block**: 60vh height, split layout (content left, visual right)
-- **Features Grid**: 3-column icons with benefits
-- **CTA**: Large button with external link icon, secondary "Learn More" option
-- **Badge**: "External Service" indicator top-right
+### External Link Cards (Shop/Marketplace)
+Hero-style blocks (60vh), split layout, green gradient overlays, large CTA with external icon, "외부 서비스" badge top-right.
 
 ---
 
 ## Images
 
-**Hero Section**: 
-- Large lifestyle image of plants in modern interior (1920x1080)
-- Subtle overlay gradient (from transparent to rgba(0,0,0,0.3))
+**Hero**: Large botanical lifestyle - modern minimalist interior with abundant healthy plants, natural light, Korean aesthetic (2560x1440)
 
-**Service Sections**: 
-- AI Chatbot: Mockup of chat interface or person using phone with plants
-- Subscription: Flat-lay of plant delivery box
-- Education: Person caring for plants or workshop setting
-- Marketplace: Local shop or community market scene
+**Services**: AI chat mockup, subscription box flat-lay, workshop scene, local market
 
-**Portfolio**: 
-- High-quality project photos (before/after, detail shots, wide angles)
-- Minimum 1200px width for quality
+**Portfolio**: High-quality project photos (1200px+), before/after comparisons, detail shots
 
-**Magazine**: 
-- Featured images for each post (16:9 ratio)
-- Minimum 800px width
+**Magazine**: Featured post images (16:9, 1200px+)
 
-**B2B Section**: 
-- Office space with plants, corporate environments
+**B2B**: Corporate office greenery, professional installations
 
-**About Page**: 
-- Team photos, workspace, brand story imagery
+**About**: Team with plants, workspace, brand story visuals
 
 ---
 
-## Interactive Elements
+## Animations
 
-**Buttons**:
-- Primary: Solid background, white text, medium padding (px-8 py-3)
-- Secondary: Outline style, 2px border
-- Blur background for buttons on images (`backdrop-blur-md bg-white/20`)
-- Rounded corners (rounded-lg)
+**Micro-interactions**: 
+- Button hover: scale-105 with shadow increase (duration-200)
+- Card hover: lift + shadow (duration-300)
+- Page scroll: subtle fade-in for section headings (once)
+- Staggered grid children (100ms delays)
 
-**Links**: 
-- Underline on hover, smooth transition
-- External links: small icon suffix
-
-**Cards**: 
-- Lift on hover (transform translate-y-[-4px])
-- Shadow increase on hover
-- Smooth transition-all (duration-300)
-
-**Scroll Animations** (Minimal):
-- Fade-in on scroll for section headings only
-- Stagger children for card grids (delay-[100ms], delay-[200ms], etc.)
-- No parallax or heavy animations
+**Transitions**: All smooth, ease-in-out, no parallax, no heavy scroll-triggered animations.
 
 ---
 
-## Page-Specific Notes
+## Page Architecture
 
-**Landing**: 6-8 sections total - Hero (3 choices), Services Overview (4 cards), Latest Portfolio (slider), Latest Magazine (grid), B2B CTA, Footer
+**Landing**: Hero (3-choice), Services (4 cards), Latest Portfolio (6 items), Magazine Preview (3 featured), B2B CTA block, Rich Footer
 
-**Services**: Each service gets dedicated section with icon, description, benefits list, CTA
+**Services**: Individual pages with hero, detailed benefits, FAQ accordion, booking CTA
 
-**Portfolio**: Filter tabs top, masonry or standard grid, lightbox for images
+**Portfolio**: Filter tabs, masonry grid, lightbox, project detail modals
 
-**Magazine**: Featured post hero, grid below, sidebar with categories/tags on desktop
+**Magazine**: Featured hero post, grid (9-12 items), sidebar categories/tags (desktop)
 
-**B2B**: Professional tone, case studies, downloadable PDF section, testimonials from corporate clients
+**B2B**: Professional hero, case studies grid, downloadable resources, corporate testimonials, contact form
 
-**Admin**: Sidebar navigation, table views for data, form-based editors, minimal styling (utility-focused)
+**Admin**: Sidebar navigation, minimal styling, table views, form editors
 
 ---
 
-**Accessibility**: ARIA labels for interactive elements, focus states with visible outline (ring-2 ring-blue-500), keyboard navigation support, form error messages inline with red accent.
+## Accessibility
+
+ARIA labels, visible focus states (`ring-2 ring-green-500`), keyboard navigation, 1.5:1 minimum touch targets, inline form errors with red accent, Korean screen reader optimization.
