@@ -13,16 +13,24 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { CalendarIcon, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 
 export default function Booking() {
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [location] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // URL에서 recommendation 파라미터 추출
+  const getRecommendationFromUrl = () => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("recommendation") || "";
+  };
 
   const form = useForm<InsertBooking>({
     resolver: zodResolver(insertBookingSchema),
@@ -33,9 +41,17 @@ export default function Booking() {
       consultationType: "AI curation",
       preferredDate: new Date(),
       preferredTime: "",
-      message: "",
+      message: getRecommendationFromUrl(),
     },
   });
+
+  // URL 파라미터 변경 시 message 필드 업데이트
+  useEffect(() => {
+    const recommendation = getRecommendationFromUrl();
+    if (recommendation) {
+      form.setValue("message", recommendation);
+    }
+  }, [location, form]);
 
   const createBooking = useMutation({
     mutationFn: (data: InsertBooking) => apiRequest("POST", "/api/bookings", data),

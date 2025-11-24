@@ -165,7 +165,7 @@ export default function AICuration() {
             {/* Action Buttons */}
             {showActions && (
               <div className="w-full flex gap-2 flex-wrap">
-                <Link href="/booking">
+                <Link href={`/booking?recommendation=${encodeURIComponent(recommendationText)}`}>
                   <Button
                     data-testid="button-booking-action"
                     variant="default"
