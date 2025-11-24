@@ -1,0 +1,931 @@
+프로젝트 개요
+식물 브랜드 "심다(SIMDA)"의 공식 홈페이지를 구축합니다. 서비스 소개, 예약/상담, 포트폴리오, 콘텐츠 발행, B2B 협업 제안 등 브랜드 운영 전반을 통합하는 반응형 웹사이트입니다.
+기술 스택
+* 프론트엔드: React.js (Next.js 권장) 또는 Vue.js
+* 백엔드: Node.js + Express.js
+* 데이터베이스: PostgreSQL 또는 MongoDB
+* 스타일링: Tailwind CSS 또는 styled-components
+* 폼 관리: React Hook Form + Zod validation
+* 이미지 최적화: Next.js Image 컴포넌트 또는 Cloudinary 연동
+* SEO: Next.js의 Metadata API 또는 React Helmet
+* AI 챗봇: Google Gemini API
+* 외부 연동: 채널톡 SDK, 파일 다운로드 기능
+
+1. 프로젝트 구조 및 라우팅
+필요한 페이지 (URL 구조)
+text
+/ (메인 랜딩페이지)
+/about (브랜드 스토리)
+/services (서비스 소개 - 하위 섹션 포함)
+  /services#ai-curation (AI 식물 큐레이션)
+  /services#subscription (식물 구독 관리)
+  /services#education (식물 콘텐츠 교육)
+  /services#marketplace (지역 기반 입찰/쇼핑몰 - 외부 링크)
+/booking (예약·상담 폼)
+/portfolio (포트폴리오 - 프로젝트 사례)
+/magazine (콘텐츠/블로그 - 매거진 스타일)
+/b2b (기업 협업 제안 페이지)
+/shop (온라인샵 - 외부 링크로 연결)
+/support (고객센터/FAQ/정책)
+/admin (관리자 전용)
+  /admin/login (관리자 로그인)
+  /admin/dashboard (대시보드 메인)
+  /admin/bookings (예약/상담 관리)
+  /admin/b2b-proposals (기업 제안 관리)
+  /admin/portfolios (포트폴리오 관리)
+  /admin/posts (매거진 포스트 관리)
+
+2. 페이지별 상세 요구사항
+2.1 메인 페이지 (/)
+핵심 메시지 전달 랜딩페이지
+* Hero 섹션: 큰 비주얼 이미지와 함께 "식물을 사고 싶으신가요? / 관리하고 싶으신가요? / 배우고 싶으신가요?" 3가지 선택지 카드 형태 제시
+* 각 선택지는 해당 서비스 페이지로 연결되는 CTA 버튼
+    * "식물을 사고 싶으신가요?" → 온라인샵 (https://simgo.kr/) 외부 링크
+    * "관리하고 싶으신가요?" → AI 큐레이션 또는 구독 서비스
+    * "배우고 싶으신가요?" → 교육 서비스 또는 매거진
+* 주요 서비스 4가지 간단 소개 (카드 형태)
+* 최신 포트폴리오 3개 슬라이더
+* 최신 매거진 포스트 3개 그리드
+* CTA 섹션: "기업 협업 문의" 버튼
+* 푸터: 회사 정보, SNS 링크, 개인정보처리방침, 이용약관
+기술 구현
+* 반응형 디자인 (모바일/태블릿/데스크톱)
+* 이미지 lazy loading
+* 부드러운 스크롤 애니메이션 (Framer Motion 또는 AOS 라이브러리)
+2.2 브랜드 스토리 (/about)
+* 브랜드 소개 텍스트 (마크다운 또는 리치 텍스트 에디터)
+* 팀 소개 섹션 (선택사항)
+* 비전 및 미션 설명
+* 이미지 갤러리 (고용량 이미지 지원)
+2.3 서비스 소개 (/services)
+A. AI 식물 큐레이션 ⭐ 중요: Gemini API 사용
+대화형 챗봇 구현 - Google Gemini API 연동
+UI 구성
+* 채팅 인터페이스 (메시지 목록 + 입력창)
+* 사용자 메시지와 AI 응답 구분되는 말풍선 디자인
+* 타이핑 인디케이터 (AI 응답 대기 중)
+* 대화 히스토리 저장 (localStorage 또는 데이터베이스)
+Gemini API 설정
+* Google AI Studio에서 API 키 발급: https://makersuite.google.com/app/apikey
+* 환경 변수에 GEMINI_API_KEY=your_api_key_here 추가
+* 패키지 설치: npm install @google/generative-ai
+챗봇 시스템 프롬프트 가이드 당신은 "심다(SIMDA)"의 AI 식물 큐레이터입니다. 다음 순서로 대화를 진행하세요:
+1. 사용자의 거주 환경 파악 (실내/실외, 햇빛 양, 습도, 공간 크기)
+2. 식물 관리 경험 수준 확인 (초보/중급/고급)
+3. 선호하는 식물 스타일 (관엽/다육/허브/꽃/공기정화 식물)
+4. 특별한 요구사항 (반려동물 유무, 알레르기, 인테리어 스타일)
+5. 최종 추천: 3가지 식물 (이름, 특징, 관리 방법, 추천 이유, 구매처)
+구매처 안내:
+* 온라인샵: https://simgo.kr/ (전국 배송)
+* 지역 기반 샵: https://simda.me/ (직거래 가능)
+친절하고 전문적으로 답변하며, 각 질문은 하나씩만 하세요.
+대화 히스토리 저장
+* 사용자의 대화 내역을 데이터베이스에 저장
+* 추후 마케팅 분석 및 개인화된 추천에 활용
+* 데이터베이스 스키마: chat_histories 테이블 참조
+추천 후 액션
+* AI 추천 완료 후 "상담 예약하기" 버튼 표시
+* "온라인샵에서 구매하기" 버튼 → https://simgo.kr/ 외부 링크
+* 추천된 식물 정보를 예약 폼에 자동 입력
+* 또는 채널톡으로 직접 연결
+B. 식물 구독 관리 서비스
+* 서비스 설명 텍스트
+* 구독 플랜 샘플 표시 (카드 형태)
+* "채널톡으로 문의하기" CTA 버튼 (채널톡 SDK 연동)
+C. 식물 콘텐츠 교육
+* 교육 프로그램 설명
+* 교육 과정 소개 (초급/중급/고급)
+* 강의 일정 및 수강료 안내
+* "채널톡으로 문의하기" CTA 버튼
+네, 지역 기반 입찰 서비스 부분을 AI 추천 기반의 신규 서비스로 수정했습니다:
+
+D. 지역 기반 입찰 마켓플레이스 ⭐ 외부 링크 연결
+AI 추천 기반 지역 판매자 입찰 서비스
+서비스 개념
+* AI 챗봇이 사용자에게 최적의 식물을 추천
+* 추천된 식물을 지역 내 판매자들이 입찰 방식으로 제공
+* 사용자는 가격, 거리, 평점을 비교하여 구매 결정
+* 직거래 또는 배송 선택 가능
+UI 구성
+* 섹션 제목: "AI 추천 지역 입찰 마켓플레이스"
+* 서비스 설명: "AI가 추천한 당신에게 딱 맞는 식물을, 우리 동네 판매자들이 경쟁 입찰로 제안합니다. 가장 좋은 조건으로 신선한 식물을 만나보세요."
+서비스 프로세스 안내 (스텝 형태)
+1. 🤖 AI 식물 추천
+    * AI 챗봇이 당신의 환경과 취향 분석
+    * 최적의 식물 3-5종 추천
+2. 📍 지역 판매자 매칭
+    * 내 주변 5km 이내 판매자 자동 검색
+    * 추천 식물 보유 판매자에게 입찰 요청 발송
+3. 💰 실시간 입찰
+    * 판매자들이 가격, 배송/픽업 조건 제시
+    * 24시간 이내 입찰 마감
+4. ✅ 최적 선택
+    * 가격, 거리, 평점, 리뷰 비교
+    * 원하는 판매자 선택 및 구매
+주요 특징 (아이콘과 함께)
+* 🤖 AI 맞춤 추천 - 내게 딱 맞는 식물만
+* 📍 지역 기반 매칭 - 내 주변 5km 이내 판매자
+* 💰 경쟁 입찰 - 더 좋은 가격으로
+* 🌱 신선도 보장 - 지역에서 바로 구매
+* 💬 직접 소통 - 판매자와 1:1 채팅
+* 🚚 배송/픽업 선택 - 편한 방법으로
+* ⭐ 신뢰 시스템 - 평점과 리뷰 확인
+판매자 혜택 안내 (서브 섹션)
+* 📈 무료 입점 및 수수료 저렴
+* 🎯 타겟 고객에게 직접 노출
+* 📊 판매 데이터 및 인사이트 제공
+* "판매자로 입점하기" 링크 버튼
+링크 버튼
+* 큰 CTA 버튼 1: "AI 추천 받고 입찰 시작하기"
+    * 클릭 시 https://simda.me/ 로 이동 (새 탭)
+    * 외부 링크 아이콘 표시
+    * Primary 버튼 스타일
+* 서브 버튼: "서비스 자세히 알아보기"
+    * 클릭 시 https://simda.me/about 로 이동
+    * Secondary 버튼 스타일
+실제 사례 소개 (선택사항)
+* 간단한 사용 후기 2-3개 카드
+    * "AI 추천으로 우리 집에 딱 맞는 식물을 찾았고, 동네 판매자분께 30% 저렴하게 구매했어요!"
+    * "입찰로 3곳에서 제안을 받아 가격과 상태를 비교할 수 있어 좋았습니다."
+안내 배너
+* "🎉 신규 서비스 오픈! 첫 구매 시 5,000원 할인 쿠폰 증정"
+* "* 서비스는 새 탭에서 simda.me로 연결됩니다."
+외부 링크임을 명확히 표시
+* 버튼 옆에 "외부 서비스" 뱃지 표시
+* 링크 클릭 시 "새 창에서 열립니다" 툴팁
+ 
+2.4 예약·상담 페이지 (/booking)
+폼 필드
+* 이름 (필수)
+* 연락처 (필수, 전화번호 형식 검증)
+* 이메일 (필수, 이메일 형식 검증)
+* 상담 유형 선택 (드롭다운: AI 큐레이션 / 구독 관리 / 교육 / 기업 협업 / 기타)
+* 희망 날짜 및 시간 (Date Picker + Time Picker)
+* 문의 내용 (Textarea, 필수)
+* 개인정보 수집 동의 체크박스 (필수)
+기술 구현
+* React Hook Form + Zod validation
+* 제출 시 백엔드 API로 POST 요청
+* 데이터베이스에 예약 정보 저장
+* 제출 성공 시 확인 메시지 표시
+* 이메일 알림: Nodemailer 또는 SendGrid 사용
+* 관리자 알림: 새 예약 시 이메일 발송
+2.5 포트폴리오 (/portfolio)
+프로젝트 사례 관리
+* 그리드 레이아웃 (2~3열)
+* 각 프로젝트 카드: 썸네일 이미지, 프로젝트명, 간단한 설명
+* 카드 클릭 시 상세 페이지 또는 모달로 확장
+* 상세 페이지: 대형 이미지 갤러리, 프로젝트 설명, 클라이언트 정보, 완료 날짜
+* 카테고리별 필터링 기능
+고용량 이미지 지원
+* 이미지 업로드 시 압축 및 최적화 (Sharp 라이브러리)
+* Cloudinary 또는 AWS S3 연동 권장
+* 이미지 lazy loading
+* Progressive loading 지원
+관리 기능
+* 관리자 대시보드에서 포트폴리오 CRUD
+* 드래그 앤 드롭 이미지 업로드
+* 이미지 순서 변경 기능
+2.6 콘텐츠/매거진 (/magazine)
+블로그 형태의 콘텐츠 게시 기능
+* 그리드 또는 리스트 뷰
+* 각 포스트 카드: 썸네일, 제목, 작성일, 간단한 요약, 태그
+* 포스트 클릭 시 상세 페이지 이동
+* 상세 페이지: 마크다운 렌더링 지원, 이미지 삽입, 공유 버튼 (SNS)
+* 댓글 기능 (선택사항)
+* 조회수 카운팅
+카테고리 및 태그 필터링
+* 카테고리: 식물 관리 팁, 프로젝트 스토리, 트렌드, 인테리어 등
+* 태그 클라우드 또는 필터 메뉴
+* 검색 기능 (제목, 내용 검색)
+SEO 최적화
+* 각 포스트마다 meta title, description, OG 이미지 설정
+* Sitemap.xml 자동 생성
+* Schema.org 마크업 적용
+관리 기능
+* 관리자 대시보드에서 포스트 CRUD
+* 리치 텍스트 에디터 (Quill 또는 TinyMCE)
+* 미리보기 기능
+* 예약 게시 기능 (선택사항)
+2.7 기업 협업/B2B 페이지 (/b2b)
+기업 대상 서비스 소개
+* B2B 서비스 설명 (오피스 식물 관리, 대규모 조경 등)
+* 협업 사례 간략 소개
+* 주요 클라이언트 로고 (선택사항)
+* 제공 서비스 리스트
+* 기업용 회사 소개서 및 제안서 파일 다운로드 버튼 (PDF 파일)
+기업 제안 폼
+* 회사명 (필수)
+* 담당자명 (필수)
+* 연락처 (필수)
+* 이메일 (필수)
+* 사업 분야 (선택)
+* 제안 내용 (Textarea)
+* 파일 첨부 (선택사항, 이미지/PDF 등, 최대 10MB)
+* 제출 시 백엔드로 전송 및 데이터베이스 저장
+* 관리자에게 이메일 알림
+2.8 온라인샵 (/shop) ⭐ 외부 링크로 리다이렉트
+옵션 1: 즉시 리다이렉트
+* /shop 접속 시 자동으로 https://simgo.kr/ 로 리다이렉트
+* 리다이렉트 전 1-2초 안내 메시지 표시
+옵션 2: 안내 페이지 (권장)
+* /shop 페이지에 온라인샵 소개 및 링크 제공
+* 온라인샵 주요 특징 소개:
+    * 🌿 다양한 식물 (관엽식물부터 다육식물까지)
+    * 📦 안전한 포장 (식물이 건강하게 배송)
+    * 💳 편리한 결제 (다양한 결제 방법 지원)
+    * 🚚 빠른 배송 (주문 후 2-3일 내 배송)
+* 인기 상품 미리보기 (선택사항)
+* "온라인샵 바로가기" 큰 CTA 버튼 → https://simgo.kr/ (새 탭)
+* 안내 문구: "* 새 탭에서 심다 온라인샵(simgo.kr)이 열립니다."
+네비게이션 메뉴에서 처리
+* 헤더 네비게이션의 "온라인샵" 메뉴 클릭 시 직접 외부 링크
+* 외부 링크 아이콘 표시
+2.9 고객센터 (/support)
+FAQ 아코디언 형태
+* 자주 묻는 질문 10~15개
+* 질문 클릭 시 답변 펼쳐짐 (Accordion UI)
+* 카테고리별 분류 (주문/배송, 식물관리, 서비스 이용, 계정/결제)
+FAQ 예시
+* Q: 온라인샵과 지역 기반 샵의 차이점은 무엇인가요?
+* A: 온라인샵(simgo.kr)은 전국 어디서나 주문 가능한 공식 쇼핑몰이며, 지역 기반 샵(simda.me)은 내 주변 공급자와 직거래할 수 있는 마켓플레이스입니다.
+* Q: 배송은 얼마나 걸리나요?
+* A: 온라인샵은 2-3일, 지역 기반 샵은 공급자와 협의하여 결정됩니다.
+* Q: 결제 방법은 어떻게 되나요?
+* A: 각 샵의 결제 페이지에서 카드, 계좌이체 등 다양한 방법을 선택하실 수 있습니다.
+문의 폼 또는 채널톡 연결
+* "1:1 문의하기" 버튼 → 채널톡 팝업
+* 또는 간단한 문의 폼 제공
+정책 페이지 링크
+* 개인정보처리방침
+* 이용약관
+* 환불/교환 정책
+* 배송 정책
+
+3. 관리자 페이지 (Admin Dashboard) ⭐ 중요
+3.1 관리자 로그인 (/admin/login)
+인증 시스템
+* 이메일 + 비밀번호 로그인
+* JWT 또는 세션 기반 인증
+* 로그인 실패 시 에러 메시지
+* 비밀번호 찾기 기능 (선택사항)
+* 로그인 시도 제한 (보안)
+3.2 관리자 대시보드 메인 (/admin/dashboard)
+대시보드 개요
+* 주요 지표 카드:
+    * 이번 주 새 예약/상담 건수
+    * 처리 대기 중인 예약 건수
+    * 새 기업 제안 건수
+    * 이번 달 포트폴리오 조회수
+    * 매거진 포스트 수
+    * 총 챗봇 대화 수 (선택사항)
+차트 및 통계 (선택사항)
+* 월별 예약 추이 그래프 (Line Chart)
+* 상담 유형별 분포 차트 (Pie Chart)
+* 최근 활동 타임라인
+빠른 링크
+* "새 예약 확인하기" → /admin/bookings
+* "기업 제안 확인하기" → /admin/b2b-proposals
+* "포트폴리오 추가" → /admin/portfolios/new
+* "매거진 작성" → /admin/posts/new
+3.3 예약/상담 관리 페이지 (/admin/bookings) ⭐ 핵심 기능
+예약 목록 테이블
+* 컬럼: ID, 이름, 연락처, 이메일, 상담 유형, 희망 날짜/시간, 상태, 제출일
+* 정렬 기능 (날짜순, 상태별, 이름순)
+* 검색 기능 (이름, 이메일, 연락처)
+* 필터:
+    * 상태별: 대기 중 / 확인 완료 / 상담 완료 / 취소
+    * 상담 유형별: AI 큐레이션 / 구독 관리 / 교육 / 기업 협업 / 기타
+    * 날짜 범위: 오늘, 이번 주, 이번 달, 전체
+* 페이지네이션 (10개, 20개, 50개씩 선택 가능)
+* 엑셀 내보내기 기능 (선택사항)
+예약 상세 보기
+* 행 클릭 시 모달 또는 상세 페이지 표시
+* 모든 예약 정보 표시:
+    * 고객 정보: 이름, 연락처, 이메일
+    * 상담 유형
+    * 희망 날짜 및 시간
+    * 문의 내용 전체 표시 (고객이 Textarea에 작성한 모든 내용)
+    * 제출 일시
+    * 현재 상태
+    * 관리자 메모 (관리자 전용 필드)
+예약 상태 관리
+* 상태 변경 드롭다운:
+    * 대기 중 (pending) - 기본값
+    * 확인 완료 (confirmed) - 고객에게 확인 연락 완료
+    * 상담 완료 (completed) - 상담 진행 완료
+    * 취소 (cancelled) - 고객 요청 또는 기타 사유로 취소
+* 상태 변경 시 자동으로 데이터베이스 업데이트
+* 상태 변경 히스토리 기록 (선택사항)
+* 상태별 색상 구분 (pending: 노란색, confirmed: 파란색, completed: 녹색, cancelled: 회색)
+액션 버튼
+* "상담 메모 추가/수정" - 관리자 전용 메모 작성 (고객은 볼 수 없음)
+* "고객에게 이메일 보내기" (선택사항)
+* "예약 삭제" - 확인 후 완전 삭제
+일괄 처리 기능 (선택사항)
+* 여러 예약 선택하여 일괄 상태 변경
+* 일괄 삭제
+3.4 기업 제안 관리 페이지 (/admin/b2b-proposals) ⭐ 핵심 기능
+기업 제안 목록 테이블
+* 컬럼: ID, 회사명, 담당자명, 연락처, 이메일, 상태, 제출일
+* 정렬 기능 (날짜순, 회사명순, 상태별)
+* 검색 기능 (회사명, 담당자명, 이메일)
+* 필터:
+    * 상태별: 대기 중 / 검토 중 / 연락 완료 / 협업 진행 / 보류
+    * 날짜 범위: 오늘, 이번 주, 이번 달, 전체
+* 페이지네이션
+* 엑셀 내보내기 기능 (선택사항)
+제안 상세 보기
+* 모든 제안 정보 표시:
+    * 기업 정보: 회사명, 담당자명
+    * 연락처, 이메일
+    * 사업 분야 (있는 경우)
+    * 제안 내용 전체 표시 (고객이 작성한 모든 내용)
+    * 첨부 파일 다운로드 링크 (있는 경우)
+    * 제출 일시
+    * 현재 상태
+    * 관리자 검토 메모
+제안 상태 관리
+* 상태 변경 드롭다운:
+    * 대기 중 (pending)
+    * 검토 중 (reviewing)
+    * 연락 완료 (contacted)
+    * 협업 진행 (in_progress)
+    * 협업 완료 (completed)
+    * 보류 (on_hold)
+* 관리자 메모 추가/수정 기능
+* 상태별 색상 구분
+액션 버튼
+* "제안 검토 메모 추가"
+* "기업에게 이메일 보내기"
+* "제안 삭제"
+3.5 포트폴리오 관리 (/admin/portfolios)
+포트폴리오 목록
+* 그리드 뷰 또는 테이블 뷰 전환 가능
+* 각 항목: 썸네일, 제목, 클라이언트명, 날짜, 공개 여부, 조회수
+* "새 포트폴리오 추가" 버튼 (상단 우측)
+* 검색 및 필터링 (카테고리, 공개 여부, 날짜)
+* 드래그 앤 드롭으로 순서 변경 (선택사항)
+포트폴리오 추가/수정 폼
+* 제목 (필수, 100자 제한)
+* 설명 (Textarea, 2000자 제한)
+* 이미지 업로드:
+    * 멀티플 이미지 업로드 (최대 20장)
+    * 드래그 앤 드롭 지원
+    * 이미지 미리보기
+    * 이미지 순서 변경
+    * 대표 이미지 선택
+* 클라이언트명 (100자 제한)
+* 프로젝트 날짜 (Date Picker)
+* 카테고리 (드롭다운: 주거공간, 상업공간, 오피스, 조경, 기타)
+* 공개/비공개 토글
+* "저장" 및 "저장 후 공개" 버튼
+이미지 최적화
+* 자동 리사이징 (최대 1920px)
+* WebP 변환 (선택사항)
+* Cloudinary 또는 AWS S3에 저장
+3.6 매거진 포스트 관리 (/admin/posts)
+포스트 목록
+* 테이블 뷰: 썸네일, 제목, 작성자, 카테고리, 태그, 공개 여부, 조회수, 작성일
+* "새 포스트 작성" 버튼 (상단 우측)
+* 검색 (제목, 내용)
+* 필터 (카테고리, 공개 여부, 작성자)
+* 정렬 (최신순, 조회수순, 제목순)
+포스트 작성/수정 에디터
+* 제목 (필수, 200자 제한)
+* Slug (URL용):
+    * 자동 생성 (제목 기반)
+    * 수동 수정 가능
+    * 중복 확인
+* 리치 텍스트 에디터:
+    * Quill, TinyMCE, 또는 Markdown 에디터
+    * 텍스트 포맷팅 (굵게, 기울임, 밑줄, 제목, 리스트)
+    * 이미지 삽입 (드래그 앤 드롭 또는 업로드)
+    * 링크 삽입
+    * 코드 블록 (선택사항)
+* 썸네일 이미지 업로드:
+    * 드래그 앤 드롭
+    * 권장 비율 안내 (16:9)
+    * 이미지 크롭 기능 (선택사항)
+* 작성자 (자동 입력 또는 선택)
+* 카테고리 선택 (드롭다운 또는 새 카테고리 추가)
+* 태그 입력:
+    * 멀티플 태그
+    * 자동완성 기능
+    * 쉼표 또는 엔터로 구분
+* 발행 상태:
+    * 공개/비공개 토글
+    * 예약 게시 (날짜/시간 선택, 선택사항)
+* SEO 설정 (접을 수 있는 섹션):
+    * Meta Title (60자 제한)
+    * Meta Description (160자 제한)
+    * OG 이미지 (썸네일과 별도)
+* "미리보기" 버튼 - 새 탭에서 포스트 미리보기
+* "임시저장" 버튼 - 공개하지 않고 저장
+* "저장" 버튼 - 현재 상태로 저장
+* "게시" 버튼 - 공개 상태로 저장 및 발행
+3.7 관리자 네비게이션
+사이드바 메뉴
+* 대시보드 (홈 아이콘)
+* 예약/상담 관리 (뱃지: 새 예약 건수 표시)
+* 기업 제안 관리 (뱃지: 새 제안 건수 표시)
+* 포트폴리오 관리
+* 매거진 관리
+* 챗봇 대화 기록 (선택사항)
+* 사이트 설정 (선택사항)
+* 로그아웃
+상단 헤더
+* 좌측: 사이트명 "심다 Admin"
+* 우측:
+    * 알림 아이콘 (새 예약/제안 알림, 클릭 시 드롭다운)
+    * 관리자 프로필 드롭다운 (이메일, 로그아웃)
+    * "사이트 보기" 링크 (메인 홈페이지로 이동, 새 탭)
+반응형 디자인
+* 모바일에서는 사이드바를 햄버거 메뉴로 변경
+* 테이블은 카드 형태로 변환
+
+4. 공통 기능 요구사항
+4.1 반응형 웹 디자인
+* 모바일 우선 설계 (Mobile-first approach)
+* Breakpoints:
+    * 모바일: < 768px
+    * 태블릿: 768px ~ 1024px
+    * 데스크톱: > 1024px
+* 모든 페이지 및 컴포넌트가 모든 화면 크기에서 정상 작동
+* 터치 제스처 지원 (모바일)
+* 가독성 최적화 (폰트 크기, 줄 간격)
+4.2 채널톡 연동
+설치 및 설정
+* 채널톡 JavaScript SDK 설치
+* 채널톡 플러그인 키 설정 (환경 변수)
+* 모든 페이지 우측 하단에 채널톡 아이콘 자동 표시
+기능
+* 특정 CTA 버튼 클릭 시 채널톡 팝업 자동 실행
+* 사용자 정보 자동 입력 (이름, 이메일 - 로그인 시)
+* 페이지별 맞춤 메시지 (선택사항)
+적용 위치
+* 구독 관리 서비스 문의 버튼
+* 교육 프로그램 문의 버튼
+* 고객센터 1:1 문의 버튼
+4.3 SEO 기본 설정
+메타 태그
+* 각 페이지마다 고유한 meta title (50-60자)
+* meta description (150-160자)
+* Open Graph 태그:
+    * og:title
+    * og:description
+    * og:image (1200x630px)
+    * og:url
+    * og:type
+* Twitter Card 태그:
+    * twitter:card
+    * twitter:title
+    * twitter:description
+    * twitter:image
+기술적 SEO
+* Sitemap.xml 자동 생성 및 업데이트
+* robots.txt 생성
+* Canonical URL 설정
+* Schema.org 마크업 (Organization, LocalBusiness)
+* 이미지 alt 속성 필수
+* 적절한 heading 구조 (H1, H2, H3)
+성능 최적화
+* 페이지 로딩 속도 최적화
+* Core Web Vitals 개선
+* Lazy loading
+* Image optimization
+연동
+* Google Analytics 또는 Google Tag Manager 연동
+* Google Search Console 연동
+* Naver 웹마스터 도구 연동 (선택사항)
+4.4 알림 기능
+이메일 알림 (Nodemailer 또는 SendGrid)
+* 새 예약/상담 제출 시:
+    * 관리자에게 즉시 이메일 발송
+    * 포함 내용: 이름, 연락처, 이메일, 상담 유형, 문의 내용
+    * 관리자 페이지 링크 포함
+* 기업 제안 폼 제출 시:
+    * 관리자에게 즉시 이메일 발송
+    * 포함 내용: 회사명, 담당자명, 제안 내용
+* 상태 변경 시 (선택사항):
+    * 고객에게 확인 이메일 발송
+추가 알림 옵션 (선택사항)
+* 슬랙 웹훅 연동
+* 텔레그램 봇 알림
+* SMS 알림 (문자 발송 API 연동)
+알림 설정
+* 관리자 페이지에서 알림 ON/OFF 설정
+* 알림 수신 이메일 주소 변경 가능
+4.5 이미지 최적화
+업로드 시 처리
+* Sharp 라이브러리로 자동 리사이징
+* WebP 변환 (브라우저 호환성 고려)
+* 압축 (품질 85-90%)
+* 썸네일 생성 (여러 사이즈)
+저장소
+* Cloudinary 연동 (권장)
+* 또는 AWS S3
+* 또는 로컬 storage (백업 필요)
+프론트엔드 최적화
+* Next.js Image 컴포넌트 사용
+* Lazy loading
+* Blur placeholder
+* Responsive images (srcset)
+4.6 보안
+인증 및 권한
+* JWT 토큰 기반 인증 (httpOnly 쿠키 권장)
+* 비밀번호 해싱 (bcrypt, salt rounds 10+)
+* 관리자 페이지 접근 제한 미들웨어
+* CSRF 토큰 (선택사항)
+입력 검증
+* 모든 폼 입력 검증 (프론트 + 백엔드)
+* SQL Injection 방지 (Prepared statements, ORM 사용)
+* XSS 방지 (입력 sanitization)
+* 파일 업로드 검증 (타입, 크기 제한)
+기타 보안
+* HTTPS 강제 (Replit 자동 지원)
+* CORS 설정 (허용된 도메인만)
+* Rate limiting (API 요청 제한)
+* 환경 변수 보안 (Replit Secrets 사용)
+
+5. 데이터베이스 스키마 설계
+테이블 구조 (PostgreSQL)
+users (관리자 계정)
+sql
+CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  role VARCHAR(50) DEFAULT 'admin',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_login TIMESTAMP
+);
+ 
+CREATE INDEX idx_users_email ON users(email);
+bookings (예약/상담) ⭐
+sql
+CREATE TABLE bookings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(100) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  consultation_type VARCHAR(100),
+  preferred_date DATE,
+  preferred_time TIME,
+  message TEXT NOT NULL,
+  status VARCHAR(50) DEFAULT 'pending',
+  admin_note TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ 
+CREATE INDEX idx_bookings_status ON bookings(status);
+CREATE INDEX idx_bookings_created ON bookings(created_at DESC);
+CREATE INDEX idx_bookings_email ON bookings(email);
+b2b_proposals (기업 제안) ⭐
+sql
+CREATE TABLE b2b_proposals (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  company_name VARCHAR(255) NOT NULL,
+  contact_name VARCHAR(100) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  business_field VARCHAR(100),
+  message TEXT NOT NULL,
+  attachment_url VARCHAR(500),
+  status VARCHAR(50) DEFAULT 'pending',
+  admin_note TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ 
+CREATE INDEX idx_b2b_status ON b2b_proposals(status);
+CREATE INDEX idx_b2b_created ON b2b_proposals(created_at DESC);
+CREATE INDEX idx_b2b_company ON b2b_proposals(company_name);
+portfolios (포트폴리오)
+sql
+CREATE TABLE portfolios (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  images JSONB,
+  client_name VARCHAR(255),
+  project_date DATE,
+  category VARCHAR(100),
+  published BOOLEAN DEFAULT false,
+  views INTEGER DEFAULT 0,
+  display_order INTEGER DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ 
+CREATE INDEX idx_portfolios_published ON portfolios(published);
+CREATE INDEX idx_portfolios_category ON portfolios(category);
+CREATE INDEX idx_portfolios_order ON portfolios(display_order);
+posts (매거진/블로그)
+sql
+CREATE TABLE posts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug VARCHAR(255) UNIQUE NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  thumbnail VARCHAR(500),
+  author VARCHAR(100),
+  category VARCHAR(100),
+  tags JSONB,
+  published BOOLEAN DEFAULT false,
+  scheduled_at TIMESTAMP,
+  views INTEGER DEFAULT 0,
+  meta_title VARCHAR(100),
+  meta_description VARCHAR(200),
+  og_image VARCHAR(500),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ 
+CREATE INDEX idx_posts_slug ON posts(slug);
+CREATE INDEX idx_posts_published ON posts(published);
+CREATE INDEX idx_posts_category ON posts(category);
+CREATE INDEX idx_posts_created ON posts(created_at DESC);
+CREATE INDEX idx_posts_views ON posts(views DESC);
+chat_histories (챗봇 대화 기록)
+sql
+CREATE TABLE chat_histories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  session_id VARCHAR(255) NOT NULL,
+  user_ip VARCHAR(50),
+  user_agent TEXT,
+  messages JSONB NOT NULL,
+  recommendation_given BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ 
+CREATE INDEX idx_chat_session ON chat_histories(session_id);
+CREATE INDEX idx_chat_created ON chat_histories(created_at DESC);
+categories (카테고리 - 선택사항)
+sql
+CREATE TABLE categories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(100) UNIQUE NOT NULL,
+  type VARCHAR(50) NOT NULL, -- 'portfolio' or 'post'
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ 
+CREATE INDEX idx_categories_type ON categories(type);
+
+6. API 엔드포인트 설계
+인증
+* POST /api/admin/login - 관리자 로그인 (이메일, 비밀번호)
+* POST /api/admin/logout - 로그아웃
+* GET /api/admin/me - 현재 로그인한 관리자 정보
+예약/상담
+* POST /api/bookings - 새 예약 생성 (공개)
+* GET /api/admin/bookings - 모든 예약 조회 (관리자 전용)
+    * 쿼리: ?page=1&limit=10&status=pending&search=홍길동&sort=created_at_desc
+* GET /api/admin/bookings/:id - 예약 상세 조회 (관리자)
+* PUT /api/admin/bookings/:id - 예약 상태 및 메모 업데이트 (관리자)
+* DELETE /api/admin/bookings/:id - 예약 삭제 (관리자)
+기업 제안
+* POST /api/b2b - 새 기업 제안 제출 (공개)
+* GET /api/admin/b2b - 모든 제안 조회 (관리자 전용)
+    * 쿼리: ?page=1&limit=10&status=pending&search=회사명
+* GET /api/admin/b2b/:id - 제안 상세 조회 (관리자)
+* PUT /api/admin/b2b/:id - 제안 상태 및 메모 업데이트 (관리자)
+* DELETE /api/admin/b2b/:id - 제안 삭제 (관리자)
+포트폴리오
+* GET /api/portfolios - 포트폴리오 목록 (공개된 것만)
+    * 쿼리: ?category=주거공간&page=1&limit=12
+* GET /api/portfolios/:id - 포트폴리오 상세 (조회수 증가)
+* GET /api/admin/portfolios - 모든 포트폴리오 (관리자)
+* POST /api/admin/portfolios - 새 포트폴리오 생성 (관리자)
+* PUT /api/admin/portfolios/:id - 포트폴리오 수정 (관리자)
+* DELETE /api/admin/portfolios/:id - 포트폴리오 삭제 (관리자)
+* PUT /api/admin/portfolios/reorder - 순서 변경 (관리자, 선택사항)
+매거진/블로그
+* GET /api/posts - 포스트 목록 (공개된 것만)
+    * 쿼리: ?page=1&limit=12&category=관리팁&tag=다육식물
+* GET /api/posts/:slug - 포스트 상세 (slug로 조회, 조회수 증가)
+* GET /api/admin/posts - 모든 포스트 (관리자)
+* POST /api/admin/posts - 새 포스트 생성 (관리자)
+* PUT /api/admin/posts/:id - 포스트 수정 (관리자)
+* DELETE /api/admin/posts/:id - 포스트 삭제 (관리자)
+AI 챗봇
+* POST /api/chatbot - 챗봇 메시지 전송 및 AI 응답 받기
+    * Request Body: { message: string, conversationHistory: array, sessionId?: string }
+    * Response: { response: string, conversationId: string }
+파일 업로드
+* POST /api/upload - 이미지 업로드 (공개 또는 관리자)
+    * Multipart form-data
+    * Response: { url: string, filename: string }
+* POST /api/upload/multiple - 여러 이미지 업로드
+    * Response: { urls: array }
+대시보드 통계
+* GET /api/admin/dashboard/stats - 대시보드 주요 지표 (관리자)
+    * Response: 새 예약 건수, 대기 중인 예약, 새 제안, 포트폴리오 수, 포스트 수 등
+기타
+* GET /api/categories - 카테고리 목록 (공개)
+* GET /api/tags - 인기 태그 목록 (공개, 선택사항)
+* GET /sitemap.xml - 사이트맵 (자동 생성)
+* GET /robots.txt - robots.txt
+
+7. 주요 패키지 및 라이브러리
+프론트엔드
+json
+{
+  "next": "^14.0.0",
+  "react": "^18.0.0",
+  "react-dom": "^18.0.0",
+  "tailwindcss": "^3.0.0",
+  "framer-motion": "^10.0.0",
+  "react-hook-form": "^7.0.0",
+  "zod": "^3.0.0",
+  "axios": "^1.0.0",
+  "react-markdown": "^9.0.0",
+  "swiper": "^11.0.0",
+  "@google/generative-ai": "^0.1.0",
+  "antd": "^5.0.0",
+  "lucide-react": "^0.294.0",
+  "react-quill": "^2.0.0",
+  "date-fns": "^2.30.0"
+}
+백엔드
+json
+{
+  "express": "^4.18.0",
+  "pg": "^8.11.0",
+  "bcrypt": "^5.1.0",
+  "jsonwebtoken": "^9.0.0",
+  "nodemailer": "^6.9.0",
+  "multer": "^1.4.5",
+  "dotenv": "^16.0.0",
+  "cors": "^2.8.5",
+  "express-rate-limit": "^7.0.0",
+  "sharp": "^0.33.0",
+  "helmet": "^7.0.0"
+}
+
+8. 환경 변수 설정
+text
+# Database
+DATABASE_URL=postgresql://user:password@localhost:5432/simda_db
+ 
+# JWT Secret
+JWT_SECRET=your_jwt_secret_key_here_minimum_32_characters
+ 
+# Email (Nodemailer)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
+ADMIN_EMAIL=admin@simda.com
+ 
+# Cloudinary (이미지 저장)
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+ 
+# 채널톡
+NEXT_PUBLIC_CHANNEL_TALK_KEY=your_channel_talk_plugin_key
+ 
+# Google Gemini API ⭐
+GEMINI_API_KEY=your_gemini_api_key_here
+ 
+# Google Analytics
+GA_TRACKING_ID=UA-XXXXXXXXX-X
+# 또는 GA4
+GA4_MEASUREMENT_ID=G-XXXXXXXXXX
+ 
+# Admin 초기 계정
+ADMIN_PASSWORD=secure_password_here
+ 
+# Site URL
+SITE_URL=https://simda-homepage.com
+NEXT_PUBLIC_SITE_URL=https://simda-homepage.com
+ 
+# 외부 샵 URL ⭐⭐
+NEXT_PUBLIC_ONLINE_SHOP_URL=https://simgo.kr/
+NEXT_PUBLIC_LOCAL_SHOP_URL=https://simda.me/
+ 
+# 보안
+SESSION_SECRET=your_session_secret_key_here
+ 
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+9. 배포 및 성능 최적화
+Replit 배포
+* Replit에서 자동 배포 활성화
+* 커스텀 도메인 연결 (예: simda.com)
+* HTTPS 자동 설정 (Replit 제공)
+* 환경 변수는 Replit Secrets에 저장
+성능 최적화
+* Next.js Image 최적화 사용
+* 코드 스플리팅 (React.lazy, Next.js dynamic import)
+* 이미지 lazy loading
+* 캐싱 전략:
+    * SWR 또는 React Query 사용
+    * API 응답 캐싱 (Redis 선택사항)
+* 번들 크기 최적화
+* Tree shaking
+* Lighthouse 점수 90+ 목표
+* 외부 링크는 prefetch 제외
+모니터링
+* 에러 로깅 (Sentry 또는 LogRocket, 선택사항)
+* 성능 모니터링
+* 사용자 분석 (Google Analytics)
+
+10. 단계별 구현 순서
+1. 프로젝트 초기 설정
+    * Next.js + Express.js 프로젝트 생성
+    * 폴더 구조 설정
+    * 기본 라이브러리 설치
+2. 데이터베이스 연결 및 스키마 생성
+    * PostgreSQL 연결
+    * 모든 테이블 생성
+    * 인덱스 설정
+3. 환경 변수 설정
+    * .env 파일 생성
+    * Replit Secrets에 민감 정보 저장
+    * 외부 샵 URL 설정
+4. 인증 시스템 구축
+    * 관리자 로그인 페이지
+    * JWT 토큰 발급
+    * 인증 미들웨어
+5. 메인 페이지 및 네비게이션 구현
+    * Hero 섹션
+    * 서비스 카드
+    * 네비게이션 메뉴 (외부 링크 포함)
+    * 푸터
+6. 서비스 소개 페이지 기본 구조
+    * 4가지 서비스 섹션 레이아웃
+    * 외부 샵 링크 카드
+7. Gemini AI 챗봇 구현 ⭐
+    * 챗봇 UI 컴포넌트
+    * Gemini API 연동
+    * 대화 히스토리 저장
+8. 지역 기반 샵 및 온라인샵 링크 연결 ⭐
+    * 서비스 페이지 내 링크
+    * /shop 페이지 (리다이렉트 또는 안내)
+    * 네비게이션 외부 링크
+9. 예약/상담 폼 구현
+    * 프론트엔드 폼 + 검증
+    * 백엔드 API
+    * 데이터베이스 저장
+    * 이메일 알림
+10. 관리자 - 예약/상담 관리 페이지 ⭐
+    * 예약 목록 테이블
+    * 상세 보기 모달
+    * 상태 관리
+    * 검색/필터링
+11. B2B 제안 폼 구현
+    * 프론트엔드 폼
+    * 파일 업로드
+    * 백엔드 API
+12. 관리자 - 기업 제안 관리 페이지 ⭐
+    * 제안 목록
+    * 상세 보기
+    * 상태 관리
+13. 포트폴리오 CRUD
+    * 공개 페이지 (목록, 상세)
+    * 이미지 갤러리
+14. 관리자 - 포트폴리오 관리
+    * CRUD 인터페이스
+    * 이미지 업로드
+    * 순서 변경
+15. 매거진/블로그 CRUD
+    * 공개 페이지 (목록, 상세)
+    * 카테고리/태그 필터
+16. 관리자 - 매거진 관리
+    * 리치 텍스트 에디터
+    * 포스트 작성/수정
+    * SEO 설정
+17. 고객센터 FAQ 페이지
+    * 아코디언 UI
+    * FAQ 내용 (외부 샵 관련 포함)
+    * 정책 페이지
+18. 채널톡 연동
+    * SDK 설치
+    * 모든 페이지에 적용
+    * CTA 버튼 연결
+19. SEO 설정 및 최적화
+    * 메타 태그
+    * Sitemap 생성
+    * Schema 마크업
+20. 반응형 디자인 완성
+    * 모든 페이지 반응형 확인
+    * 모바일 UX 개선
+21. 관리자 대시보드 통계
+    * 주요 지표 카드
+    * 차트 (선택사항)
+22. 테스트 및 버그 수정
+    * 기능 테스트
+    * 크로스 브라우저 테스트
+    * 성능 테스트
+23. 배포
+    * Replit 배포
+    * 도메인 연결
+    * 최종 확인
+ 
