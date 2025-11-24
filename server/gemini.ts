@@ -32,13 +32,18 @@ export async function chatWithAI(userMessage: string, history: Message[] = []): 
 
     const model = ai.getGenerativeModel({ model: "gemini-1.5-pro", systemInstruction: systemPrompt });
 
-    // Filter history to only include user messages (first one must be user role)
-    const conversationHistory = history
+    // Filter history to only include conversation (skip initial greeting if it's the first message)
+    let conversationHistory = history
       .filter((msg) => msg.role === "user" || msg.role === "assistant")
       .map((msg) => ({
         role: msg.role === "assistant" ? "model" : "user",
         parts: [{ text: msg.content }],
       }));
+
+    // Ensure first message is 'user' role (remove initial greeting if present)
+    if (conversationHistory.length > 0 && conversationHistory[0].role === "model") {
+      conversationHistory = conversationHistory.slice(1);
+    }
 
     const chat = model.startChat({ history: conversationHistory });
     const result = await chat.sendMessage(userMessage);
