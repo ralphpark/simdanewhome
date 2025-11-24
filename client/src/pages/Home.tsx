@@ -19,72 +19,93 @@ export default function Home() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-accent/10 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNlNWU3ZWIiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAgMTJjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6TTEyIDM0YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00em0wIDEyYzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00em0yNC0yNGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHptMC0xMmMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNHpNMTIgMjJjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTAtMTJjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTR6bTI0IDI0YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00eiIvPjwvZz48L2c+PC9zdmc+')] opacity-40"></div>
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-white to-accent/5 overflow-hidden">
+        {/* 배경 장식 요소 */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 right-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        </div>
         
         <div className="relative max-w-7xl mx-auto px-6 md:px-8 py-20 text-center">
-          <div className="mb-12">
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              식물과 함께하는<br />더 나은 공간
+          {/* 헤더 애니메이션 */}
+          <div className="mb-12 space-y-6 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-xl bg-white/50 border border-primary/20 mb-6">
+              <Leaf className="h-4 w-4 text-primary animate-bounce" style={{animationDelay: '0.2s'}} />
+              <span className="text-sm font-medium text-primary">SIMDA와 함께 시작하기</span>
+            </div>
+
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight bg-gradient-to-r from-primary via-primary to-primary/70 bg-clip-text text-transparent">
+              식물과 함께하는<br />
+              <span className="text-foreground">더 나은 공간</span>
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-12">
-              AI 큐레이션으로 당신에게 완벽한 식물을 찾아드립니다.<br />
-              SIMDA와 함께 자연을 일상으로 초대하세요.
+            <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 leading-relaxed">
+              AI 큐레이션으로 당신의 환경에 완벽한 식물을 찾아드립니다.<br />
+              <span className="text-foreground font-medium">SIMDA와 함께 자연을 일상으로 초대하세요.</span>
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <Card data-testid="card-choice-buy" className="hover-elevate active-elevate-2 cursor-pointer border-2">
-              <CardHeader>
-                <ShoppingBag className="h-12 w-12 mx-auto mb-4 text-primary" />
-                <CardTitle className="text-xl">식물을 사고 싶으신가요?</CardTitle>
-              </CardHeader>
-              <CardContent>
+          {/* 선택 카드들 - Glass Morphism */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <div data-testid="card-choice-buy" className="group relative overflow-hidden rounded-2xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              <div className="relative backdrop-blur-xl bg-white/40 border border-white/60 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
+                <ShoppingBag className="h-14 w-14 mx-auto mb-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-xl font-semibold mb-3">식물을 사고 싶으신가요?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  엄선된 식물을 안전하게 배송받으세요
+                  엄선된 프리미엄 식물을<br />안전하게 배송받으세요
                 </p>
                 <a href="https://simgo.kr/" target="_blank" rel="noopener noreferrer">
-                  <Button data-testid="button-shop" className="w-full gap-2">
+                  <Button data-testid="button-shop" className="w-full gap-2 bg-primary hover:bg-primary/90">
                     온라인샵 바로가기
                     <ExternalLink className="h-4 w-4" />
                   </Button>
                 </a>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card data-testid="card-choice-manage" className="hover-elevate active-elevate-2 cursor-pointer border-2">
-              <CardHeader>
-                <Leaf className="h-12 w-12 mx-auto mb-4 text-primary" />
-                <CardTitle className="text-xl">관리하고 싶으신가요?</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <div data-testid="card-choice-manage" className="group relative overflow-hidden rounded-2xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              <div className="relative backdrop-blur-xl bg-white/40 border border-white/60 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
+                <Leaf className="h-14 w-14 mx-auto mb-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-xl font-semibold mb-3">관리하고 싶으신가요?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  AI 추천과 구독 관리 서비스
+                  AI 추천과 구독 관리<br />서비스를 경험하세요
                 </p>
                 <Link href="/services#ai-curation">
-                  <Button data-testid="button-ai-curation" variant="outline" className="w-full">
+                  <Button data-testid="button-ai-curation" variant="outline" className="w-full border-white/40 hover:bg-white/20">
                     AI 큐레이션 시작하기
                   </Button>
                 </Link>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card data-testid="card-choice-learn" className="hover-elevate active-elevate-2 cursor-pointer border-2">
-              <CardHeader>
-                <BookOpen className="h-12 w-12 mx-auto mb-4 text-primary" />
-                <CardTitle className="text-xl">배우고 싶으신가요?</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <div data-testid="card-choice-learn" className="group relative overflow-hidden rounded-2xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+              <div className="relative backdrop-blur-xl bg-white/40 border border-white/60 shadow-xl rounded-2xl p-8 hover-elevate transition-all duration-300">
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
+                <BookOpen className="h-14 w-14 mx-auto mb-6 text-primary group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="text-xl font-semibold mb-3">배우고 싶으신가요?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  전문가의 식물 케어 교육
+                  전문가의 식물 케어<br />교육 프로그램
                 </p>
                 <Link href="/services#education">
-                  <Button data-testid="button-education" variant="outline" className="w-full">
+                  <Button data-testid="button-education" variant="outline" className="w-full border-white/40 hover:bg-white/20">
                     교육 프로그램 보기
                   </Button>
                 </Link>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA 스크롤 표시 */}
+          <div className="mt-20 flex justify-center">
+            <div className="animate-bounce">
+              <div className="w-6 h-10 border-2 border-primary/30 rounded-full flex items-start justify-center p-2">
+                <div className="w-1 h-2 bg-primary/50 rounded-full animate-pulse"></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

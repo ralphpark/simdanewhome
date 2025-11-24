@@ -15,6 +15,7 @@ import Magazine from "@/pages/Magazine";
 import B2B from "@/pages/B2B";
 import Shop from "@/pages/Shop";
 import Support from "@/pages/Support";
+import Admin from "@/pages/Admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/b2b" component={B2B} />
       <Route path="/shop" component={Shop} />
       <Route path="/support" component={Support} />
+      <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>
   );
