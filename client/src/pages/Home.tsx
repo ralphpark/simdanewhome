@@ -124,34 +124,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 통계 섹션 */}
-      <section className="py-20 bg-gradient-to-r from-primary/5 to-secondary/5">
-        <div className="max-w-7xl mx-auto px-6 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center animate-slide-up" style={{animationDelay: '0.1s'}}>
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">500+</div>
-              <p className="text-muted-foreground">완료된 프로젝트</p>
-              <p className="text-xs text-muted-foreground mt-1">전국의 다양한 공간</p>
-            </div>
-            <div className="text-center animate-slide-up" style={{animationDelay: '0.2s'}}>
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">10K+</div>
-              <p className="text-muted-foreground">행복한 고객</p>
-              <p className="text-xs text-muted-foreground mt-1">신뢰하는 고객들</p>
-            </div>
-            <div className="text-center animate-slide-up" style={{animationDelay: '0.3s'}}>
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">AI</div>
-              <p className="text-muted-foreground">스마트 큐레이션</p>
-              <p className="text-xs text-muted-foreground mt-1">완벽한 식물 추천</p>
-            </div>
-            <div className="text-center animate-slide-up" style={{animationDelay: '0.4s'}}>
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">24/7</div>
-              <p className="text-muted-foreground">고객 지원</p>
-              <p className="text-xs text-muted-foreground mt-1">언제든 도와드립니다</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="py-20 bg-card">
         <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="text-center mb-12">
