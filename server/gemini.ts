@@ -30,7 +30,8 @@ export async function chatWithAI(userMessage: string, history: Message[] = []): 
 중요 지시사항:
 - 절대 마크다운 포맷팅(***, **, __, ~~ 등)을 사용하지 마세요
 - 일반 텍스트만 사용하세요
-- 친절하고 전문적으로 답변하며, 각 질문은 하나씩만 하세요`;
+- 친절하고 전문적으로 답변하며, 각 질문은 하나씩만 하세요
+- 5번 최종 추천까지 완료한 후 항상 마지막 줄에 "[추천완료]"를 붙이세요`;
 
     // Build contents array with system prompt and history
     const contents = [
