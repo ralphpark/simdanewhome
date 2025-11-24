@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Loader2, ExternalLink, Phone } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -27,25 +26,33 @@ export default function AICuration() {
   const [showActions, setShowActions] = useState(false);
   const [recommendationText, setRecommendationText] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollViewportRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
+  // Auto-scroll to bottom on new messages
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (scrollViewportRef.current) {
+      // setTimeout으로 렌더링 완료 후 스크롤
+      setTimeout(() => {
+        if (scrollViewportRef.current) {
+          scrollViewportRef.current.scrollTop = scrollViewportRef.current.scrollHeight;
+        }
+      }, 0);
     }
-  }, [messages]);
+  }, [messages, isLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
     const userMessage = input.trim();
-    setInput("");
-
+    
+    // 먼저 상태를 업데이트한 후 입력창을 비움
     const newUserMessage = { role: "user" as const, content: userMessage };
     const loadingPlaceholder = { role: "assistant" as const, content: "" };
 
     setMessages((prev) => [...prev, newUserMessage, loadingPlaceholder]);
+    setInput(""); // 메시지 추가 후 입력창 비우기
     setIsLoading(true);
 
     try {
@@ -106,7 +113,7 @@ export default function AICuration() {
           </CardHeader>
 
           <CardContent className="flex-1 overflow-hidden p-0">
-            <ScrollArea ref={scrollRef} className="h-full px-4">
+            <div ref={scrollViewportRef} className="h-full overflow-y-auto px-4">
               <div className="space-y-4 py-4">
                 {messages.map((message, index) => (
                   <div
@@ -140,7 +147,7 @@ export default function AICuration() {
                   </div>
                 )}
               </div>
-            </ScrollArea>
+            </div>
           </CardContent>
 
           <CardFooter className="border-t p-4 flex-col gap-4">

@@ -24,10 +24,13 @@ export async function chatWithAI(userMessage: string, history: Message[] = []): 
 5. 최종 추천: 3가지 식물 (이름, 특징, 관리 방법, 추천 이유, 구매처)
 
 구매처 안내:
-* 온라인샵: https://simgo.kr/ (전국 배송)
-* 지역 기반 샵: https://simda.me/ (직거래 가능)
+- 온라인샵: https://simgo.kr/ (전국 배송)
+- 지역 기반 샵: https://simda.me/ (직거래 가능)
 
-친절하고 전문적으로 답변하며, 각 질문은 하나씩만 하세요.`;
+중요 지시사항:
+- 절대 마크다운 포맷팅(***, **, __, ~~ 등)을 사용하지 마세요
+- 일반 텍스트만 사용하세요
+- 친절하고 전문적으로 답변하며, 각 질문은 하나씩만 하세요`;
 
     // Build contents array with system prompt and history
     const contents = [
