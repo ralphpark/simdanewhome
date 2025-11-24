@@ -4,8 +4,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowRight, Leaf, MessageSquare, Calendar, Sprout, ExternalLink, ShoppingBag, BookOpen, Building2, Zap, Users, Leaf as LeafIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import type { Portfolio, Post } from "@shared/schema";
+import { useChatbot } from "@/contexts/ChatbotContext";
 
 export default function Home() {
+  const { openChatbot } = useChatbot();
   const { data: portfolios } = useQuery<Portfolio[]>({
     queryKey: ["/api/portfolios"],
   });
@@ -67,14 +69,12 @@ export default function Home() {
                 <ShoppingBag className="h-14 w-14 mx-auto mb-6 text-primary group-hover:scale-110 transition-transform duration-300" />
                 <h3 className="text-xl font-semibold mb-3 text-foreground">식물을 사고 싶으신가요?</h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  엄선된 프리미엄 식물을<br />안전하게 배송받으세요
+                  AI 큐레이터의 추천을 받고<br />완벽한 식물을 구매하세요
                 </p>
-                <a href="https://simgo.kr/" target="_blank" rel="noopener noreferrer">
-                  <Button data-testid="button-shop" className="w-full gap-2 bg-primary hover:bg-primary/90">
-                    온라인샵 바로가기
-                    <ExternalLink className="h-4 w-4" />
-                  </Button>
-                </a>
+                <Button data-testid="button-ai-recommendation" onClick={openChatbot} className="w-full gap-2 bg-primary hover:bg-primary/90">
+                  추천받고 구매하기
+                  <MessageSquare className="h-4 w-4" />
+                </Button>
               </div>
             </div>
 

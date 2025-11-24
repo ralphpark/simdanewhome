@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageCircle, Send, X, Loader2 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useChatbot } from "@/contexts/ChatbotContext";
+import { useState } from "react";
 
 interface Message {
   role: "user" | "assistant";
@@ -13,7 +15,7 @@ interface Message {
 }
 
 export function AIChatbot() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, openChatbot, closeChatbot } = useChatbot();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -84,7 +86,7 @@ export function AIChatbot() {
         size="icon"
         data-testid="button-open-chat"
         className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50"
-        onClick={() => setIsOpen(true)}
+        onClick={openChatbot}
       >
         <MessageCircle className="h-6 w-6" />
         <span className="sr-only">AI 상담 열기</span>
@@ -100,7 +102,7 @@ export function AIChatbot() {
           variant="ghost"
           size="icon"
           data-testid="button-close-chat"
-          onClick={() => setIsOpen(false)}
+          onClick={closeChatbot}
         >
           <X className="h-5 w-5" />
           <span className="sr-only">닫기</span>
