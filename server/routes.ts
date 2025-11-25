@@ -472,6 +472,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/timelines/:id", async (req, res) => {
+    try {
+      const timeline = await storage.getTimelineById(req.params.id);
+      if (!timeline) {
+        return res.status(404).json({ error: "Timeline not found" });
+      }
+      res.json(timeline);
+    } catch (error) {
+      console.error("Get timeline error:", error);
+      res.status(500).json({ error: "Failed to fetch timeline" });
+    }
+  });
+
   app.post("/api/timelines", isAuthenticated, async (req, res) => {
     try {
       const validatedData = insertTimelineSchema.parse(req.body);
