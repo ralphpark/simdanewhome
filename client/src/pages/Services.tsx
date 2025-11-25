@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Calendar, BookOpen, TrendingUp, Sparkles, MapPin, Users, ExternalLink, BadgeCheck } from "lucide-react";
 import { Link } from "wouter";
-import subscriptionImage from "@assets/generated_images/plant_subscription_service_delivery.png";
+import plantCareImage from "@assets/generated_images/expert_plant_care_maintenance_service.png";
 import educationImage from "@assets/generated_images/plant_content_education_program.png";
 import aiCurationImage from "@assets/generated_images/ai_plant_curation_consultation_service.png";
 
@@ -93,40 +93,40 @@ export default function Services() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="aspect-square rounded-lg overflow-hidden order-2 md:order-1">
               <img 
-                src={subscriptionImage} 
-                alt="식물 구독 관리 서비스"
+                src={plantCareImage} 
+                alt="식물 관리 서비스"
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="order-1 md:order-2">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                식물 구독 관리 서비스
+                식물 관리 서비스
               </h2>
               <p className="text-muted-foreground mb-6">
-                정기적으로 새로운 식물을 받아보고, 전문가의 관리 팁과 함께 
-                당신의 식물 컬렉션을 키워나가세요.
+                전문가 팀이 당신의 식물을 정기적으로 방문하여 물주기, 영양관리, 병충해 관리 등 
+                모든 케어를 책임지는 맞춤형 식물 관리 서비스입니다.
               </p>
               <div className="grid grid-cols-3 gap-4 mb-8">
                 <Card>
                   <CardContent className="pt-6 text-center">
                     <h4 className="font-semibold mb-2">공기업</h4>
-                    <p className="text-sm text-muted-foreground">정부기관 및 공기업 맞춤 서비스</p>
+                    <p className="text-sm text-muted-foreground">쾌적한 업무환경 조성 케어</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="pt-6 text-center">
                     <h4 className="font-semibold mb-2">사기업</h4>
-                    <p className="text-sm text-muted-foreground">기업 사무실 및 상업공간</p>
+                    <p className="text-sm text-muted-foreground">브랜드 가치 향상 케어</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardContent className="pt-6 text-center">
                     <h4 className="font-semibold mb-2">개인</h4>
-                    <p className="text-sm text-muted-foreground">가정 및 개인 공간 서비스</p>
+                    <p className="text-sm text-muted-foreground">가정의 건강한 식물 환경</p>
                   </CardContent>
                 </Card>
               </div>
-              <Button data-testid="button-contact-subscription" className="w-full md:w-auto">
+              <Button data-testid="button-contact-plant-care" className="w-full md:w-auto">
                 채널톡으로 문의하기
               </Button>
             </div>
