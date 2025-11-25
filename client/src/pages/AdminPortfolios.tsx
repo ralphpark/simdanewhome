@@ -176,6 +176,46 @@ export default function AdminPortfolios() {
     }
   };
 
+  const handleAddImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    try {
+      const newImages: string[] = formData.images || [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const base64 = event.target?.result as string;
+          newImages.push(base64);
+          setFormData({ ...formData, images: newImages });
+        };
+        reader.readAsDataURL(file);
+      }
+      toast({
+        title: "성공",
+        description: `${files.length}개의 이미지가 추가되었습니다`,
+      });
+    } catch (error) {
+      toast({
+        title: "오류",
+        description: "이미지 추가에 실패했습니다",
+        variant: "destructive",
+      });
+    }
+    // Reset input
+    e.target.value = "";
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = (formData.images || []).filter((_, i) => i !== index);
+    setFormData({ ...formData, images: updatedImages });
+    toast({
+      title: "성공",
+      description: "이미지가 제거되었습니다",
+    });
+  };
+
   const resetForm = () => {
     setFormData({
       title: "",
@@ -350,6 +390,53 @@ export default function AdminPortfolios() {
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">프로젝트 목록에서 표시될 이미지입니다</p>
+                </div>
+
+                {/* Additional Images */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">추가 이미지들</label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full mb-4"
+                    onClick={() => document.getElementById("portfolio-images-upload")?.click()}
+                  >
+                    이미지 추가 (여러개 선택 가능)
+                  </Button>
+                  <input
+                    id="portfolio-images-upload"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleAddImages}
+                    className="hidden"
+                  />
+                  
+                  {formData.images && formData.images.length > 0 && (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                      {formData.images.map((image, index) => (
+                        <div key={index} className="relative group">
+                          <img
+                            src={image}
+                            alt={`Portfolio ${index + 1}`}
+                            className="w-full h-24 object-cover rounded border"
+                          />
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="destructive"
+                            className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6"
+                            onClick={() => handleRemoveImage(index)}
+                            data-testid={`button-remove-image-${index}`}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                          <p className="text-xs text-muted-foreground text-center mt-1">{index + 1}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <p className="text-xs text-muted-foreground mt-2">포트폴리오 상세 페이지에서 표시될 이미지들입니다 ({formData.images?.length || 0}개)</p>
                 </div>
 
                 {/* Description */}
