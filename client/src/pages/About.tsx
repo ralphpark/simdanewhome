@@ -116,6 +116,110 @@ export default function About() {
               </div>
             </div>
           </div>
+
+          {/* Timeline Section */}
+          <div className="mt-20">
+            <h2 className="text-2xl md:text-3xl font-bold mb-12 text-center">
+              회사 연혁
+            </h2>
+            <div className="relative">
+              {/* Timeline Line */}
+              <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-primary/20 via-primary/40 to-primary/20"></div>
+              
+              {/* Timeline Items */}
+              <div className="space-y-12 md:space-y-16">
+                {/* 2017 */}
+                <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+                  <div className="md:text-right">
+                    <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+                      <CardContent className="pt-6">
+                        <h3 className="text-lg font-bold text-primary mb-2">2017</h3>
+                        <p className="font-semibold mb-2">일산의 작은 식물가게 오픈</p>
+                        <p className="text-sm text-muted-foreground">
+                          도시 생활 속 자연과의 연결을 위해 humble한 시작
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  <div className="hidden md:flex justify-center">
+                    <div className="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
+                  </div>
+                </div>
+
+                {/* 2019 */}
+                <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+                  <div className="hidden md:flex justify-center">
+                    <div className="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
+                  </div>
+                  <div>
+                    <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+                      <CardContent className="pt-6">
+                        <h3 className="text-lg font-bold text-primary mb-2">2019</h3>
+                        <p className="font-semibold mb-2">온라인 플랫폼 simgo.kr 런칭</p>
+                        <p className="text-sm text-muted-foreground">
+                          전국의 고객들에게 프리미엄 식물 직배송 서비스 시작
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+
+                {/* 2021 */}
+                <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+                  <div className="md:text-right">
+                    <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+                      <CardContent className="pt-6">
+                        <h3 className="text-lg font-bold text-primary mb-2">2021</h3>
+                        <p className="font-semibold mb-2">AI 큐레이션 기능 개발</p>
+                        <p className="text-sm text-muted-foreground">
+                          머신러닝 기반의 식물 추천 알고리즘 도입
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  <div className="hidden md:flex justify-center">
+                    <div className="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
+                  </div>
+                </div>
+
+                {/* 2023 */}
+                <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+                  <div className="hidden md:flex justify-center">
+                    <div className="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
+                  </div>
+                  <div>
+                    <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+                      <CardContent className="pt-6">
+                        <h3 className="text-lg font-bold text-primary mb-2">2023</h3>
+                        <p className="font-semibold mb-2">지역 기반 마켓플레이스 simda.me 오픈</p>
+                        <p className="text-sm text-muted-foreground">
+                          AI 추천 + 지역 판매자 매칭 서비스 론칭
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+
+                {/* 2024 */}
+                <div className="md:grid md:grid-cols-2 md:gap-8 items-center">
+                  <div className="md:text-right">
+                    <Card className="bg-gradient-to-br from-primary/10 to-accent/10 border-primary/40">
+                      <CardContent className="pt-6">
+                        <h3 className="text-lg font-bold text-primary mb-2">2024~</h3>
+                        <p className="font-semibold mb-2">지속 가능한 성장의 시대</p>
+                        <p className="text-sm text-muted-foreground">
+                          글로벌 확장과 AI 기술 고도화를 통한 더 나은 식물 경험 제공
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  <div className="hidden md:flex justify-center">
+                    <div className="w-4 h-4 bg-primary rounded-full border-4 border-white shadow-lg"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
     </div>
