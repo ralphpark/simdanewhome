@@ -62,12 +62,11 @@ export default function Services() {
                 </div>
               </div>
               <div className="flex gap-4 flex-wrap">
-                <a href="https://simgo.kr/" target="_blank" rel="noopener noreferrer">
+                <Link href="/curation">
                   <Button data-testid="button-shop-ai" className="gap-2">
-                    온라인샵에서 구매하기
-                    <ExternalLink className="h-4 w-4" />
+                    AI 식물큐레이션 진행하기
                   </Button>
-                </a>
+                </Link>
                 <Link href="/booking">
                   <Button variant="outline" data-testid="button-book-ai">
                     상담 예약하기
