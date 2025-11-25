@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link, useLocation } from "wouter";
+import { Link, useRoute } from "wouter";
 import type { Post } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -14,11 +14,9 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface PostDetailParams {
-  id: string;
-}
-
-export default function PostDetail({ id }: PostDetailParams) {
+export default function PostDetail() {
+  const [match, params] = useRoute("/magazine/:id");
+  const id = params?.id;
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [commentName, setCommentName] = useState("");
