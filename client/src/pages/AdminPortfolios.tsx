@@ -97,7 +97,7 @@ export default function AdminPortfolios() {
         title: "성공",
         description: "포트폴리오가 생성되었습니다",
       });
-      navigate("/admin");
+      navigate("/admin?tab=portfolios");
     },
     onError: () => {
       toast({
@@ -120,7 +120,7 @@ export default function AdminPortfolios() {
         title: "성공",
         description: "포트폴리오가 수정되었습니다",
       });
-      navigate("/admin");
+      navigate("/admin?tab=portfolios");
     },
     onError: () => {
       toast({

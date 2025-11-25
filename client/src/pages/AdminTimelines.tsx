@@ -74,7 +74,7 @@ export default function AdminTimelines() {
         title: "성공",
         description: "연혁 항목이 생성되었습니다",
       });
-      navigate("/admin");
+      navigate("/admin?tab=timelines");
     },
     onError: () => {
       toast({
@@ -97,7 +97,7 @@ export default function AdminTimelines() {
         title: "성공",
         description: "연혁 항목이 수정되었습니다",
       });
-      navigate("/admin");
+      navigate("/admin?tab=timelines");
     },
     onError: () => {
       toast({
