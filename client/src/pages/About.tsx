@@ -25,7 +25,7 @@ export default function About() {
               </h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  simda는 2020년, 도시 생활 속에서 자연과의 연결이 필요하다는 믿음으로 시작되었습니다.
+                  simda는 2017년, 도시 생활 속에서 자연과의 연결이 필요하다는 믿음으로 일산의 작은 식물가게에서 시작되었습니다.
                 </p>
                 <p>
                   우리는 단순히 식물을 판매하는 것이 아닌, 사람들이 식물과 함께 성장하고 
