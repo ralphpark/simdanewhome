@@ -62,7 +62,7 @@ export default function Services() {
                 </div>
               </div>
               <div className="flex gap-4 flex-wrap">
-                <Link href="/curation">
+                <Link href="/ai-curation">
                   <Button data-testid="button-shop-ai" className="gap-2">
                     AI 식물큐레이션 진행하기
                   </Button>
