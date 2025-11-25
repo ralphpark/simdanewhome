@@ -331,12 +331,6 @@ export default function Services() {
                 <ExternalLink className="h-5 w-5" />
               </Button>
             </a>
-            <a href="https://simda.me/#features" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="outline" data-testid="button-marketplace-learn" className="gap-2">
-                서비스 자세히 알아보기
-                <ExternalLink className="h-5 w-5" />
-              </Button>
-            </a>
           </div>
         </div>
       </section>
