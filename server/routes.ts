@@ -188,7 +188,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/portfolios", isAuthenticated, async (req, res) => {
     try {
-      const validatedData = insertPortfolioSchema.parse(req.body);
+      let data = req.body;
+      
+      // Handle completedDate conversion from string to Date
+      if (data.completedDate && typeof data.completedDate === "string") {
+        data.completedDate = new Date(data.completedDate);
+      }
+      
+      const validatedData = insertPortfolioSchema.parse(data);
       const portfolio = await storage.createPortfolio(validatedData);
       res.json(portfolio);
     } catch (error) {
