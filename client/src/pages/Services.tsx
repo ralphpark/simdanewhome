@@ -25,7 +25,6 @@ export default function Services() {
           </p>
         </div>
       </section>
-
       <section id="ai-curation" className="py-20 scroll-mt-20">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -37,10 +36,7 @@ export default function Services() {
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
                 AI 식물 큐레이션
               </h2>
-              <p className="text-muted-foreground mb-6">
-                당신의 환경과 취향을 분석하여 최적의 식물을 추천해드립니다. 
-                Google Gemini AI 기술로 대화형 상담을 통해 완벽한 식물을 찾아드립니다.
-              </p>
+              <p className="text-muted-foreground mb-6">당신의 환경과 취향을 분석하여 최적의 식물을 추천해드립니다. 특허받은  AI 기술로 대화형 상담을 통해 완벽한 식물을 찾아드립니다.</p>
               <div className="space-y-4 mb-8">
                 <div className="flex gap-3">
                   <div className="flex-shrink-0 h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
@@ -93,7 +89,6 @@ export default function Services() {
           </div>
         </div>
       </section>
-
       <section id="subscription" className="py-20 bg-card">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -149,7 +144,6 @@ export default function Services() {
           </div>
         </div>
       </section>
-
       <section id="education" className="py-20">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -226,7 +220,6 @@ export default function Services() {
           </div>
         </div>
       </section>
-
       <section id="marketplace" className="py-20 bg-card">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <div className="text-center mb-12">
