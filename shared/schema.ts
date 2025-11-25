@@ -107,6 +107,17 @@ export const comments = pgTable("comments", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Company timeline table
+export const timelines = pgTable("timelines", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  year: varchar("year").notNull(), // e.g., "2017", "2019", "2024~"
+  title: text("title").notNull(), // Event title
+  description: text("description").notNull(), // Event description
+  order: integer("order").notNull(), // Display order
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertChatHistorySchema = createInsertSchema(chatHistories).omit({
   id: true,
@@ -162,6 +173,12 @@ export const insertCommentSchema = createInsertSchema(comments).omit({
   content: z.string().min(10, "댓글은 최소 10자 이상 입력해주세요"),
 });
 
+export const insertTimelineSchema = createInsertSchema(timelines).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // Types
 export type ChatHistory = typeof chatHistories.$inferSelect;
 export type InsertChatHistory = z.infer<typeof insertChatHistorySchema>;
@@ -180,6 +197,9 @@ export type InsertPost = z.infer<typeof insertPostSchema>;
 
 export type Comment = typeof comments.$inferSelect;
 export type InsertComment = z.infer<typeof insertCommentSchema>;
+
+export type Timeline = typeof timelines.$inferSelect;
+export type InsertTimeline = z.infer<typeof insertTimelineSchema>;
 
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;

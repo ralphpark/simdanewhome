@@ -2,7 +2,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Post, Comment, Booking, B2bProposal, Portfolio } from "@shared/schema";
+import type { Post, Comment, Booking, B2bProposal, Portfolio, Timeline } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -71,6 +71,11 @@ export default function Admin() {
 
   const { data: portfolios = [] } = useQuery<Portfolio[]>({
     queryKey: ["/api/portfolios"],
+    enabled: isAuthenticated,
+  });
+
+  const { data: timelines = [] } = useQuery<Timeline[]>({
+    queryKey: ["/api/timelines"],
     enabled: isAuthenticated,
   });
 
@@ -282,12 +287,13 @@ export default function Admin() {
         </div>
 
         <Tabs defaultValue="posts" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="posts">포스트 ({posts.length})</TabsTrigger>
             <TabsTrigger value="portfolios">포트폴리오 ({portfolios.length})</TabsTrigger>
             <TabsTrigger value="bookings">예약 ({bookings.length})</TabsTrigger>
             <TabsTrigger value="b2b">B2B 제안 ({b2bProposals.length})</TabsTrigger>
             <TabsTrigger value="comments">댓글 ({comments.length})</TabsTrigger>
+            <TabsTrigger value="timelines">연혁 ({timelines.length})</TabsTrigger>
           </TabsList>
 
           {/* 포스트 탭 */}
@@ -662,6 +668,78 @@ export default function Admin() {
                   {comments.length === 0 && (
                     <div className="text-center py-8 text-muted-foreground">
                       댓글이 없습니다
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* 연혁 탭 */}
+          <TabsContent value="timelines" className="space-y-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>회사 연혁 관리</CardTitle>
+                  <CardDescription>회사 타임라인을 관리하세요</CardDescription>
+                </div>
+                <Link href="/admin/timelines/new">
+                  <Button className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    새 항목 추가
+                  </Button>
+                </Link>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {timelines.map((timeline) => (
+                    <Card key={timeline.id} className="bg-muted/50">
+                      <CardContent className="pt-6">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="font-bold text-primary">{timeline.year}</span>
+                              <h4 className="font-semibold">{timeline.title}</h4>
+                            </div>
+                            <p className="text-sm text-muted-foreground">{timeline.description}</p>
+                          </div>
+                          <div className="flex gap-2">
+                            <Link href={`/admin/timelines/${timeline.id}`}>
+                              <Button size="sm" variant="ghost">
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                            </Link>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button size="sm" variant="ghost" className="text-destructive">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogTitle>삭제하시겠습니까?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  이 연혁 항목을 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.
+                                </AlertDialogDescription>
+                                <div className="flex justify-end gap-2">
+                                  <AlertDialogCancel>취소</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => {
+                                      // Delete timeline mutation would go here
+                                    }}
+                                  >
+                                    삭제
+                                  </AlertDialogAction>
+                                </div>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                  {timelines.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      연혁 항목이 없습니다
                     </div>
                   )}
                 </div>

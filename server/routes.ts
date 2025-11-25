@@ -10,11 +10,27 @@ import {
   insertPortfolioSchema,
   insertPostSchema,
   insertCommentSchema,
+  insertTimelineSchema,
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   await setupAuth(app);
+
+  // Initialize timeline data if empty
+  const existingTimelines = await storage.getAllTimelines();
+  if (existingTimelines.length === 0) {
+    const initialTimelines = [
+      { year: "2017", title: "일산의 작은 식물가게 오픈", description: "도시 생활 속 자연과의 연결을 위해 humble한 시작", order: 1 },
+      { year: "2019", title: "온라인 플랫폼 simgo.kr 런칭", description: "전국의 고객들에게 프리미엄 식물 직배송 서비스 시작", order: 2 },
+      { year: "2021", title: "AI 큐레이션 기능 개발", description: "머신러닝 기반의 식물 추천 알고리즘 도입", order: 3 },
+      { year: "2023", title: "지역 기반 마켓플레이스 simda.me 오픈", description: "AI 추천 + 지역 판매자 매칭 서비스 론칭", order: 4 },
+      { year: "2024~", title: "지속 가능한 성장의 시대", description: "글로벌 확장과 AI 기술 고도화를 통한 더 나은 식물 경험 제공", order: 5 },
+    ];
+    for (const timeline of initialTimelines) {
+      await storage.createTimeline(timeline);
+    }
+  }
 
   // Auth endpoint
   app.get("/api/auth/user", isAuthenticated, async (req: any, res) => {
@@ -442,6 +458,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Delete comment error:", error);
       res.status(500).json({ error: "Failed to delete comment" });
+    }
+  });
+
+  // Timelines endpoints
+  app.get("/api/timelines", async (req, res) => {
+    try {
+      const timelines = await storage.getAllTimelines();
+      res.json(timelines);
+    } catch (error) {
+      console.error("Get timelines error:", error);
+      res.status(500).json({ error: "Failed to fetch timelines" });
+    }
+  });
+
+  app.post("/api/timelines", isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertTimelineSchema.parse(req.body);
+      const timeline = await storage.createTimeline(validatedData);
+      res.json(timeline);
+    } catch (error) {
+      console.error("Create timeline error:", error);
+      res.status(400).json({ error: "Invalid timeline data" });
+    }
+  });
+
+  app.patch("/api/timelines/:id", isAuthenticated, async (req, res) => {
+    try {
+      const timeline = await storage.updateTimeline(req.params.id, req.body);
+      if (!timeline) {
+        return res.status(404).json({ error: "Timeline not found" });
+      }
+      res.json(timeline);
+    } catch (error) {
+      console.error("Update timeline error:", error);
+      res.status(500).json({ error: "Failed to update timeline" });
+    }
+  });
+
+  app.delete("/api/timelines/:id", isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteTimeline(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete timeline error:", error);
+      res.status(500).json({ error: "Failed to delete timeline" });
     }
   });
 

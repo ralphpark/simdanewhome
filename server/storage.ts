@@ -11,6 +11,8 @@ import type {
   InsertPost,
   Comment,
   InsertComment,
+  Timeline,
+  InsertTimeline,
   User,
   UpsertUser,
 } from "@shared/schema";
@@ -55,6 +57,13 @@ export interface IStorage {
   getCommentsByPostId(postId: string): Promise<Comment[]>;
   approveComment(id: string): Promise<Comment | undefined>;
   deleteComment(id: string): Promise<void>;
+
+  // Timelines
+  createTimeline(data: InsertTimeline): Promise<Timeline>;
+  getAllTimelines(): Promise<Timeline[]>;
+  getTimelineById(id: string): Promise<Timeline | undefined>;
+  updateTimeline(id: string, data: Partial<InsertTimeline>): Promise<Timeline | undefined>;
+  deleteTimeline(id: string): Promise<void>;
 
   // Users (Replit Auth)
   getUser(id: string): Promise<User | undefined>;
@@ -550,6 +559,37 @@ export class DbStorage implements IStorage {
 
   async deleteComment(id: string): Promise<void> {
     await db.delete(schema.comments).where(eq(schema.comments.id, id));
+  }
+
+  // Timelines
+  async createTimeline(data: InsertTimeline): Promise<Timeline> {
+    const [result] = await db.insert(schema.timelines).values(data).returning();
+    return result;
+  }
+
+  async getAllTimelines(): Promise<Timeline[]> {
+    return await db.query.timelines.findMany({
+      orderBy: [schema.timelines.order],
+    });
+  }
+
+  async getTimelineById(id: string): Promise<Timeline | undefined> {
+    return await db.query.timelines.findFirst({
+      where: eq(schema.timelines.id, id),
+    });
+  }
+
+  async updateTimeline(id: string, data: Partial<InsertTimeline>): Promise<Timeline | undefined> {
+    const [result] = await db
+      .update(schema.timelines)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(schema.timelines.id, id))
+      .returning();
+    return result;
+  }
+
+  async deleteTimeline(id: string): Promise<void> {
+    await db.delete(schema.timelines).where(eq(schema.timelines.id, id));
   }
 
   // Users (Replit Auth)
