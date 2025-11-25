@@ -40,7 +40,8 @@ function Router() {
       <Route path="/plant-care-consultation" component={PlantCareConsultation} />
       <Route path="/admin/posts/new" component={AdminEditPost} />
       <Route path="/admin/posts/:id" component={AdminEditPost} />
-      <Route path="/admin/portfolios" component={AdminPortfolios} />
+      <Route path="/admin/portfolios/new" component={AdminPortfolios} />
+      <Route path="/admin/portfolios/:id" component={AdminPortfolios} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -2,7 +2,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Post, Comment, Booking, B2bProposal } from "@shared/schema";
+import type { Post, Comment, Booking, B2bProposal, Portfolio } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -58,6 +58,33 @@ export default function Admin() {
   const { data: b2bProposals = [] } = useQuery<B2bProposal[]>({
     queryKey: ["/api/b2b-proposals"],
     enabled: isAuthenticated,
+  });
+
+  const { data: portfolios = [] } = useQuery<Portfolio[]>({
+    queryKey: ["/api/portfolios"],
+    enabled: isAuthenticated,
+  });
+
+  // Delete portfolio mutation
+  const deletePortfolioMutation = useMutation({
+    mutationFn: async (portfolioId: string) => {
+      const res = await apiRequest("DELETE", `/api/portfolios/${portfolioId}`, {});
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/portfolios"] });
+      toast({
+        title: "성공",
+        description: "포트폴리오가 삭제되었습니다",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "오류",
+        description: "포트폴리오 삭제에 실패했습니다",
+        variant: "destructive",
+      });
+    },
   });
 
   // Delete post mutation
@@ -248,7 +275,7 @@ export default function Admin() {
         <Tabs defaultValue="posts" className="space-y-8">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="posts">포스트 ({posts.length})</TabsTrigger>
-            <TabsTrigger value="portfolios">포트폴리오</TabsTrigger>
+            <TabsTrigger value="portfolios">포트폴리오 ({portfolios.length})</TabsTrigger>
             <TabsTrigger value="bookings">예약 ({bookings.length})</TabsTrigger>
             <TabsTrigger value="b2b">B2B 제안 ({b2bProposals.length})</TabsTrigger>
             <TabsTrigger value="comments">댓글 ({comments.length})</TabsTrigger>
@@ -341,12 +368,87 @@ export default function Admin() {
 
           {/* 포트폴리오 탭 */}
           <TabsContent value="portfolios" className="space-y-6">
-            <Link href="/admin/portfolios">
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                포트폴리오 관리하기
-              </Button>
-            </Link>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>포트폴리오 관리</CardTitle>
+                  <CardDescription>프로젝트 포트폴리오를 관리하세요</CardDescription>
+                </div>
+                <Link href="/admin/portfolios/new">
+                  <Button className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    새 포트폴리오
+                  </Button>
+                </Link>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>제목</TableHead>
+                        <TableHead>카테고리</TableHead>
+                        <TableHead>클라이언트</TableHead>
+                        <TableHead>특별표시</TableHead>
+                        <TableHead className="text-right">작업</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {portfolios.map((portfolio) => (
+                        <TableRow key={portfolio.id}>
+                          <TableCell className="font-medium max-w-xs truncate">{portfolio.title}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{portfolio.category}</Badge>
+                          </TableCell>
+                          <TableCell>{portfolio.clientName || "-"}</TableCell>
+                          <TableCell>
+                            {portfolio.featured ? (
+                              <Badge className="bg-yellow-600">⭐ 특별</Badge>
+                            ) : (
+                              <Badge variant="secondary">일반</Badge>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-right space-x-2">
+                            <Link href={`/admin/portfolios/${portfolio.id}`}>
+                              <Button size="icon" variant="ghost" data-testid={`edit-portfolio-${portfolio.id}`}>
+                                <Edit2 className="h-4 w-4" />
+                              </Button>
+                            </Link>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button size="icon" variant="ghost" data-testid={`delete-portfolio-${portfolio.id}`}>
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogTitle>포트폴리오 삭제</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  이 포트폴리오를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+                                </AlertDialogDescription>
+                                <div className="flex gap-2 justify-end">
+                                  <AlertDialogCancel>취소</AlertDialogCancel>
+                                  <AlertDialogAction
+                                    onClick={() => deletePortfolioMutation.mutate(portfolio.id)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
+                                    삭제
+                                  </AlertDialogAction>
+                                </div>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  {portfolios.length === 0 && (
+                    <div className="text-center py-8 text-muted-foreground">
+                      포트폴리오가 없습니다
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* 예약 탭 */}

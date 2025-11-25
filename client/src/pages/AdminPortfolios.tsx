@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocation } from "wouter";
+import { useLocation, useRoute } from "wouter";
 import type { Portfolio, InsertPortfolio } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,8 +28,11 @@ export default function AdminPortfolios() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [matchNew] = useRoute("/admin/portfolios/new");
+  const [matchEdit, params] = useRoute("/admin/portfolios/:id");
+  const routeId = params?.id;
+  const [isFormOpen, setIsFormOpen] = useState(!!matchNew || !!matchEdit);
+  const [editingId, setEditingId] = useState<string | null>(routeId || null);
   const [thumbnailUploading, setThumbnailUploading] = useState(false);
 
   const [formData, setFormData] = useState<Partial<InsertPortfolio>>({
@@ -47,6 +50,11 @@ export default function AdminPortfolios() {
     enabled: isAuthenticated,
   });
 
+  const { data: editingPortfolio } = useQuery<Portfolio>({
+    queryKey: [`/api/portfolios/${routeId}`],
+    enabled: isAuthenticated && !!routeId && !!matchEdit,
+  });
+
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       toast({
@@ -60,6 +68,21 @@ export default function AdminPortfolios() {
     }
   }, [isAuthenticated, authLoading, navigate, toast]);
 
+  // 기존 포트폴리오 로드 시 폼 데이터 업데이트
+  useEffect(() => {
+    if (editingPortfolio && editingId === routeId) {
+      setFormData({
+        title: editingPortfolio.title,
+        description: editingPortfolio.description,
+        category: editingPortfolio.category,
+        clientName: editingPortfolio.clientName,
+        thumbnailUrl: editingPortfolio.thumbnailUrl,
+        images: editingPortfolio.images,
+        featured: editingPortfolio.featured,
+      });
+    }
+  }, [editingPortfolio, editingId, routeId]);
+
   const createPortfolioMutation = useMutation({
     mutationFn: async (data: Partial<InsertPortfolio>) => {
       const res = await apiRequest("POST", "/api/portfolios", data);
@@ -71,7 +94,7 @@ export default function AdminPortfolios() {
         title: "성공",
         description: "포트폴리오가 생성되었습니다",
       });
-      resetForm();
+      navigate("/admin");
     },
     onError: () => {
       toast({
@@ -89,11 +112,12 @@ export default function AdminPortfolios() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/portfolios"] });
+      queryClient.invalidateQueries({ queryKey: [`/api/portfolios/${editingId}`] });
       toast({
         title: "성공",
         description: "포트폴리오가 수정되었습니다",
       });
-      resetForm();
+      navigate("/admin");
     },
     onError: () => {
       toast({
