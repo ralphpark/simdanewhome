@@ -110,10 +110,9 @@ export const comments = pgTable("comments", {
 // Company timeline table
 export const timelines = pgTable("timelines", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  year: varchar("year").notNull(), // e.g., "2017", "2019", "2024~"
+  year: varchar("year").notNull(), // e.g., "2017", "2019"
   title: text("title").notNull(), // Event title
   description: text("description").notNull(), // Event description
-  order: integer("order").notNull(), // Display order
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -177,6 +176,8 @@ export const insertTimelineSchema = createInsertSchema(timelines).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  year: z.string().regex(/^\d{4}$/, "연도는 4자리 숫자만 입력 가능합니다"),
 });
 
 // Types

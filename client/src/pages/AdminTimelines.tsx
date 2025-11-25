@@ -26,7 +26,6 @@ export default function AdminTimelines() {
     year: "",
     title: "",
     description: "",
-    order: 0,
   });
 
   const { data: timelines = [] } = useQuery<Timeline[]>({
@@ -58,7 +57,6 @@ export default function AdminTimelines() {
         year: editingTimeline.year,
         title: editingTimeline.title,
         description: editingTimeline.description,
-        order: editingTimeline.order,
       });
     }
   }, [editingTimeline, routeId]);
@@ -74,7 +72,8 @@ export default function AdminTimelines() {
         title: "성공",
         description: "연혁 항목이 생성되었습니다",
       });
-      navigate("/admin?tab=timelines");
+      sessionStorage.setItem('adminActiveTab', 'timelines');
+      navigate("/admin");
     },
     onError: () => {
       toast({
@@ -97,7 +96,8 @@ export default function AdminTimelines() {
         title: "성공",
         description: "연혁 항목이 수정되었습니다",
       });
-      navigate("/admin?tab=timelines");
+      sessionStorage.setItem('adminActiveTab', 'timelines');
+      navigate("/admin");
     },
     onError: () => {
       toast({
@@ -124,7 +124,6 @@ export default function AdminTimelines() {
       year: formData.year,
       title: formData.title,
       description: formData.description,
-      order: formData.order || timelines.length + 1,
     };
 
     if (isNewMode) {
@@ -157,11 +156,15 @@ export default function AdminTimelines() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="text-sm font-medium mb-2 block">연도</label>
+                <label className="text-sm font-medium mb-2 block">연도 (4자리)</label>
                 <Input
                   value={formData.year || ""}
-                  onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                  placeholder="예: 2017, 2024~"
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                    setFormData({ ...formData, year: value });
+                  }}
+                  placeholder="예: 2017"
+                  maxLength={4}
                   data-testid="input-year"
                 />
               </div>
@@ -184,17 +187,6 @@ export default function AdminTimelines() {
                   placeholder="예: 도시 생활 속 자연과의 연결을 위해 humble한 시작"
                   className="min-h-[120px]"
                   data-testid="textarea-description"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium mb-2 block">순서</label>
-                <Input
-                  type="number"
-                  value={formData.order || 0}
-                  onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
-                  placeholder="표시 순서"
-                  data-testid="input-order"
                 />
               </div>
 

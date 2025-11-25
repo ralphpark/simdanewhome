@@ -97,7 +97,8 @@ export default function AdminPortfolios() {
         title: "성공",
         description: "포트폴리오가 생성되었습니다",
       });
-      navigate("/admin?tab=portfolios");
+      sessionStorage.setItem('adminActiveTab', 'portfolios');
+      navigate("/admin");
     },
     onError: () => {
       toast({
@@ -120,7 +121,8 @@ export default function AdminPortfolios() {
         title: "성공",
         description: "포트폴리오가 수정되었습니다",
       });
-      navigate("/admin?tab=portfolios");
+      sessionStorage.setItem('adminActiveTab', 'portfolios');
+      navigate("/admin");
     },
     onError: () => {
       toast({

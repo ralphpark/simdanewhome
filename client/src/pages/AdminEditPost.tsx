@@ -101,7 +101,8 @@ export default function AdminEditPost({ id }: EditPostParams) {
         title: "성공",
         description: "포스트가 생성되었습니다",
       });
-      navigate("/admin?tab=posts");
+      sessionStorage.setItem('adminActiveTab', 'posts');
+      navigate("/admin");
     },
     onError: () => {
       toast({
@@ -124,7 +125,8 @@ export default function AdminEditPost({ id }: EditPostParams) {
         title: "성공",
         description: "포스트가 수정되었습니다",
       });
-      navigate("/admin?tab=posts");
+      sessionStorage.setItem('adminActiveTab', 'posts');
+      navigate("/admin");
     },
     onError: () => {
       toast({

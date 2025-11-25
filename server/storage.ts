@@ -568,8 +568,12 @@ export class DbStorage implements IStorage {
   }
 
   async getAllTimelines(): Promise<Timeline[]> {
-    return await db.query.timelines.findMany({
-      orderBy: [schema.timelines.order],
+    const timelines = await db.query.timelines.findMany();
+    // Sort by year (numerically, with latest first)
+    return timelines.sort((a, b) => {
+      const yearA = parseInt(a.year);
+      const yearB = parseInt(b.year);
+      return yearB - yearA;
     });
   }
 

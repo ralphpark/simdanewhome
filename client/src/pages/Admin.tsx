@@ -26,20 +26,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 
 export default function Admin() {
   const { isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [location] = useLocation();
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [selectedProposal, setSelectedProposal] = useState<B2bProposal | null>(null);
-  
-  // Get tab from query parameter
-  const urlParams = new URLSearchParams(location.split('?')[1] || '');
-  const tabFromUrl = urlParams.get('tab') || 'posts';
+  const [activeTab, setActiveTab] = useState(() => {
+    // Get active tab from sessionStorage
+    return sessionStorage.getItem('adminActiveTab') || 'posts';
+  });
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -313,7 +312,10 @@ export default function Admin() {
           </a>
         </div>
 
-        <Tabs defaultValue={tabFromUrl} className="space-y-8">
+        <Tabs value={activeTab} onValueChange={(val) => {
+          setActiveTab(val);
+          sessionStorage.setItem('adminActiveTab', val);
+        }} className="space-y-8">
           <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="posts">포스트 ({posts.length})</TabsTrigger>
             <TabsTrigger value="portfolios">포트폴리오 ({portfolios.length})</TabsTrigger>
