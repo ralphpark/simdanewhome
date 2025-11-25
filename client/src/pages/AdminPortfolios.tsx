@@ -30,7 +30,8 @@ export default function AdminPortfolios() {
   const [, navigate] = useLocation();
   const [matchNew] = useRoute("/admin/portfolios/new");
   const [matchEdit, params] = useRoute("/admin/portfolios/:id");
-  const routeId = params?.id;
+  // Only use routeId if it's not "new" (to avoid matching /admin/portfolios/new as an ID)
+  const routeId = params?.id && params.id !== "new" ? params.id : null;
   const [isFormOpen, setIsFormOpen] = useState(!!matchNew || !!matchEdit);
   const [editingId, setEditingId] = useState<string | null>(routeId || null);
   const [thumbnailUploading, setThumbnailUploading] = useState(false);
