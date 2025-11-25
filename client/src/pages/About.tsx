@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Leaf, Users, Target, Heart } from "lucide-react";
+import aboutImage from "@assets/8-1 (1)_1764048850640.jpg";
 
 export default function About() {
   return (
@@ -36,7 +37,13 @@ export default function About() {
                 </p>
               </div>
             </div>
-            <div className="aspect-[4/3] bg-muted rounded-lg"></div>
+            <div className="aspect-[4/3] bg-muted rounded-lg overflow-hidden">
+              <img 
+                src={aboutImage} 
+                alt="simda 식물" 
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
