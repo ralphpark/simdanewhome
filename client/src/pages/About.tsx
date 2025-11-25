@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Leaf, Users, Target, Heart } from "lucide-react";
 import aboutImage from "@assets/8-1 (1)_1764048850640.jpg";
+import expertImage from "@assets/DALL·E 2024-05-28 19.23.31 - A digital illustration depicting a premium plant care service in a corporate setting, now featuring a plant care expert wearing a dark green jumpsuit,_1764086182026.webp";
 import { useQuery } from "@tanstack/react-query";
 import type { Timeline } from "@shared/schema";
 
@@ -92,6 +93,35 @@ export default function About() {
                 </p>
               </CardContent>
             </Card>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
+            <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+              <img 
+                src={expertImage} 
+                alt="프리미엄 식물 관리 서비스" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">
+                기업 공간을 위한 전문 서비스
+              </h2>
+              <div className="space-y-4 text-muted-foreground">
+                <p>
+                  simda의 기업 식물 관리 전문가는 대형 사무실, 로비, 회의실 등 
+                  다양한 코퍼레이트 환경에 맞춰진 식물 솔루션을 제공합니다.
+                </p>
+                <p>
+                  전문적인 진단과 맞춤형 설계로 업무 공간을 더욱 쾌적하고 
+                  생산성 높은 환경으로 변화시킵니다.
+                </p>
+                <p>
+                  정기적인 방문 관리와 전문 상담을 통해 기업의 이미지 제고와 
+                  직원들의 웰빙을 동시에 실현합니다.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="bg-card rounded-lg p-8 md:p-12">
