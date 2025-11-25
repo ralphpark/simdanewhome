@@ -11,6 +11,7 @@ import Services from "@/pages/Services";
 import Booking from "@/pages/Booking";
 import Portfolio from "@/pages/Portfolio";
 import Magazine from "@/pages/Magazine";
+import PostDetail from "@/pages/PostDetail";
 import B2B from "@/pages/B2B";
 import Shop from "@/pages/Shop";
 import Support from "@/pages/Support";
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/booking" component={Booking} />
       <Route path="/portfolio" component={Portfolio} />
       <Route path="/magazine" component={Magazine} />
+      <Route path="/magazine/:id" component={PostDetail} />
       <Route path="/b2b" component={B2B} />
       <Route path="/shop" component={Shop} />
       <Route path="/support" component={Support} />
