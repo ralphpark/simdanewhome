@@ -302,7 +302,7 @@ export default function Home() {
               <h3 className="font-semibold text-lg mb-2">AI 기반 분석</h3>
               <p className="text-muted-foreground">Google Gemini AI가 당신의 환경을 완벽히 분석하여 최적의 식물을 추천합니다</p>
             </div>
-            <div className="p-8 bg-gradient-to-br from-secondary/10 to-transparent rounded-2xl border border-secondary/10 hover-elevate transition-all duration-300 animate-slide-up" style={{animationDelay: '0.3s'}}>
+            <div className="p-8 bg-gradient-to-br from-primary/5 to-transparent rounded-2xl border border-primary/10 hover-elevate transition-all duration-300 animate-slide-up" style={{animationDelay: '0.3s'}}>
               <Users className="h-10 w-10 text-primary mb-4" />
               <h3 className="font-semibold text-lg mb-2">전문가 팀</h3>
               <p className="text-muted-foreground">식물학자, 디자이너, 기술자가 함께 최고의 서비스를 제공합니다</p>
