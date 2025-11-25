@@ -41,6 +41,7 @@ export default function AdminPortfolios() {
     category: "indoor",
     clientName: "",
     thumbnailUrl: "",
+    completedDate: undefined,
     images: [],
     featured: false,
   });
@@ -76,6 +77,7 @@ export default function AdminPortfolios() {
         description: editingPortfolio.description,
         category: editingPortfolio.category,
         clientName: editingPortfolio.clientName,
+        completedDate: editingPortfolio.completedDate ? new Date(editingPortfolio.completedDate) : undefined,
         thumbnailUrl: editingPortfolio.thumbnailUrl,
         images: editingPortfolio.images,
         featured: editingPortfolio.featured,
@@ -223,6 +225,7 @@ export default function AdminPortfolios() {
       category: "indoor",
       clientName: "",
       thumbnailUrl: "",
+      completedDate: undefined,
       images: [],
       featured: false,
     });

@@ -199,7 +199,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/portfolios/:id", isAuthenticated, async (req, res) => {
     try {
-      const portfolio = await storage.updatePortfolio(req.params.id, req.body);
+      let data = req.body;
+      
+      // Handle completedDate conversion from string to Date
+      if (data.completedDate && typeof data.completedDate === "string") {
+        data.completedDate = new Date(data.completedDate);
+      }
+      
+      const portfolio = await storage.updatePortfolio(req.params.id, data);
       if (!portfolio) {
         return res.status(404).json({ error: "Portfolio not found" });
       }
