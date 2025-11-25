@@ -7,6 +7,12 @@ import educationImage from "@assets/generated_images/plant_content_education_pro
 import aiCurationImage from "@assets/generated_images/ai_plant_curation_consultation_service.png";
 
 export default function Services() {
+  const handleChannelTalk = () => {
+    if (typeof window !== "undefined" && (window as any).ChannelIO) {
+      (window as any).ChannelIO("showMessenger");
+    }
+  };
+
   return (
     <div className="flex flex-col">
       <section className="py-20 bg-gradient-to-br from-primary/5 to-accent/10">
@@ -126,9 +132,19 @@ export default function Services() {
                   </CardContent>
                 </Card>
               </div>
-              <Button data-testid="button-contact-plant-care" className="w-full md:w-auto">
-                채널톡으로 문의하기
-              </Button>
+              <div className="flex gap-4 flex-wrap">
+                <Button 
+                  data-testid="button-contact-plant-care" 
+                  onClick={handleChannelTalk}
+                >
+                  채널톡으로 문의하기
+                </Button>
+                <Link href="/booking">
+                  <Button variant="outline" data-testid="button-book-plant-care">
+                    상담 예약하기
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -186,9 +202,19 @@ export default function Services() {
                   </CardContent>
                 </Card>
               </div>
-              <Button data-testid="button-contact-education" className="w-full md:w-auto">
-                채널톡으로 문의하기
-              </Button>
+              <div className="flex gap-4 flex-wrap">
+                <Button 
+                  data-testid="button-contact-education" 
+                  onClick={handleChannelTalk}
+                >
+                  채널톡으로 문의하기
+                </Button>
+                <Link href="/booking">
+                  <Button variant="outline" data-testid="button-book-education">
+                    상담 예약하기
+                  </Button>
+                </Link>
+              </div>
             </div>
             <div className="aspect-square rounded-lg overflow-hidden">
               <img 
