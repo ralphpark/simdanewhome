@@ -384,6 +384,89 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Protected admin endpoints for posts and comments
+  app.patch("/api/posts/:id", isAuthenticated, async (req, res) => {
+    try {
+      const post = await storage.updatePost(req.params.id, req.body);
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+      res.json(post);
+    } catch (error) {
+      console.error("Update post error:", error);
+      res.status(400).json({ error: "Failed to update post" });
+    }
+  });
+
+  app.delete("/api/posts/:id", isAuthenticated, async (req, res) => {
+    try {
+      await storage.deletePost(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete post error:", error);
+      res.status(500).json({ error: "Failed to delete post" });
+    }
+  });
+
+  app.patch("/api/comments/:id/approve", isAuthenticated, async (req, res) => {
+    try {
+      const comment = await storage.approveComment(req.params.id);
+      if (!comment) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+      res.json(comment);
+    } catch (error) {
+      console.error("Approve comment error:", error);
+      res.status(500).json({ error: "Failed to approve comment" });
+    }
+  });
+
+  app.delete("/api/comments/:id", isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteComment(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete comment error:", error);
+      res.status(500).json({ error: "Failed to delete comment" });
+    }
+  });
+
+  // Booking and B2B status update endpoints
+  app.patch("/api/b2b-proposals/:id/status", isAuthenticated, async (req, res) => {
+    try {
+      const { status } = req.body;
+      const proposal = await storage.updateB2bProposalStatus(req.params.id, status);
+      if (!proposal) {
+        return res.status(404).json({ error: "Proposal not found" });
+      }
+      res.json(proposal);
+    } catch (error) {
+      console.error("Update B2B proposal status error:", error);
+      res.status(500).json({ error: "Failed to update proposal status" });
+    }
+  });
+
+  // Get all bookings and proposals for admin
+  app.get("/api/admin/bookings", isAuthenticated, async (req, res) => {
+    try {
+      const bookings = await storage.getAllBookings();
+      res.json(bookings);
+    } catch (error) {
+      console.error("Get admin bookings error:", error);
+      res.status(500).json({ error: "Failed to fetch bookings" });
+    }
+  });
+
+  app.get("/api/admin/b2b-proposals", isAuthenticated, async (req, res) => {
+    try {
+      const proposals = await storage.getAllB2bProposals();
+      res.json(proposals);
+    } catch (error) {
+      console.error("Get admin B2B proposals error:", error);
+      res.status(500).json({ error: "Failed to fetch proposals" });
+    }
+  });
+
   // SEO Sitemap endpoint
   app.get("/sitemap.xml", async (req, res) => {
     try {
