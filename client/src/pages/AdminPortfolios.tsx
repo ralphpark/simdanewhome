@@ -30,6 +30,7 @@ export default function AdminPortfolios() {
   const [, navigate] = useLocation();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [thumbnailUploading, setThumbnailUploading] = useState(false);
 
   const [formData, setFormData] = useState<Partial<InsertPortfolio>>({
     title: "",
@@ -123,6 +124,33 @@ export default function AdminPortfolios() {
       });
     },
   });
+
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setThumbnailUploading(true);
+    try {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        setFormData({ ...formData, thumbnailUrl: base64 });
+        toast({
+          title: "성공",
+          description: "썸네일이 선택되었습니다",
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast({
+        title: "오류",
+        description: "파일 업로드에 실패했습니다",
+        variant: "destructive",
+      });
+    } finally {
+      setThumbnailUploading(false);
+    }
+  };
 
   const resetForm = () => {
     setFormData({
@@ -269,12 +297,35 @@ export default function AdminPortfolios() {
 
                 {/* Thumbnail */}
                 <div>
-                  <label className="block text-sm font-medium mb-2">썸네일 이미지 URL *</label>
-                  <Input
-                    value={formData.thumbnailUrl || ""}
-                    onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                    placeholder="https://example.com/image.jpg"
-                  />
+                  <label className="block text-sm font-medium mb-2">썸네일 이미지 *</label>
+                  <div className="flex gap-4">
+                    <div className="flex-1">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => document.getElementById("portfolio-thumbnail-upload")?.click()}
+                        disabled={thumbnailUploading}
+                      >
+                        {thumbnailUploading ? "업로드 중..." : "이미지 선택"}
+                      </Button>
+                      <input
+                        id="portfolio-thumbnail-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleThumbnailUpload}
+                        className="hidden"
+                      />
+                    </div>
+                    {formData.thumbnailUrl && (
+                      <img
+                        src={formData.thumbnailUrl}
+                        alt="Preview"
+                        className="w-24 h-24 object-cover rounded border"
+                      />
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">프로젝트 목록에서 표시될 이미지입니다</p>
                 </div>
 
                 {/* Description */}

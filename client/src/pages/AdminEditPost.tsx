@@ -39,6 +39,7 @@ export default function AdminEditPost({ id }: EditPostParams) {
   });
 
   const [tagInput, setTagInput] = useState("");
+  const [thumbnailUploading, setThumbnailUploading] = useState(false);
 
   // Editor
   const editor = useEditor({
@@ -163,6 +164,36 @@ export default function AdminEditPost({ id }: EditPostParams) {
     }
   };
 
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setThumbnailUploading(true);
+    try {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const base64 = event.target?.result as string;
+        // 파일명 생성
+        const fileName = `thumbnails/${Date.now()}-${file.name}`;
+        // 데이터 URL을 사용 (실제 프로덕션에서는 서버에서 처리)
+        setFormData({ ...formData, thumbnailUrl: base64 });
+        toast({
+          title: "성공",
+          description: "썸네일이 선택되었습니다",
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast({
+        title: "오류",
+        description: "파일 업로드에 실패했습니다",
+        variant: "destructive",
+      });
+    } finally {
+      setThumbnailUploading(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -241,15 +272,37 @@ export default function AdminEditPost({ id }: EditPostParams) {
                 </p>
               </div>
 
-              {/* Thumbnail URL */}
+              {/* Thumbnail Image */}
               <div>
-                <label className="block text-sm font-medium mb-2">썸네일 이미지 URL *</label>
-                <Input
-                  value={formData.thumbnailUrl || ""}
-                  onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
-                  placeholder="https://example.com/image.jpg"
-                />
-                <p className="text-xs text-muted-foreground mt-1">포스트 목록에서 표시될 이미지입니다</p>
+                <label className="block text-sm font-medium mb-2">썸네일 이미지 *</label>
+                <div className="flex gap-4">
+                  <div className="flex-1">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => document.getElementById("thumbnail-upload")?.click()}
+                      disabled={thumbnailUploading}
+                    >
+                      {thumbnailUploading ? "업로드 중..." : "이미지 선택"}
+                    </Button>
+                    <input
+                      id="thumbnail-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleThumbnailUpload}
+                      className="hidden"
+                    />
+                  </div>
+                  {formData.thumbnailUrl && (
+                    <img
+                      src={formData.thumbnailUrl}
+                      alt="Preview"
+                      className="w-24 h-24 object-cover rounded border"
+                    />
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground mt-2">포스트 목록에서 표시될 이미지입니다 (권장: 1200x800px)</p>
               </div>
 
               {/* Rich Text Editor */}
