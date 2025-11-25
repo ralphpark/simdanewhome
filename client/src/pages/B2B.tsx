@@ -10,6 +10,7 @@ import { Building2, Users, FileCheck, Download, Leaf } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import plantCareImage from "@assets/DALL·E 2024-05-28 19.23.31 - A digital illustration depicting a premium plant care service in a corporate setting, now featuring a plant care expert wearing a dark green jumpsuit,_1764087568341.webp";
 
 export default function B2B() {
   const { toast } = useToast();
@@ -22,7 +23,7 @@ export default function B2B() {
       contactName: "",
       phone: "",
       email: "",
-      businessField: "",
+      businessField: "" as any,
       proposalContent: "",
     },
   });
@@ -126,7 +127,13 @@ export default function B2B() {
                 ))}
               </ul>
             </div>
-            <div className="aspect-square bg-muted rounded-lg"></div>
+            <div className="aspect-square rounded-lg overflow-hidden">
+              <img 
+                src={plantCareImage} 
+                alt="simda B2B 플랜트 케어 서비스"
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
 
           <Card className="mb-12">
