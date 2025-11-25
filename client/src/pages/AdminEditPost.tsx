@@ -1,0 +1,330 @@
+import { useState, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "wouter";
+import type { Post, InsertPost } from "@shared/schema";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { apiRequest } from "@/lib/queryClient";
+import { Link } from "wouter";
+import { ArrowLeft, Save, Eye } from "lucide-react";
+
+interface EditPostParams {
+  id?: string;
+}
+
+export default function AdminEditPost({ id }: EditPostParams) {
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [, navigate] = useLocation();
+  const isEditMode = !!id;
+
+  const [formData, setFormData] = useState<Partial<InsertPost>>({
+    title: "",
+    content: "",
+    excerpt: "",
+    category: "plant-care",
+    tags: [],
+    author: "simda Team",
+    published: true,
+    thumbnailUrl: "",
+  });
+
+  const [tagInput, setTagInput] = useState("");
+
+  // Fetch post if editing
+  const { data: post, isLoading: postLoading } = useQuery<Post>({
+    queryKey: [`/api/posts/${id}`],
+    enabled: isEditMode && isAuthenticated,
+  });
+
+  useEffect(() => {
+    if (post && isEditMode) {
+      setFormData({
+        title: post.title,
+        content: post.content,
+        excerpt: post.excerpt,
+        category: post.category,
+        tags: post.tags || [],
+        author: post.author,
+        published: post.published,
+        thumbnailUrl: post.thumbnailUrl,
+      });
+    }
+  }, [post, isEditMode]);
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      toast({
+        title: "인증 필요",
+        description: "관리자 로그인이 필요합니다",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        navigate("/");
+      }, 500);
+    }
+  }, [isAuthenticated, authLoading, navigate, toast]);
+
+  const createPostMutation = useMutation({
+    mutationFn: async (data: Partial<InsertPost>) => {
+      const res = await apiRequest("POST", "/api/posts", data);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/posts"] });
+      toast({
+        title: "성공",
+        description: "포스트가 생성되었습니다",
+      });
+      navigate("/admin");
+    },
+    onError: () => {
+      toast({
+        title: "오류",
+        description: "포스트 생성에 실패했습니다",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const updatePostMutation = useMutation({
+    mutationFn: async (data: Partial<InsertPost>) => {
+      const res = await apiRequest("PATCH", `/api/posts/${id}`, data);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/posts"] });
+      queryClient.invalidateQueries({ queryKey: [`/api/posts/${id}`] });
+      toast({
+        title: "성공",
+        description: "포스트가 수정되었습니다",
+      });
+      navigate("/admin");
+    },
+    onError: () => {
+      toast({
+        title: "오류",
+        description: "포스트 수정에 실패했습니다",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleAddTag = () => {
+    if (tagInput.trim() && formData.tags && !formData.tags.includes(tagInput.trim())) {
+      setFormData({
+        ...formData,
+        tags: [...formData.tags, tagInput.trim()],
+      });
+      setTagInput("");
+    }
+  };
+
+  const handleRemoveTag = (tag: string) => {
+    setFormData({
+      ...formData,
+      tags: formData.tags?.filter(t => t !== tag) || [],
+    });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.title || !formData.content || !formData.excerpt || !formData.thumbnailUrl) {
+      toast({
+        title: "필수 항목",
+        description: "모든 필수 항목을 입력해주세요",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (isEditMode) {
+      updatePostMutation.mutate(formData);
+    } else {
+      createPostMutation.mutate(formData);
+    }
+  };
+
+  if (authLoading || postLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
+          <p className="text-muted-foreground">로드 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex-1">
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        <Link href="/admin">
+          <Button variant="ghost" size="sm" className="mb-6 gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            돌아가기
+          </Button>
+        </Link>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{isEditMode ? "포스트 수정" : "새 포스트 작성"}</CardTitle>
+            <CardDescription>
+              {isEditMode ? "기존 포스트를 수정하세요" : "새로운 블로그 포스트를 작성하세요"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Title */}
+              <div>
+                <label className="block text-sm font-medium mb-2">제목 *</label>
+                <Input
+                  value={formData.title || ""}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  placeholder="포스트 제목을 입력하세요"
+                  maxLength={200}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {formData.title?.length || 0}/200
+                </p>
+              </div>
+
+              {/* Excerpt */}
+              <div>
+                <label className="block text-sm font-medium mb-2">요약 *</label>
+                <Textarea
+                  value={formData.excerpt || ""}
+                  onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+                  placeholder="포스트 요약을 입력하세요"
+                  maxLength={300}
+                  className="resize-none h-20"
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  {formData.excerpt?.length || 0}/300
+                </p>
+              </div>
+
+              {/* Thumbnail URL */}
+              <div>
+                <label className="block text-sm font-medium mb-2">썸네일 이미지 URL *</label>
+                <Input
+                  value={formData.thumbnailUrl || ""}
+                  onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
+                  placeholder="https://example.com/image.jpg"
+                />
+              </div>
+
+              {/* Content */}
+              <div>
+                <label className="block text-sm font-medium mb-2">내용 *</label>
+                <Textarea
+                  value={formData.content || ""}
+                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  placeholder="마크다운 형식의 포스트 내용을 입력하세요"
+                  className="resize-none h-64 font-mono text-sm"
+                />
+              </div>
+
+              {/* Category */}
+              <div>
+                <label className="block text-sm font-medium mb-2">카테고리</label>
+                <select
+                  value={formData.category || ""}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  className="w-full px-3 py-2 border rounded-md"
+                >
+                  <option value="plant-care">식물 관리</option>
+                  <option value="design">인테리어</option>
+                  <option value="trends">트렌드</option>
+                  <option value="story">스토리</option>
+                  <option value="other">기타</option>
+                </select>
+              </div>
+
+              {/* Tags */}
+              <div>
+                <label className="block text-sm font-medium mb-2">태그</label>
+                <div className="flex gap-2 mb-3">
+                  <Input
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleAddTag();
+                      }
+                    }}
+                    placeholder="태그 입력 후 엔터"
+                  />
+                  <Button type="button" variant="outline" onClick={handleAddTag}>
+                    추가
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {formData.tags?.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="cursor-pointer"
+                      onClick={() => handleRemoveTag(tag)}
+                    >
+                      {tag} ×
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Author */}
+              <div>
+                <label className="block text-sm font-medium mb-2">작성자</label>
+                <Input
+                  value={formData.author || ""}
+                  onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                  placeholder="작성자 이름"
+                />
+              </div>
+
+              {/* Publish Status */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="published"
+                  checked={formData.published || false}
+                  onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                  className="rounded"
+                />
+                <label htmlFor="published" className="text-sm font-medium cursor-pointer">
+                  발행 상태 (체크 시 공개)
+                </label>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2 justify-end pt-4 border-t">
+                <Link href="/admin">
+                  <Button type="button" variant="outline">
+                    취소
+                  </Button>
+                </Link>
+                <Button
+                  type="submit"
+                  disabled={createPostMutation.isPending || updatePostMutation.isPending}
+                  className="gap-2"
+                >
+                  <Save className="h-4 w-4" />
+                  {isEditMode ? "수정 완료" : "포스트 생성"}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

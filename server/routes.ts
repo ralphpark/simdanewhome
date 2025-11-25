@@ -186,7 +186,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/portfolios", async (req, res) => {
+  app.post("/api/portfolios", isAuthenticated, async (req, res) => {
     try {
       const validatedData = insertPortfolioSchema.parse(req.body);
       const portfolio = await storage.createPortfolio(validatedData);
@@ -197,7 +197,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/portfolios/:id", async (req, res) => {
+  app.patch("/api/portfolios/:id", isAuthenticated, async (req, res) => {
     try {
       const portfolio = await storage.updatePortfolio(req.params.id, req.body);
       if (!portfolio) {
@@ -210,7 +210,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/portfolios/:id", async (req, res) => {
+  app.delete("/api/portfolios/:id", isAuthenticated, async (req, res) => {
     try {
       await storage.deletePortfolio(req.params.id);
       res.json({ success: true });
@@ -248,7 +248,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/posts", async (req, res) => {
+  app.post("/api/posts", isAuthenticated, async (req, res) => {
     try {
       const validatedData = insertPostSchema.parse(req.body);
       const post = await storage.createPost(validatedData);
@@ -259,7 +259,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/posts/:id", async (req, res) => {
+  app.patch("/api/posts/:id", isAuthenticated, async (req, res) => {
     try {
       const post = await storage.updatePost(req.params.id, req.body);
       if (!post) {
@@ -272,7 +272,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/posts/:id", async (req, res) => {
+  app.delete("/api/posts/:id", isAuthenticated, async (req, res) => {
     try {
       await storage.deletePost(req.params.id);
       res.json({ success: true });

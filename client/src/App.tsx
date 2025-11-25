@@ -17,6 +17,8 @@ import Support from "@/pages/Support";
 import Admin from "@/pages/Admin";
 import AICuration from "@/pages/AICuration";
 import PlantCareConsultation from "@/pages/PlantCareConsultation";
+import AdminEditPost from "@/pages/AdminEditPost";
+import AdminPortfolios from "@/pages/AdminPortfolios";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -34,6 +36,9 @@ function Router() {
       <Route path="/admin" component={Admin} />
       <Route path="/ai-curation" component={AICuration} />
       <Route path="/plant-care-consultation" component={PlantCareConsultation} />
+      <Route path="/admin/posts/new" component={AdminEditPost} />
+      <Route path="/admin/posts/:id" component={AdminEditPost} />
+      <Route path="/admin/portfolios" component={AdminPortfolios} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Edit2, Trash2, Check, X, Plus, AlertCircle } from "lucide-react";
+import { Edit2, Trash2, Check, X, Plus } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import {
   AlertDialog,
@@ -246,8 +246,9 @@ export default function Admin() {
         </div>
 
         <Tabs defaultValue="posts" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="posts">포스트 ({posts.length})</TabsTrigger>
+            <TabsTrigger value="portfolios">포트폴리오</TabsTrigger>
             <TabsTrigger value="bookings">예약 ({bookings.length})</TabsTrigger>
             <TabsTrigger value="b2b">B2B 제안 ({b2bProposals.length})</TabsTrigger>
             <TabsTrigger value="comments">댓글 ({comments.length})</TabsTrigger>
@@ -261,6 +262,12 @@ export default function Admin() {
                   <CardTitle>포스트 관리</CardTitle>
                   <CardDescription>블로그 포스트를 관리하세요</CardDescription>
                 </div>
+                <Link href="/admin/posts/new">
+                  <Button className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    새 포스트
+                  </Button>
+                </Link>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -290,7 +297,7 @@ export default function Admin() {
                             )}
                           </TableCell>
                           <TableCell className="text-right space-x-2">
-                            <Link href={`/magazine/${post.id}`}>
+                            <Link href={`/admin/posts/${post.id}`}>
                               <Button size="icon" variant="ghost" data-testid={`edit-post-${post.id}`}>
                                 <Edit2 className="h-4 w-4" />
                               </Button>
@@ -330,6 +337,16 @@ export default function Admin() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* 포트폴리오 탭 */}
+          <TabsContent value="portfolios" className="space-y-6">
+            <Link href="/admin/portfolios">
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                포트폴리오 관리하기
+              </Button>
+            </Link>
           </TabsContent>
 
           {/* 예약 탭 */}
