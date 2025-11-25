@@ -19,6 +19,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Link } from "wouter";
 
 export default function Admin() {
@@ -26,6 +33,8 @@ export default function Admin() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [selectedProposal, setSelectedProposal] = useState<B2bProposal | null>(null);
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -496,7 +505,13 @@ export default function Admin() {
                             </select>
                           </TableCell>
                           <TableCell>
-                            <Button size="sm" variant="ghost" className="text-xs">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-xs"
+                              onClick={() => setSelectedBooking(booking)}
+                              data-testid={`button-view-booking-${booking.id}`}
+                            >
                               보기
                             </Button>
                           </TableCell>
@@ -560,7 +575,13 @@ export default function Admin() {
                             </select>
                           </TableCell>
                           <TableCell>
-                            <Button size="sm" variant="ghost" className="text-xs">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-xs"
+                              onClick={() => setSelectedProposal(proposal)}
+                              data-testid={`button-view-proposal-${proposal.id}`}
+                            >
                               보기
                             </Button>
                           </TableCell>
@@ -648,6 +669,103 @@ export default function Admin() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* 예약 상세 Dialog */}
+        <Dialog open={!!selectedBooking} onOpenChange={(open) => !open && setSelectedBooking(null)}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>예약 상세 정보</DialogTitle>
+            </DialogHeader>
+            {selectedBooking && (
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">이름</p>
+                  <p className="font-medium">{selectedBooking.name}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">연락처</p>
+                  <p className="font-medium">{selectedBooking.phone}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">이메일</p>
+                  <p className="font-medium">{selectedBooking.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">상담 유형</p>
+                  <p className="font-medium">{selectedBooking.consultationType}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">희망 날짜</p>
+                  <p className="font-medium">
+                    {selectedBooking.preferredDate
+                      ? new Date(selectedBooking.preferredDate).toLocaleDateString("ko-KR")
+                      : "-"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">희망 시간</p>
+                  <p className="font-medium">{selectedBooking.preferredTime || "-"}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">상태</p>
+                  <p className="font-medium">
+                    {selectedBooking.status === "pending" && "대기 중"}
+                    {selectedBooking.status === "confirmed" && "확인 완료"}
+                    {selectedBooking.status === "completed" && "완료"}
+                    {selectedBooking.status === "cancelled" && "취소"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">문의 내용</p>
+                  <p className="text-sm whitespace-pre-wrap">{selectedBooking.message}</p>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* B2B 제안 상세 Dialog */}
+        <Dialog open={!!selectedProposal} onOpenChange={(open) => !open && setSelectedProposal(null)}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>B2B 제안 상세 정보</DialogTitle>
+            </DialogHeader>
+            {selectedProposal && (
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">회사명</p>
+                  <p className="font-medium">{selectedProposal.companyName}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">담당자</p>
+                  <p className="font-medium">{selectedProposal.contactName}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">연락처</p>
+                  <p className="font-medium">{selectedProposal.phone}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">이메일</p>
+                  <p className="font-medium">{selectedProposal.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">상태</p>
+                  <p className="font-medium">
+                    {selectedProposal.status === "pending" && "대기 중"}
+                    {selectedProposal.status === "reviewing" && "검토 중"}
+                    {selectedProposal.status === "contacted" && "연락 완료"}
+                    {selectedProposal.status === "in_progress" && "진행 중"}
+                    {selectedProposal.status === "completed" && "완료"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">제안 내용</p>
+                  <p className="text-sm whitespace-pre-wrap">{selectedProposal.proposalContent}</p>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
