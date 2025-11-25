@@ -2,6 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Calendar, BookOpen, TrendingUp, Sparkles, MapPin, Users, ExternalLink, BadgeCheck } from "lucide-react";
 import { Link } from "wouter";
+import subscriptionImage from "@assets/generated_images/plant_subscription_service_delivery.png";
+import educationImage from "@assets/generated_images/plant_content_education_program.png";
+import aiCurationImage from "@assets/generated_images/ai_plant_curation_consultation_service.png";
 
 export default function Services() {
   return (
@@ -74,8 +77,12 @@ export default function Services() {
                 </Link>
               </div>
             </div>
-            <div className="aspect-square bg-muted rounded-lg flex items-center justify-center">
-              <MessageSquare className="h-24 w-24 text-muted-foreground" />
+            <div className="aspect-square rounded-lg overflow-hidden">
+              <img 
+                src={aiCurationImage} 
+                alt="AI 식물 큐레이션 서비스"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
@@ -84,8 +91,12 @@ export default function Services() {
       <section id="subscription" className="py-20 bg-card">
         <div className="max-w-6xl mx-auto px-6 md:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="aspect-square bg-muted rounded-lg flex items-center justify-center order-2 md:order-1">
-              <Calendar className="h-24 w-24 text-muted-foreground" />
+            <div className="aspect-square rounded-lg overflow-hidden order-2 md:order-1">
+              <img 
+                src={subscriptionImage} 
+                alt="식물 구독 관리 서비스"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="order-1 md:order-2">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
@@ -95,19 +106,23 @@ export default function Services() {
                 정기적으로 새로운 식물을 받아보고, 전문가의 관리 팁과 함께 
                 당신의 식물 컬렉션을 키워나가세요.
               </p>
-              <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-3 gap-4 mb-8">
                 <Card>
-                  <CardContent className="pt-6">
-                    <h4 className="font-semibold mb-2">베이직 플랜</h4>
-                    <p className="text-2xl font-bold text-primary mb-2">월 29,000원</p>
-                    <p className="text-sm text-muted-foreground">월 1회 식물 배송</p>
+                  <CardContent className="pt-6 text-center">
+                    <h4 className="font-semibold mb-2">공기업</h4>
+                    <p className="text-sm text-muted-foreground">정부기관 및 공기업 맞춤 서비스</p>
                   </CardContent>
                 </Card>
                 <Card>
-                  <CardContent className="pt-6">
-                    <h4 className="font-semibold mb-2">프리미엄 플랜</h4>
-                    <p className="text-2xl font-bold text-primary mb-2">월 59,000원</p>
-                    <p className="text-sm text-muted-foreground">월 2회 + 관리 서비스</p>
+                  <CardContent className="pt-6 text-center">
+                    <h4 className="font-semibold mb-2">사기업</h4>
+                    <p className="text-sm text-muted-foreground">기업 사무실 및 상업공간</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-6 text-center">
+                    <h4 className="font-semibold mb-2">개인</h4>
+                    <p className="text-sm text-muted-foreground">가정 및 개인 공간 서비스</p>
                   </CardContent>
                 </Card>
               </div>
@@ -127,40 +142,47 @@ export default function Services() {
                 식물 콘텐츠 교육
               </h2>
               <p className="text-muted-foreground mb-8">
-                초급부터 고급까지, 체계적인 식물 관리 교육 프로그램을 제공합니다.
+                공기업, 사기업, 교육기관 및 개인을 대상으로 한 맞춤형 식물 교육 프로그램을 제공합니다.
               </p>
               <div className="space-y-4 mb-8">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">초급 과정</CardTitle>
+                    <CardTitle className="text-lg">공기업/공공기관</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      기본적인 식물 관리법, 물주기, 빛 관리
+                    <p className="text-sm text-muted-foreground">
+                      직원 웰빙을 위한 직장 내 식물 관리 교육 및 사내 정원 운영 프로그램
                     </p>
-                    <p className="text-sm font-semibold">2주 과정 | 150,000원</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">중급 과정</CardTitle>
+                    <CardTitle className="text-lg">사기업/상업시설</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      분갈이, 병충해 관리, 번식법
+                    <p className="text-sm text-muted-foreground">
+                      고객 만족도 향상을 위한 상업공간 식물 관리 전문 교육
                     </p>
-                    <p className="text-sm font-semibold">4주 과정 | 280,000원</p>
                   </CardContent>
                 </Card>
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">고급 과정</CardTitle>
+                    <CardTitle className="text-lg">교육기관</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      희귀 식물 관리, 전문가 양성 과정
+                    <p className="text-sm text-muted-foreground">
+                      학생들을 위한 생태학 연계 교육 프로그램 및 원예 치료 프로그램
                     </p>
-                    <p className="text-sm font-semibold">8주 과정 | 500,000원</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-lg">개인</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      가정에서의 체계적인 식물 관리법과 전문가 양성 과정
+                    </p>
                   </CardContent>
                 </Card>
               </div>
@@ -168,8 +190,12 @@ export default function Services() {
                 채널톡으로 문의하기
               </Button>
             </div>
-            <div className="aspect-square bg-muted rounded-lg flex items-center justify-center">
-              <BookOpen className="h-24 w-24 text-muted-foreground" />
+            <div className="aspect-square rounded-lg overflow-hidden">
+              <img 
+                src={educationImage} 
+                alt="식물 콘텐츠 교육"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
