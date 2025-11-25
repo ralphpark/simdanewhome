@@ -101,6 +101,28 @@ export default function Admin() {
     },
   });
 
+  // Delete timeline mutation
+  const deleteTimelineMutation = useMutation({
+    mutationFn: async (timelineId: string) => {
+      const res = await apiRequest("DELETE", `/api/timelines/${timelineId}`, {});
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/timelines"] });
+      toast({
+        title: "성공",
+        description: "연혁 항목이 삭제되었습니다",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "오류",
+        description: "연혁 항목 삭제에 실패했습니다",
+        variant: "destructive",
+      });
+    },
+  });
+
   // Delete post mutation
   const deletePostMutation = useMutation({
     mutationFn: async (postId: string) => {
@@ -724,7 +746,7 @@ export default function Admin() {
                                   <AlertDialogCancel>취소</AlertDialogCancel>
                                   <AlertDialogAction
                                     onClick={() => {
-                                      // Delete timeline mutation would go here
+                                      deleteTimelineMutation.mutate(timeline.id);
                                     }}
                                   >
                                     삭제

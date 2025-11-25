@@ -20,6 +20,7 @@ import AICuration from "@/pages/AICuration";
 import PlantCareConsultation from "@/pages/PlantCareConsultation";
 import AdminEditPost from "@/pages/AdminEditPost";
 import AdminPortfolios from "@/pages/AdminPortfolios";
+import AdminTimelines from "@/pages/AdminTimelines";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -42,6 +43,8 @@ function Router() {
       <Route path="/admin/posts/:id" component={AdminEditPost} />
       <Route path="/admin/portfolios/new" component={AdminPortfolios} />
       <Route path="/admin/portfolios/:id" component={AdminPortfolios} />
+      <Route path="/admin/timelines/new" component={AdminTimelines} />
+      <Route path="/admin/timelines/:id" component={AdminTimelines} />
       <Route component={NotFound} />
     </Switch>
   );
