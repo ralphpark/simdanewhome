@@ -238,7 +238,7 @@ export default function Booking() {
                       control={form.control}
                       name="preferredTime"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="flex flex-col">
                           <FormLabel>희망 시간 *</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
