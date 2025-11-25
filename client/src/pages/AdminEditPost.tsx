@@ -11,7 +11,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
-import { ArrowLeft, Save, Eye } from "lucide-react";
+import { ArrowLeft, Save, Bold, Italic, Heading2, List, Image as ImageIcon, Link2 } from "lucide-react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import ImageExtension from "@tiptap/extension-image";
 
 interface EditPostParams {
   id?: string;
@@ -37,6 +40,20 @@ export default function AdminEditPost({ id }: EditPostParams) {
 
   const [tagInput, setTagInput] = useState("");
 
+  // Editor
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      ImageExtension.configure({
+        allowBase64: true,
+      }),
+    ],
+    content: formData.content || "<p>포스트 내용을 입력하세요...</p>",
+    onUpdate: ({ editor }) => {
+      setFormData({ ...formData, content: editor.getHTML() });
+    },
+  });
+
   // Fetch post if editing
   const { data: post, isLoading: postLoading } = useQuery<Post>({
     queryKey: [`/api/posts/${id}`],
@@ -55,8 +72,9 @@ export default function AdminEditPost({ id }: EditPostParams) {
         published: post.published,
         thumbnailUrl: post.thumbnailUrl,
       });
+      editor?.commands.setContent(post.content);
     }
-  }, [post, isEditMode]);
+  }, [post, isEditMode, editor]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -133,9 +151,21 @@ export default function AdminEditPost({ id }: EditPostParams) {
     });
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const url = event.target?.result as string;
+        editor?.chain().focus().setImage({ src: url }).run();
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title || !formData.content || !formData.excerpt || !formData.thumbnailUrl) {
       toast({
         title: "필수 항목",
@@ -202,7 +232,7 @@ export default function AdminEditPost({ id }: EditPostParams) {
                 <Textarea
                   value={formData.excerpt || ""}
                   onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                  placeholder="포스트 요약을 입력하세요"
+                  placeholder="포스트 한 줄 요약 (목록에서 표시됩니다)"
                   maxLength={300}
                   className="resize-none h-20"
                 />
@@ -219,17 +249,75 @@ export default function AdminEditPost({ id }: EditPostParams) {
                   onChange={(e) => setFormData({ ...formData, thumbnailUrl: e.target.value })}
                   placeholder="https://example.com/image.jpg"
                 />
+                <p className="text-xs text-muted-foreground mt-1">포스트 목록에서 표시될 이미지입니다</p>
               </div>
 
-              {/* Content */}
+              {/* Rich Text Editor */}
               <div>
                 <label className="block text-sm font-medium mb-2">내용 *</label>
-                <Textarea
-                  value={formData.content || ""}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  placeholder="마크다운 형식의 포스트 내용을 입력하세요"
-                  className="resize-none h-64 font-mono text-sm"
-                />
+                <div className="border rounded-lg">
+                  {/* Toolbar */}
+                  <div className="flex flex-wrap gap-1 p-3 border-b bg-muted">
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant={editor?.isActive("bold") ? "default" : "ghost"}
+                      onClick={() => editor?.chain().focus().toggleBold().run()}
+                      className="h-8 w-8"
+                    >
+                      <Bold className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant={editor?.isActive("italic") ? "default" : "ghost"}
+                      onClick={() => editor?.chain().focus().toggleItalic().run()}
+                      className="h-8 w-8"
+                    >
+                      <Italic className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant={editor?.isActive("heading", { level: 2 }) ? "default" : "ghost"}
+                      onClick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+                      className="h-8 w-8"
+                    >
+                      <Heading2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant={editor?.isActive("bulletList") ? "default" : "ghost"}
+                      onClick={() => editor?.chain().focus().toggleBulletList().run()}
+                      className="h-8 w-8"
+                    >
+                      <List className="h-4 w-4" />
+                    </Button>
+                    <div className="border-l mx-1"></div>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="ghost"
+                      onClick={() => document.getElementById("image-upload")?.click()}
+                      className="h-8 w-8"
+                    >
+                      <ImageIcon className="h-4 w-4" />
+                    </Button>
+                    <input
+                      id="image-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </div>
+
+                  {/* Editor */}
+                  <div className="prose prose-sm max-w-none p-4 min-h-96 focus:outline-none">
+                    <EditorContent editor={editor} className="focus:outline-none" />
+                  </div>
+                </div>
               </div>
 
               {/* Category */}
