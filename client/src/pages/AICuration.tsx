@@ -105,9 +105,6 @@ export default function AICuration() {
               ← 돌아가기
             </Button>
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-            AI 식물 큐레이션
-          </h1>
           <p className="text-muted-foreground">
             simda의 AI 식물 큐레이터와 대화하며 당신에게 완벽한 식물을 찾아보세요
           </p>
