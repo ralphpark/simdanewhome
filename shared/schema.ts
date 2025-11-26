@@ -117,6 +117,16 @@ export const timelines = pgTable("timelines", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Documents table for company introduction and proposal templates
+export const documents = pgTable("documents", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(), // Document name (e.g., "회사소개서 2024", "제안서 양식")
+  type: text("type").notNull(), // "company-intro" or "proposal-template"
+  fileUrl: text("file_url").notNull(), // Object storage path
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertChatHistorySchema = createInsertSchema(chatHistories).omit({
   id: true,
@@ -180,6 +190,16 @@ export const insertTimelineSchema = createInsertSchema(timelines).omit({
   year: z.string().regex(/^\d{4}$/, "연도는 4자리 숫자만 입력 가능합니다"),
 });
 
+export const insertDocumentSchema = createInsertSchema(documents).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  name: z.string().min(2, "문서명을 입력해주세요"),
+  type: z.enum(["company-intro", "proposal-template"]),
+  fileUrl: z.string().url("유효한 파일 URL을 입력해주세요"),
+});
+
 // Types
 export type ChatHistory = typeof chatHistories.$inferSelect;
 export type InsertChatHistory = z.infer<typeof insertChatHistorySchema>;
@@ -201,6 +221,9 @@ export type InsertComment = z.infer<typeof insertCommentSchema>;
 
 export type Timeline = typeof timelines.$inferSelect;
 export type InsertTimeline = z.infer<typeof insertTimelineSchema>;
+
+export type Document = typeof documents.$inferSelect;
+export type InsertDocument = z.infer<typeof insertDocumentSchema>;
 
 export type User = typeof users.$inferSelect;
 export type UpsertUser = typeof users.$inferInsert;

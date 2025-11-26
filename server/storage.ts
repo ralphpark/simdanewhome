@@ -13,6 +13,8 @@ import type {
   InsertComment,
   Timeline,
   InsertTimeline,
+  Document,
+  InsertDocument,
   User,
   UpsertUser,
 } from "@shared/schema";
@@ -64,6 +66,12 @@ export interface IStorage {
   getTimelineById(id: string): Promise<Timeline | undefined>;
   updateTimeline(id: string, data: Partial<InsertTimeline>): Promise<Timeline | undefined>;
   deleteTimeline(id: string): Promise<void>;
+
+  // Documents
+  createDocument(data: InsertDocument): Promise<Document>;
+  getAllDocuments(): Promise<Document[]>;
+  getDocumentById(id: string): Promise<Document | undefined>;
+  deleteDocument(id: string): Promise<void>;
 
   // Users (Replit Auth)
   getUser(id: string): Promise<User | undefined>;
