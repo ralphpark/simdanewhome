@@ -374,13 +374,14 @@ export default function Admin() {
           setActiveTab(val);
           sessionStorage.setItem('adminActiveTab', val);
         }} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="posts">포스트 ({posts.length})</TabsTrigger>
             <TabsTrigger value="portfolios">포트폴리오 ({portfolios.length})</TabsTrigger>
             <TabsTrigger value="bookings">예약 ({bookings.length})</TabsTrigger>
             <TabsTrigger value="b2b">B2B 제안 ({b2bProposals.length})</TabsTrigger>
             <TabsTrigger value="comments">댓글 ({comments.length})</TabsTrigger>
             <TabsTrigger value="timelines">연혁 ({timelines.length})</TabsTrigger>
+            <TabsTrigger value="documents">문서 ({documents.length})</TabsTrigger>
           </TabsList>
 
           {/* 포스트 탭 */}
@@ -827,6 +828,152 @@ export default function Admin() {
                   {timelines.length === 0 && (
                     <div className="text-center py-8 text-muted-foreground">
                       연혁 항목이 없습니다
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* 문서 탭 */}
+          <TabsContent value="documents" className="space-y-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>회사 문서 관리</CardTitle>
+                  <CardDescription>회사소개서 및 제안서 양식을 관리하세요</CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* 문서 업로드 폼 */}
+                <Card className="bg-muted/50 p-6">
+                  <div className="space-y-4">
+                    <h3 className="font-semibold">새 문서 업로드</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-sm font-medium">문서명</label>
+                        <Input
+                          placeholder="예: 2024 회사소개서"
+                          value={documentName}
+                          onChange={(e) => setDocumentName(e.target.value)}
+                          data-testid="input-document-name"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">문서 유형</label>
+                        <div className="flex gap-4 mt-2">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              value="company-intro"
+                              checked={documentType === "company-intro"}
+                              onChange={(e) => setDocumentType(e.target.value as "company-intro" | "proposal-template")}
+                              data-testid="radio-company-intro"
+                            />
+                            <span className="text-sm">회사소개서</span>
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              value="proposal-template"
+                              checked={documentType === "proposal-template"}
+                              onChange={(e) => setDocumentType(e.target.value as "company-intro" | "proposal-template")}
+                              data-testid="radio-proposal-template"
+                            />
+                            <span className="text-sm">제안서 양식</span>
+                          </label>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">파일 URL (Object Storage)</label>
+                        <Input
+                          placeholder="https://..."
+                          value={documentFileUrl}
+                          onChange={(e) => setDocumentFileUrl(e.target.value)}
+                          data-testid="input-document-url"
+                        />
+                      </div>
+                      <Button
+                        onClick={() => {
+                          if (documentName && documentFileUrl) {
+                            createDocumentMutation.mutate({
+                              name: documentName,
+                              type: documentType,
+                              fileUrl: documentFileUrl,
+                            });
+                          } else {
+                            toast({
+                              title: "오류",
+                              description: "모든 항목을 입력해주세요",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                        disabled={createDocumentMutation.isPending}
+                        data-testid="button-upload-document"
+                      >
+                        {createDocumentMutation.isPending ? "업로드 중..." : "업로드"}
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* 문서 목록 */}
+                <div className="space-y-3">
+                  <h3 className="font-semibold">업로드된 문서</h3>
+                  {documents.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      업로드된 문서가 없습니다
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {documents.map((doc) => (
+                        <Card key={doc.id} className="p-4">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex items-start gap-3 flex-1">
+                              <FileText className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium truncate">{doc.name}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {doc.type === "company-intro" ? "회사소개서" : "제안서 양식"}
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {new Date(doc.createdAt).toLocaleDateString("ko-KR")}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex gap-2 flex-shrink-0">
+                              <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer">
+                                <Button size="sm" variant="ghost" data-testid={`button-download-${doc.id}`}>
+                                  <Download className="h-4 w-4" />
+                                </Button>
+                              </a>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <Button size="sm" variant="ghost" className="text-destructive" data-testid={`button-delete-doc-${doc.id}`}>
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogTitle>문서 삭제</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    이 문서를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.
+                                  </AlertDialogDescription>
+                                  <div className="flex justify-end gap-2">
+                                    <AlertDialogCancel>취소</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => deleteDocumentMutation.mutate(doc.id)}
+                                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                    >
+                                      삭제
+                                    </AlertDialogAction>
+                                  </div>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
                     </div>
                   )}
                 </div>
