@@ -604,6 +604,28 @@ export class DbStorage implements IStorage {
     await db.delete(schema.timelines).where(eq(schema.timelines.id, id));
   }
 
+  // Documents
+  async createDocument(data: InsertDocument): Promise<Document> {
+    const [result] = await db.insert(schema.documents).values(data).returning();
+    return result;
+  }
+
+  async getAllDocuments(): Promise<Document[]> {
+    return await db.query.documents.findMany({
+      orderBy: [desc(schema.documents.createdAt)],
+    });
+  }
+
+  async getDocumentById(id: string): Promise<Document | undefined> {
+    return await db.query.documents.findFirst({
+      where: eq(schema.documents.id, id),
+    });
+  }
+
+  async deleteDocument(id: string): Promise<void> {
+    await db.delete(schema.documents).where(eq(schema.documents.id, id));
+  }
+
   // Users (Replit Auth)
   async getUser(id: string): Promise<User | undefined> {
     return await db.query.users.findFirst({

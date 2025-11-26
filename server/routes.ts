@@ -11,6 +11,7 @@ import {
   insertPostSchema,
   insertCommentSchema,
   insertTimelineSchema,
+  insertDocumentSchema,
 } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -516,6 +517,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Delete timeline error:", error);
       res.status(500).json({ error: "Failed to delete timeline" });
+    }
+  });
+
+  // Documents endpoints
+  app.get("/api/documents", async (req, res) => {
+    try {
+      const documents = await storage.getAllDocuments();
+      res.json(documents);
+    } catch (error) {
+      console.error("Get documents error:", error);
+      res.status(500).json({ error: "Failed to fetch documents" });
+    }
+  });
+
+  app.post("/api/documents", isAuthenticated, async (req, res) => {
+    try {
+      const validatedData = insertDocumentSchema.parse(req.body);
+      const document = await storage.createDocument(validatedData);
+      res.json(document);
+    } catch (error) {
+      console.error("Create document error:", error);
+      res.status(400).json({ error: "Invalid document data" });
+    }
+  });
+
+  app.delete("/api/documents/:id", isAuthenticated, async (req, res) => {
+    try {
+      await storage.deleteDocument(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Delete document error:", error);
+      res.status(500).json({ error: "Failed to delete document" });
     }
   });
 

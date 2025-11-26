@@ -2,13 +2,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Post, Comment, Booking, B2bProposal, Portfolio, Timeline } from "@shared/schema";
+import type { Post, Comment, Booking, B2bProposal, Portfolio, Timeline, Document } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Edit2, Trash2, Check, X, Plus } from "lucide-react";
+import { Edit2, Trash2, Check, X, Plus, Download, FileText } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { apiRequest } from "@/lib/queryClient";
 import {
   AlertDialog,
@@ -83,6 +84,16 @@ export default function Admin() {
     enabled: isAuthenticated,
   });
 
+  const { data: documents = [] } = useQuery<Document[]>({
+    queryKey: ["/api/documents"],
+    enabled: isAuthenticated,
+  });
+
+  // State for document form
+  const [documentName, setDocumentName] = useState("");
+  const [documentType, setDocumentType] = useState<"company-intro" | "proposal-template">("company-intro");
+  const [documentFileUrl, setDocumentFileUrl] = useState("");
+
   // Delete portfolio mutation
   const deletePortfolioMutation = useMutation({
     mutationFn: async (portfolioId: string) => {
@@ -144,6 +155,53 @@ export default function Admin() {
       toast({
         title: "오류",
         description: "포스트 삭제에 실패했습니다",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Create document mutation
+  const createDocumentMutation = useMutation({
+    mutationFn: async (data: { name: string; type: string; fileUrl: string }) => {
+      const res = await apiRequest("POST", "/api/documents", data);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
+      setDocumentName("");
+      setDocumentFileUrl("");
+      setDocumentType("company-intro");
+      toast({
+        title: "성공",
+        description: "문서가 업로드되었습니다",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "오류",
+        description: "문서 업로드에 실패했습니다",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Delete document mutation
+  const deleteDocumentMutation = useMutation({
+    mutationFn: async (docId: string) => {
+      const res = await apiRequest("DELETE", `/api/documents/${docId}`, {});
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
+      toast({
+        title: "성공",
+        description: "문서가 삭제되었습니다",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "오류",
+        description: "문서 삭제에 실패했습니다",
         variant: "destructive",
       });
     },
