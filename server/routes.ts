@@ -553,8 +553,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Upload to object storage
       const fileName = `documents/${Date.now()}-${req.file.originalname}`;
-      const publicDir = process.env.PUBLIC_OBJECT_SEARCH_PATHS || "public";
-      const filePath = path.join(publicDir, fileName);
+      const publicDir = process.env.PUBLIC_OBJECT_SEARCH_PATHS || "./public/documents";
+      const filePath = path.join(publicDir, `${Date.now()}-${req.file.originalname}`);
 
       // Create directories if they don't exist
       const dir = path.dirname(filePath);
@@ -564,7 +564,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await fsPromises.writeFile(filePath, req.file.buffer);
 
       // Save document record
-      const fileUrl = `/${fileName}`;
+      const fileUrl = `/documents/${Date.now()}-${req.file.originalname}`;
       const document = await storage.createDocument({
         name,
         type,
