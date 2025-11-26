@@ -92,7 +92,7 @@ export default function Admin() {
   // State for document form
   const [documentName, setDocumentName] = useState("");
   const [documentType, setDocumentType] = useState<"company-intro" | "proposal-template">("company-intro");
-  const [documentFileUrl, setDocumentFileUrl] = useState("");
+  const [documentFile, setDocumentFile] = useState<File | null>(null);
 
   // Delete portfolio mutation
   const deletePortfolioMutation = useMutation({
@@ -162,24 +162,31 @@ export default function Admin() {
 
   // Create document mutation
   const createDocumentMutation = useMutation({
-    mutationFn: async (data: { name: string; type: string; fileUrl: string }) => {
-      const res = await apiRequest("POST", "/api/documents", data);
-      return res.json();
+    mutationFn: async (formData: FormData) => {
+      const response = await fetch("/api/documents/upload", {
+        method: "POST",
+        body: formData,
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "업로드 실패");
+      }
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
       setDocumentName("");
-      setDocumentFileUrl("");
+      setDocumentFile(null);
       setDocumentType("company-intro");
       toast({
         title: "성공",
         description: "문서가 업로드되었습니다",
       });
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         title: "오류",
-        description: "문서 업로드에 실패했습니다",
+        description: error instanceof Error ? error.message : "문서 업로드에 실패했습니다",
         variant: "destructive",
       });
     },
@@ -885,22 +892,27 @@ export default function Admin() {
                         </div>
                       </div>
                       <div>
-                        <label className="text-sm font-medium">파일 URL (Object Storage)</label>
+                        <label className="text-sm font-medium">파일 선택</label>
                         <Input
-                          placeholder="https://..."
-                          value={documentFileUrl}
-                          onChange={(e) => setDocumentFileUrl(e.target.value)}
-                          data-testid="input-document-url"
+                          type="file"
+                          onChange={(e) => setDocumentFile(e.target.files?.[0] || null)}
+                          data-testid="input-document-file"
+                          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
                         />
+                        {documentFile && (
+                          <p className="text-xs text-muted-foreground mt-2">
+                            선택된 파일: {documentFile.name}
+                          </p>
+                        )}
                       </div>
                       <Button
                         onClick={() => {
-                          if (documentName && documentFileUrl) {
-                            createDocumentMutation.mutate({
-                              name: documentName,
-                              type: documentType,
-                              fileUrl: documentFileUrl,
-                            });
+                          if (documentName && documentFile && documentType) {
+                            const formData = new FormData();
+                            formData.append("name", documentName);
+                            formData.append("type", documentType);
+                            formData.append("file", documentFile);
+                            createDocumentMutation.mutate(formData);
                           } else {
                             toast({
                               title: "오류",

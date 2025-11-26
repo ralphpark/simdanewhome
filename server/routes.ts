@@ -13,6 +13,9 @@ import {
   insertTimelineSchema,
   insertDocumentSchema,
 } from "@shared/schema";
+import multer from "multer";
+import { promises as fsPromises } from "fs";
+import path from "path";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
@@ -528,6 +531,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get documents error:", error);
       res.status(500).json({ error: "Failed to fetch documents" });
+    }
+  });
+
+  // Document upload endpoint
+  const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
+  });
+
+  app.post("/api/documents/upload", isAuthenticated, upload.single("file"), async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "파일을 선택해주세요" });
+      }
+
+      const { name, type } = req.body;
+      if (!name || !type) {
+        return res.status(400).json({ error: "문서명과 유형을 입력해주세요" });
+      }
+
+      // Upload to object storage
+      const fileName = `documents/${Date.now()}-${req.file.originalname}`;
+      const publicDir = process.env.PUBLIC_OBJECT_SEARCH_PATHS || "public";
+      const filePath = path.join(publicDir, fileName);
+
+      // Create directories if they don't exist
+      const dir = path.dirname(filePath);
+      await fsPromises.mkdir(dir, { recursive: true });
+
+      // Write file
+      await fsPromises.writeFile(filePath, req.file.buffer);
+
+      // Save document record
+      const fileUrl = `/${fileName}`;
+      const document = await storage.createDocument({
+        name,
+        type,
+        fileUrl,
+      });
+
+      res.json(document);
+    } catch (error) {
+      console.error("Upload document error:", error);
+      res.status(500).json({ error: "파일 업로드에 실패했습니다" });
     }
   });
 
