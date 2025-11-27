@@ -165,10 +165,6 @@ export default function B2B() {
                 <Download className="h-4 w-4" />
                 회사 소개서 (PDF)
               </Button>
-              <Button variant="outline" data-testid="button-download-proposal" className="gap-2" onClick={() => downloadDocument("proposal-template")}>
-                <Download className="h-4 w-4" />
-                제안서 양식 (PDF)
-              </Button>
             </CardContent>
           </Card>
 
