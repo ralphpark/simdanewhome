@@ -271,23 +271,18 @@ export default function Booking() {
                   </div>
 
                   {form.watch("consultationType") === "subscription" && recommendation && (
-                    <FormField
-                      control={form.control}
-                      render={() => (
-                        <FormItem>
-                          <FormLabel>AI 상담 기록</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              value={recommendation}
-                              disabled
-                              data-testid="input-consultation-history"
-                              className="min-h-[150px] bg-muted"
-                            />
-                          </FormControl>
-                          <p className="text-xs text-muted-foreground mt-2">AI 식물관리사와의 상담 내용입니다</p>
-                        </FormItem>
-                      )}
-                    />
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                        AI 상담 기록
+                      </label>
+                      <Textarea
+                        value={recommendation}
+                        disabled
+                        data-testid="input-consultation-history"
+                        className="min-h-[150px] bg-muted"
+                      />
+                      <p className="text-xs text-muted-foreground">AI 식물관리사와의 상담 내용입니다</p>
+                    </div>
                   )}
 
                   <FormField
