@@ -70,14 +70,23 @@ export default function PlantCareConsultation() {
 
       setMessages((prev) => {
         const withoutPlaceholder = prev.slice(0, -1);
-        return [...withoutPlaceholder, { role: "assistant", content: aiReply }];
+        const updatedMessages = [...withoutPlaceholder, { role: "assistant", content: aiReply }];
+        
+        // Check if consultation is complete
+        if (aiReply.includes("[상담완료]")) {
+          // Format all messages for consultation history
+          const formattedConsultation = updatedMessages
+            .map((msg) => {
+              const speaker = msg.role === "user" ? "사용자" : "식물관리사";
+              return `[${speaker}]\n${msg.content}`;
+            })
+            .join("\n\n");
+          setConsultationText(formattedConsultation);
+          setShowActions(true);
+        }
+        
+        return updatedMessages;
       });
-
-      // Check if consultation is complete
-      if (aiReply.includes("[상담완료]")) {
-        setConsultationText(aiReply);
-        setShowActions(true);
-      }
     } catch (error) {
       setMessages((prev) => prev.slice(0, -1));
       toast({

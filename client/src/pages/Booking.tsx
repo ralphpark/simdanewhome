@@ -26,11 +26,19 @@ export default function Booking() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // URL에서 recommendation 파라미터 추출
-  const getRecommendationFromUrl = () => {
+  // URL에서 파라미터 추출
+  const getUrlParams = () => {
     const params = new URLSearchParams(window.location.search);
-    return params.get("recommendation") || "";
+    return {
+      recommendation: params.get("recommendation") || "",
+      type: params.get("type") || "",
+    };
   };
+
+  const { recommendation, type } = getUrlParams();
+  
+  // plant-care 타입일 때 consultationType 설정
+  const initialConsultationType = type === "plant-care" ? "subscription" : "AI curation";
 
   const form = useForm<InsertBooking>({
     resolver: zodResolver(insertBookingSchema),
@@ -38,18 +46,20 @@ export default function Booking() {
       name: "",
       phone: "",
       email: "",
-      consultationType: "AI curation",
+      consultationType: initialConsultationType,
       preferredDate: new Date(),
       preferredTime: "",
-      message: getRecommendationFromUrl(),
+      message: type === "plant-care" ? "" : recommendation,
     },
   });
 
-  // URL 파라미터 변경 시 message 필드 업데이트
+  // URL 파라미터 변경 시 업데이트
   useEffect(() => {
-    const recommendation = getRecommendationFromUrl();
-    if (recommendation) {
-      form.setValue("message", recommendation);
+    const { recommendation: newRec, type: newType } = getUrlParams();
+    const newConsultationType = newType === "plant-care" ? "subscription" : "AI curation";
+    form.setValue("consultationType", newConsultationType);
+    if (newType !== "plant-care") {
+      form.setValue("message", newRec);
     }
   }, [location, form]);
 
@@ -260,6 +270,26 @@ export default function Booking() {
                     />
                   </div>
 
+                  {form.watch("consultationType") === "subscription" && recommendation && (
+                    <FormField
+                      control={form.control}
+                      render={() => (
+                        <FormItem>
+                          <FormLabel>AI 상담 기록</FormLabel>
+                          <FormControl>
+                            <Textarea
+                              value={recommendation}
+                              disabled
+                              data-testid="input-consultation-history"
+                              className="min-h-[150px] bg-muted"
+                            />
+                          </FormControl>
+                          <p className="text-xs text-muted-foreground mt-2">AI 식물관리사와의 상담 내용입니다</p>
+                        </FormItem>
+                      )}
+                    />
+                  )}
+
                   <FormField
                     control={form.control}
                     name="message"
@@ -268,7 +298,7 @@ export default function Booking() {
                         <FormLabel>문의 내용 *</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="상담 받고 싶은 내용을 자세히 적어주세요"
+                            placeholder={form.watch("consultationType") === "subscription" ? "추가 질문이나 특별 요청사항이 있으시면 적어주세요" : "상담 받고 싶은 내용을 자세히 적어주세요"}
                             data-testid="input-message"
                             className="min-h-[120px]"
                             {...field}
