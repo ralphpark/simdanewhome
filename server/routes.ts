@@ -553,7 +553,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Upload to object storage
       const fileName = `documents/${Date.now()}-${req.file.originalname}`;
-      const publicDir = process.env.PUBLIC_OBJECT_SEARCH_PATHS || "./public/documents";
+      const publicDir = "./public/documents";
       const filePath = path.join(publicDir, `${Date.now()}-${req.file.originalname}`);
 
       // Create directories if they don't exist
