@@ -128,9 +128,15 @@ export default function Services() {
                 </Card>
               </div>
               <div className="flex gap-4 flex-wrap">
+                <Link href="/plant-care-consultation">
+                  <Button data-testid="button-ai-plant-care" className="gap-2">
+                    AI 식물관리사와 상담하기
+                  </Button>
+                </Link>
                 <Button 
                   data-testid="button-contact-plant-care" 
                   onClick={handleChannelTalk}
+                  variant="outline"
                 >
                   채널톡으로 문의하기
                 </Button>
