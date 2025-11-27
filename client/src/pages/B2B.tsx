@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertB2bProposalSchema, type InsertB2bProposal } from "@shared/schema";
+import { insertB2bProposalSchema, type InsertB2bProposal, type Document } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Building2, Users, FileCheck, Download, Leaf } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import b2bCollaborationImage from "@assets/generated_images/b2b_corporate_collaboration_and_partnership.png";
@@ -15,6 +15,10 @@ import b2bCollaborationImage from "@assets/generated_images/b2b_corporate_collab
 export default function B2B() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const { data: documents = [] } = useQuery<Document[]>({
+    queryKey: ["/api/documents"],
+  });
 
   const form = useForm<InsertB2bProposal>({
     resolver: zodResolver(insertB2bProposalSchema),
@@ -49,6 +53,19 @@ export default function B2B() {
 
   const onSubmit = (data: InsertB2bProposal) => {
     createProposal.mutate(data);
+  };
+
+  const downloadDocument = (type: "company-intro" | "proposal-template") => {
+    const doc = documents.find(d => d.type === type);
+    if (doc) {
+      window.open(doc.fileUrl, "_blank");
+    } else {
+      toast({
+        title: "다운로드 불가",
+        description: type === "company-intro" ? "회사소개서를 찾을 수 없습니다." : "제안서 양식을 찾을 수 없습니다.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -144,11 +161,11 @@ export default function B2B() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex justify-center gap-4">
-              <Button data-testid="button-download-company" className="gap-2">
+              <Button data-testid="button-download-company" className="gap-2" onClick={() => downloadDocument("company-intro")}>
                 <Download className="h-4 w-4" />
                 회사 소개서 (PDF)
               </Button>
-              <Button variant="outline" data-testid="button-download-proposal" className="gap-2">
+              <Button variant="outline" data-testid="button-download-proposal" className="gap-2" onClick={() => downloadDocument("proposal-template")}>
                 <Download className="h-4 w-4" />
                 제안서 양식 (PDF)
               </Button>
