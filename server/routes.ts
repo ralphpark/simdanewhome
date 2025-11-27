@@ -551,10 +551,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "문서명과 유형을 입력해주세요" });
       }
 
-      // Upload to object storage
-      const fileName = `documents/${Date.now()}-${req.file.originalname}`;
+      // Create URL-safe filename (avoid Korean encoding issues)
+      const ext = path.extname(req.file.originalname);
+      const safeFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}${ext}`;
+      
       const publicDir = "./public/documents";
-      const filePath = path.join(publicDir, `${Date.now()}-${req.file.originalname}`);
+      const filePath = path.join(publicDir, safeFileName);
 
       // Create directories if they don't exist
       const dir = path.dirname(filePath);
@@ -563,8 +565,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Write file
       await fsPromises.writeFile(filePath, req.file.buffer);
 
-      // Save document record
-      const fileUrl = `/documents/${Date.now()}-${req.file.originalname}`;
+      // Save document record with safe URL
+      const fileUrl = `/documents/${safeFileName}`;
       const document = await storage.createDocument({
         name,
         type,
