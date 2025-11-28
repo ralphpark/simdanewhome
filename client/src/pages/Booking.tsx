@@ -65,6 +65,7 @@ export default function Booking() {
     mutationFn: (data: InsertBooking) => apiRequest("POST", "/api/bookings", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/bookings"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/bookings"] });
       toast({
         title: "예약이 완료되었습니다",
         description: "담당자가 확인 후 연락드리겠습니다.",
