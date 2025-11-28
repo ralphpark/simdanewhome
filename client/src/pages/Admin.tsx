@@ -54,6 +54,18 @@ export default function Admin() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
+  // Invalidate all admin queries on component mount to ensure fresh data
+  useEffect(() => {
+    console.log("[Admin] Invalidating all queries");
+    queryClient.invalidateQueries({ queryKey: ["/api/posts"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/bookings"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/b2b-proposals"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/portfolios"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/timelines"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/documents"] });
+    queryClient.invalidateQueries({ queryKey: ["/api/admin/comments"] });
+  }, [queryClient]);
+
   const { data: posts = [] } = useQuery<Post[]>({
     queryKey: ["/api/posts"],
   });
