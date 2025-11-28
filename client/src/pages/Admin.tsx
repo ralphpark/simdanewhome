@@ -56,37 +56,30 @@ export default function Admin() {
 
   const { data: posts = [] } = useQuery<Post[]>({
     queryKey: ["/api/posts"],
-    enabled: isAuthenticated,
   });
 
   const { data: comments = [] } = useQuery<Comment[]>({
     queryKey: ["/api/admin/comments"],
-    enabled: isAuthenticated,
   });
 
   const { data: bookings = [] } = useQuery<Booking[]>({
     queryKey: ["/api/bookings"],
-    enabled: isAuthenticated,
   });
 
   const { data: b2bProposals = [] } = useQuery<B2bProposal[]>({
     queryKey: ["/api/b2b-proposals"],
-    enabled: isAuthenticated,
   });
 
   const { data: portfolios = [] } = useQuery<Portfolio[]>({
     queryKey: ["/api/portfolios"],
-    enabled: isAuthenticated,
   });
 
   const { data: timelines = [] } = useQuery<Timeline[]>({
     queryKey: ["/api/timelines"],
-    enabled: isAuthenticated,
   });
 
   const { data: documents = [] } = useQuery<Document[]>({
     queryKey: ["/api/documents"],
-    enabled: isAuthenticated,
   });
 
   // State for document form
