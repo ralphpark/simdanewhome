@@ -37,8 +37,8 @@ export default function Booking() {
 
   const { recommendation, type } = getUrlParams();
   
-  // plant-care 타입일 때 consultationType 설정
-  const initialConsultationType = type === "plant-care" ? "subscription" : "AI curation";
+  // type에 따라 consultationType 설정 (plant-care -> subscription, ai-curation -> AI curation)
+  const initialConsultationType = type === "plant-care" ? "subscription" : (type === "ai-curation" ? "AI curation" : "AI curation");
 
   const form = useForm<InsertBooking>({
     resolver: zodResolver(insertBookingSchema),
@@ -56,7 +56,7 @@ export default function Booking() {
   // URL 파라미터 변경 시 업데이트
   useEffect(() => {
     const { recommendation: newRec, type: newType } = getUrlParams();
-    const newConsultationType = newType === "plant-care" ? "subscription" : "AI curation";
+    const newConsultationType = newType === "plant-care" ? "subscription" : (newType === "ai-curation" ? "AI curation" : "AI curation");
     form.setValue("consultationType", newConsultationType);
     form.setValue("message", "");
   }, [location, form]);

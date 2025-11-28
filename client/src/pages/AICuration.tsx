@@ -79,7 +79,11 @@ export default function AICuration() {
       // Check if AI has completed recommendations with completion marker
       // Only show buttons when recommendation is fully complete
       if (aiReply.includes("[추천완료]")) {
-        setRecommendationText(aiReply);
+        // 전체 대화 기록을 포맷팅하여 저장
+        const fullConversation = [...messages, newUserMessage, { role: "assistant" as const, content: aiReply }]
+          .map(msg => `[${msg.role === 'user' ? '사용자' : '큐레이터'}]\n${msg.content}`)
+          .join('\n\n');
+        setRecommendationText(fullConversation);
         setShowActions(true);
       }
     } catch (error) {
@@ -158,7 +162,7 @@ export default function AICuration() {
             {/* Action Buttons */}
             {showActions && (
               <div className="w-full flex gap-2 flex-wrap">
-                <Link href={`/booking?recommendation=${encodeURIComponent(recommendationText)}`}>
+                <Link href={`/booking?recommendation=${encodeURIComponent(recommendationText)}&type=ai-curation`}>
                   <Button
                     data-testid="button-booking-action"
                     variant="default"
