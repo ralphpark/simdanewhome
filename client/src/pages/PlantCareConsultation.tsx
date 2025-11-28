@@ -28,6 +28,11 @@ export default function PlantCareConsultation() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
 
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     if (scrollViewportRef.current) {
