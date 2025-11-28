@@ -768,7 +768,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const fileBuffer = Buffer.from(result.value);
       
       res.setHeader('Content-Type', contentType);
-      res.setHeader('Content-Length', fileBuffer.length);
+      res.setHeader('Content-Length', fileBuffer.length.toString());
       res.setHeader('Content-Disposition', `attachment; filename="${path.basename(objectPath)}"`);
       res.send(fileBuffer);
     } catch (error) {
