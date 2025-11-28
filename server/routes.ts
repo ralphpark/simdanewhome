@@ -16,7 +16,7 @@ import {
 import multer from "multer";
 import { promises as fsPromises } from "fs";
 import path from "path";
-import { Client } from "@replit/object-storage";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
@@ -556,15 +556,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const ext = path.extname(req.file.originalname);
       const safeFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}${ext}`;
       
-      // Upload to Object Storage
-      const bucketId = process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID;
-      if (!bucketId) {
-        throw new Error("Object Storage bucket not configured");
-      }
-      const objectStorageClient = new Client({ bucketId });
+      // Upload to Object Storage using ObjectStorageService
+      const objectStorageService = new ObjectStorageService();
       const objectPath = `public/documents/${safeFileName}`;
       
-      await objectStorageClient.uploadFromBytes(objectPath, req.file.buffer);
+      // Determine content type
+      const contentTypes: Record<string, string> = {
+        '.pdf': 'application/pdf',
+        '.doc': 'application/msword',
+        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        '.xls': 'application/vnd.ms-excel',
+        '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      };
+      const contentType = contentTypes[ext.toLowerCase()] || 'application/octet-stream';
+      
+      await objectStorageService.uploadFile(objectPath, req.file.buffer, contentType);
+      
+      console.log(`[ObjectStorage] Document uploaded: ${objectPath}, size: ${req.file.buffer.length} bytes`);
       
       // Get the public URL for the uploaded file
       const fileUrl = `/object-storage/${objectPath}`;
@@ -575,7 +583,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileUrl,
       });
 
-      console.log(`[ObjectStorage] Document uploaded: ${objectPath}`);
       res.json(document);
     } catch (error) {
       console.error("Upload document error:", error);
@@ -737,49 +744,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/object-storage/*", async (req, res) => {
     try {
       const objectPath = (req.params as Record<string, string>)[0];
-      const bucketId = process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID;
-      if (!bucketId) {
-        return res.status(500).json({ error: "Object Storage not configured" });
-      }
-      const objectStorageClient = new Client({ bucketId });
+      const objectStorageService = new ObjectStorageService();
       
-      const result = await objectStorageClient.downloadAsBytes(objectPath);
+      console.log(`[ObjectStorage] Download request for: ${objectPath}`);
       
-      if (!result.ok || !result.value) {
-        console.error(`[ObjectStorage] File not found: ${objectPath}`);
+      const file = await objectStorageService.getFile(objectPath);
+      
+      // Use streaming download
+      await objectStorageService.downloadObject(file, res);
+      
+    } catch (error) {
+      if (error instanceof ObjectNotFoundError) {
+        console.error(`[ObjectStorage] File not found: ${(req.params as Record<string, string>)[0]}`);
         return res.status(404).json({ error: "File not found" });
       }
-      
-      console.log(`[ObjectStorage] Download started - path: ${objectPath}, value type: ${typeof result.value}, value length: ${(result.value as any).length}`);
-      
-      // Determine content type based on extension
-      const ext = path.extname(objectPath).toLowerCase();
-      const contentTypes: Record<string, string> = {
-        '.pdf': 'application/pdf',
-        '.doc': 'application/msword',
-        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        '.xls': 'application/vnd.ms-excel',
-        '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        '.png': 'image/png',
-        '.jpg': 'image/jpeg',
-        '.jpeg': 'image/jpeg',
-        '.gif': 'image/gif',
-      };
-      
-      const contentType = contentTypes[ext] || 'application/octet-stream';
-      
-      // Convert Uint8Array to Buffer properly
-      const fileBuffer = Buffer.isBuffer(result.value) ? result.value : Buffer.from(result.value);
-      console.log(`[ObjectStorage] Buffer created - size: ${fileBuffer.length} bytes`);
-      
-      res.setHeader('Content-Type', contentType);
-      res.setHeader('Content-Length', fileBuffer.length.toString());
-      res.setHeader('Content-Disposition', `attachment; filename="${path.basename(objectPath)}"`);
-      
-      // Use end() instead of send() for binary data
-      res.end(fileBuffer);
-      console.log(`[ObjectStorage] Download completed - size sent: ${fileBuffer.length} bytes`);
-    } catch (error) {
       console.error("[ObjectStorage] Download error:", error);
       res.status(500).json({ error: "Failed to download file" });
     }
