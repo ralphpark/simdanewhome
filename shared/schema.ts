@@ -141,7 +141,7 @@ export const insertBookingSchema = createInsertSchema(bookings).omit({
   email: z.string().email("유효한 이메일 주소를 입력해주세요"),
   phone: z.string().min(10, "유효한 전화번호를 입력해주세요"),
   name: z.string().min(2, "이름을 입력해주세요"),
-  message: z.string().min(10, "문의 내용을 입력해주세요"),
+  message: z.string().min(0, "최소 1자 이상 입력해주세요"),
   preferredDate: z.coerce.date(),
 });
 
