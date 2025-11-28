@@ -1039,18 +1039,20 @@ export default function Admin() {
                     {selectedBooking.status === "cancelled" && "취소"}
                   </p>
                 </div>
-                {selectedBooking.consultationType === "subscription" && selectedBooking.message && (
+                {(selectedBooking.consultationType === "subscription" || selectedBooking.consultationType === "AI curation") && selectedBooking.message && (
                   <div className="border-t pt-4 space-y-4">
                     {selectedBooking.message.includes("===CONSULTATION_END===") ? (
                       <>
                         <div>
-                          <p className="text-sm text-muted-foreground mb-2">AI 상담 기록</p>
+                          <p className="text-sm text-muted-foreground mb-2">
+                            {selectedBooking.consultationType === "subscription" ? "AI 상담 기록" : "AI 큐레이션 기록"}
+                          </p>
                           <div className="bg-muted p-3 rounded text-xs whitespace-pre-wrap max-h-80 overflow-y-auto">
                             {selectedBooking.message.split("===CONSULTATION_END===")[0].trim()}
                           </div>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground mb-2">문의사항</p>
+                          <p className="text-sm text-muted-foreground mb-2">추가 요청사항</p>
                           <p className="text-sm whitespace-pre-wrap">
                             {selectedBooking.message.split("===CONSULTATION_END===")[1]?.trim() || "-"}
                           </p>
@@ -1058,7 +1060,9 @@ export default function Admin() {
                       </>
                     ) : (
                       <div>
-                        <p className="text-sm text-muted-foreground mb-2">AI 상담 기록</p>
+                        <p className="text-sm text-muted-foreground mb-2">
+                          {selectedBooking.consultationType === "subscription" ? "AI 상담 기록" : "AI 큐레이션 기록"}
+                        </p>
                         <div className="bg-muted p-3 rounded text-xs whitespace-pre-wrap max-h-80 overflow-y-auto">
                           {selectedBooking.message}
                         </div>
@@ -1066,7 +1070,7 @@ export default function Admin() {
                     )}
                   </div>
                 )}
-                {selectedBooking.consultationType !== "subscription" && (
+                {selectedBooking.consultationType !== "subscription" && selectedBooking.consultationType !== "AI curation" && (
                   <div>
                     <p className="text-sm text-muted-foreground">문의 내용</p>
                     <p className="text-sm whitespace-pre-wrap">{selectedBooking.message || "-"}</p>

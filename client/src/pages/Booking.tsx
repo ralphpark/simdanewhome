@@ -277,10 +277,10 @@ export default function Booking() {
                     />
                   </div>
 
-                  {form.watch("consultationType") === "subscription" && recommendation && (
+                  {(form.watch("consultationType") === "subscription" || form.watch("consultationType") === "AI curation") && recommendation && (
                     <div className="space-y-2">
                       <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                        AI 상담 기록
+                        {form.watch("consultationType") === "subscription" ? "AI 상담 기록" : "AI 큐레이션 기록"}
                       </label>
                       <Textarea
                         value={recommendation}
@@ -288,7 +288,9 @@ export default function Booking() {
                         data-testid="input-consultation-history"
                         className="min-h-[150px] bg-muted"
                       />
-                      <p className="text-xs text-muted-foreground">AI 식물관리사와의 상담 내용입니다</p>
+                      <p className="text-xs text-muted-foreground">
+                        {form.watch("consultationType") === "subscription" ? "AI 식물관리사와의 상담 내용입니다" : "AI 큐레이터와의 추천 내용입니다"}
+                      </p>
                     </div>
                   )}
 
@@ -297,10 +299,14 @@ export default function Booking() {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>문의 내용 *</FormLabel>
+                        <FormLabel>
+                          {(form.watch("consultationType") === "subscription" || form.watch("consultationType") === "AI curation") && recommendation 
+                            ? "추가 요청사항" 
+                            : "문의 내용"} *
+                        </FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder={form.watch("consultationType") === "subscription" ? "추가 질문이나 특별 요청사항이 있으시면 적어주세요" : "상담 받고 싶은 내용을 자세히 적어주세요"}
+                            placeholder={form.watch("consultationType") === "subscription" || form.watch("consultationType") === "AI curation" ? "추가 질문이나 특별 요청사항이 있으시면 적어주세요" : "상담 받고 싶은 내용을 자세히 적어주세요"}
                             data-testid="input-message"
                             className="min-h-[120px]"
                             {...field}
