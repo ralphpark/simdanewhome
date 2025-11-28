@@ -65,12 +65,12 @@ export default function Admin() {
   });
 
   const { data: bookings = [] } = useQuery<Booking[]>({
-    queryKey: ["/api/bookings"],
+    queryKey: ["/api/admin/bookings"],
     enabled: isAuthenticated,
   });
 
   const { data: b2bProposals = [] } = useQuery<B2bProposal[]>({
-    queryKey: ["/api/b2b-proposals"],
+    queryKey: ["/api/admin/b2b-proposals"],
     enabled: isAuthenticated,
   });
 
@@ -265,6 +265,7 @@ export default function Admin() {
       return res.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/bookings"] });
       queryClient.invalidateQueries({ queryKey: ["/api/bookings"] });
       toast({
         title: "성공",
@@ -287,6 +288,7 @@ export default function Admin() {
       return res.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/b2b-proposals"] });
       queryClient.invalidateQueries({ queryKey: ["/api/b2b-proposals"] });
       toast({
         title: "성공",
