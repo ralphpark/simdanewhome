@@ -49,7 +49,7 @@ export default function Booking() {
       consultationType: initialConsultationType,
       preferredDate: new Date(),
       preferredTime: "",
-      message: recommendation,
+      message: "",
     },
   });
 
@@ -58,7 +58,7 @@ export default function Booking() {
     const { recommendation: newRec, type: newType } = getUrlParams();
     const newConsultationType = newType === "plant-care" ? "subscription" : "AI curation";
     form.setValue("consultationType", newConsultationType);
-    form.setValue("message", newRec);
+    form.setValue("message", "");
   }, [location, form]);
 
   const createBooking = useMutation({

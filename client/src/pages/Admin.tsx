@@ -1039,7 +1039,7 @@ export default function Admin() {
                     {selectedBooking.status === "cancelled" && "취소"}
                   </p>
                 </div>
-                {selectedBooking.consultationType === "subscription" && selectedBooking.message && (
+                {selectedBooking.consultationType === "subscription" && selectedBooking.message && selectedBooking.message.includes("[사용자]") && (
                   <div className="border-t pt-4 space-y-4">
                     <div>
                       <p className="text-sm text-muted-foreground mb-2">AI 상담 기록</p>
@@ -1049,12 +1049,10 @@ export default function Admin() {
                     </div>
                   </div>
                 )}
-                {selectedBooking.consultationType !== "subscription" && (
-                  <div>
-                    <p className="text-sm text-muted-foreground">문의 내용</p>
-                    <p className="text-sm whitespace-pre-wrap">{selectedBooking.message || "-"}</p>
-                  </div>
-                )}
+                <div>
+                  <p className="text-sm text-muted-foreground">{selectedBooking.consultationType === "subscription" ? "추가 요청사항" : "문의 내용"}</p>
+                  <p className="text-sm whitespace-pre-wrap">{selectedBooking.message || "-"}</p>
+                </div>
               </div>
             )}
           </DialogContent>
