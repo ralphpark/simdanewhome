@@ -16,6 +16,7 @@ import {
 import multer from "multer";
 import { promises as fsPromises } from "fs";
 import path from "path";
+import { Client } from "@replit/object-storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
@@ -555,24 +556,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const ext = path.extname(req.file.originalname);
       const safeFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}${ext}`;
       
-      const publicDir = "./public/documents";
-      const filePath = path.join(publicDir, safeFileName);
-
-      // Create directories if they don't exist
-      const dir = path.dirname(filePath);
-      await fsPromises.mkdir(dir, { recursive: true });
-
-      // Write file
-      await fsPromises.writeFile(filePath, req.file.buffer);
-
-      // Save document record with safe URL
-      const fileUrl = `/documents/${safeFileName}`;
+      // Upload to Object Storage
+      const objectStorageClient = new Client();
+      const objectPath = `public/documents/${safeFileName}`;
+      
+      await objectStorageClient.uploadFromBytes(objectPath, req.file.buffer);
+      
+      // Get the public URL for the uploaded file
+      const fileUrl = `/object-storage/${objectPath}`;
+      
       const document = await storage.createDocument({
         name,
         type,
         fileUrl,
       });
 
+      console.log(`[ObjectStorage] Document uploaded: ${objectPath}`);
       res.json(document);
     } catch (error) {
       console.error("Upload document error:", error);
@@ -727,6 +726,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Sitemap generation error:", error);
       res.status(500).send("Failed to generate sitemap");
+    }
+  });
+
+  // Object Storage file download endpoint
+  app.get("/object-storage/*", async (req, res) => {
+    try {
+      const objectPath = (req.params as Record<string, string>)[0];
+      const objectStorageClient = new Client();
+      
+      const result = await objectStorageClient.downloadAsBytes(objectPath);
+      
+      if (!result.ok || !result.value) {
+        console.error(`[ObjectStorage] File not found: ${objectPath}`);
+        return res.status(404).json({ error: "File not found" });
+      }
+      
+      // Determine content type based on extension
+      const ext = path.extname(objectPath).toLowerCase();
+      const contentTypes: Record<string, string> = {
+        '.pdf': 'application/pdf',
+        '.doc': 'application/msword',
+        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        '.xls': 'application/vnd.ms-excel',
+        '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+      };
+      
+      const contentType = contentTypes[ext] || 'application/octet-stream';
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Disposition', `attachment; filename="${path.basename(objectPath)}"`);
+      res.send(result.value);
+    } catch (error) {
+      console.error("[ObjectStorage] Download error:", error);
+      res.status(500).json({ error: "Failed to download file" });
     }
   });
 
