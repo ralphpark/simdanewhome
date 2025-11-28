@@ -1049,12 +1049,12 @@ export default function Admin() {
                             {selectedBooking.message.split("===CONSULTATION_END===")[0].trim()}
                           </div>
                         </div>
-                        {selectedBooking.message.split("===CONSULTATION_END===")[1]?.trim() && (
-                          <div>
-                            <p className="text-sm text-muted-foreground mb-2">문의사항</p>
-                            <p className="text-sm whitespace-pre-wrap">{selectedBooking.message.split("===CONSULTATION_END===")[1].trim()}</p>
-                          </div>
-                        )}
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-2">문의사항</p>
+                          <p className="text-sm whitespace-pre-wrap">
+                            {selectedBooking.message.split("===CONSULTATION_END===")[1]?.trim() || "-"}
+                          </p>
+                        </div>
                       </>
                     ) : (
                       <div>
