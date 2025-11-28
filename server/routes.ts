@@ -557,7 +557,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const safeFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}${ext}`;
       
       // Upload to Object Storage
-      const objectStorageClient = new Client();
+      const bucketId = process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID;
+      if (!bucketId) {
+        throw new Error("Object Storage bucket not configured");
+      }
+      const objectStorageClient = new Client({ bucketId });
       const objectPath = `public/documents/${safeFileName}`;
       
       await objectStorageClient.uploadFromBytes(objectPath, req.file.buffer);
@@ -733,7 +737,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/object-storage/*", async (req, res) => {
     try {
       const objectPath = (req.params as Record<string, string>)[0];
-      const objectStorageClient = new Client();
+      const bucketId = process.env.DEFAULT_OBJECT_STORAGE_BUCKET_ID;
+      if (!bucketId) {
+        return res.status(500).json({ error: "Object Storage not configured" });
+      }
+      const objectStorageClient = new Client({ bucketId });
       
       const result = await objectStorageClient.downloadAsBytes(objectPath);
       
