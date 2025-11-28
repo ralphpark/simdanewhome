@@ -996,7 +996,7 @@ export default function Admin() {
 
         {/* 예약 상세 Dialog */}
         <Dialog open={!!selectedBooking} onOpenChange={(open) => !open && setSelectedBooking(null)}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>예약 상세 정보</DialogTitle>
             </DialogHeader>
@@ -1039,20 +1039,37 @@ export default function Admin() {
                     {selectedBooking.status === "cancelled" && "취소"}
                   </p>
                 </div>
-                {selectedBooking.consultationType === "subscription" && selectedBooking.message && selectedBooking.message.includes("[사용자]") && (
+                {selectedBooking.consultationType === "subscription" && selectedBooking.message && (
                   <div className="border-t pt-4 space-y-4">
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-2">AI 상담 기록</p>
-                      <div className="bg-muted p-3 rounded text-xs whitespace-pre-wrap max-h-[300px] overflow-y-auto">
-                        {selectedBooking.message}
+                    {selectedBooking.message.includes("\n\n") ? (
+                      <>
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-2">AI 상담 기록</p>
+                          <div className="bg-muted p-3 rounded text-xs whitespace-pre-wrap">
+                            {selectedBooking.message.split("\n\n")[0]}
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground mb-2">문의사항</p>
+                          <p className="text-sm whitespace-pre-wrap">{selectedBooking.message.split("\n\n")[1] || "-"}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div>
+                        <p className="text-sm text-muted-foreground mb-2">AI 상담 기록</p>
+                        <div className="bg-muted p-3 rounded text-xs whitespace-pre-wrap">
+                          {selectedBooking.message}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 )}
-                <div>
-                  <p className="text-sm text-muted-foreground">{selectedBooking.consultationType === "subscription" ? "추가 요청사항" : "문의 내용"}</p>
-                  <p className="text-sm whitespace-pre-wrap">{selectedBooking.message || "-"}</p>
-                </div>
+                {selectedBooking.consultationType !== "subscription" && (
+                  <div>
+                    <p className="text-sm text-muted-foreground">문의 내용</p>
+                    <p className="text-sm whitespace-pre-wrap">{selectedBooking.message || "-"}</p>
+                  </div>
+                )}
               </div>
             )}
           </DialogContent>
