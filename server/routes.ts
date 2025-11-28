@@ -765,9 +765,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       const contentType = contentTypes[ext] || 'application/octet-stream';
+      const fileBuffer = Buffer.from(result.value);
+      
       res.setHeader('Content-Type', contentType);
+      res.setHeader('Content-Length', fileBuffer.length);
       res.setHeader('Content-Disposition', `attachment; filename="${path.basename(objectPath)}"`);
-      res.send(result.value);
+      res.send(fileBuffer);
     } catch (error) {
       console.error("[ObjectStorage] Download error:", error);
       res.status(500).json({ error: "Failed to download file" });
