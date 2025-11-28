@@ -90,7 +90,16 @@ export default function Booking() {
       });
       return;
     }
-    createBooking.mutate(data);
+    
+    // AI 상담 기록과 사용자 입력을 모두 저장
+    const finalData = {
+      ...data,
+      message: recommendation 
+        ? recommendation + (data.message ? "\n\n" + data.message : "") 
+        : data.message,
+    };
+    
+    createBooking.mutate(finalData);
   };
 
   return (
