@@ -55,7 +55,7 @@ export default function Admin() {
   }, [isAuthenticated, isLoading, toast]);
 
   const { data: posts = [] } = useQuery<Post[]>({
-    queryKey: ["/api/admin/posts"],
+    queryKey: ["/api/posts"],
     enabled: isAuthenticated,
   });
 
@@ -65,12 +65,12 @@ export default function Admin() {
   });
 
   const { data: bookings = [] } = useQuery<Booking[]>({
-    queryKey: ["/api/admin/bookings"],
+    queryKey: ["/api/bookings"],
     enabled: isAuthenticated,
   });
 
   const { data: b2bProposals = [] } = useQuery<B2bProposal[]>({
-    queryKey: ["/api/admin/b2b-proposals"],
+    queryKey: ["/api/b2b-proposals"],
     enabled: isAuthenticated,
   });
 
@@ -265,7 +265,6 @@ export default function Admin() {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/bookings"] });
       queryClient.invalidateQueries({ queryKey: ["/api/bookings"] });
       toast({
         title: "성공",
@@ -288,7 +287,6 @@ export default function Admin() {
       return res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/b2b-proposals"] });
       queryClient.invalidateQueries({ queryKey: ["/api/b2b-proposals"] });
       toast({
         title: "성공",
