@@ -1041,23 +1041,25 @@ export default function Admin() {
                 </div>
                 {selectedBooking.consultationType === "subscription" && selectedBooking.message && (
                   <div className="border-t pt-4 space-y-4">
-                    {selectedBooking.message.includes("\n\n") ? (
+                    {selectedBooking.message.includes("===CONSULTATION_END===") ? (
                       <>
                         <div>
                           <p className="text-sm text-muted-foreground mb-2">AI 상담 기록</p>
-                          <div className="bg-muted p-3 rounded text-xs whitespace-pre-wrap">
-                            {selectedBooking.message.split("\n\n")[0]}
+                          <div className="bg-muted p-3 rounded text-xs whitespace-pre-wrap max-h-80 overflow-y-auto">
+                            {selectedBooking.message.split("===CONSULTATION_END===")[0].trim()}
                           </div>
                         </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground mb-2">문의사항</p>
-                          <p className="text-sm whitespace-pre-wrap">{selectedBooking.message.split("\n\n")[1] || "-"}</p>
-                        </div>
+                        {selectedBooking.message.split("===CONSULTATION_END===")[1]?.trim() && (
+                          <div>
+                            <p className="text-sm text-muted-foreground mb-2">문의사항</p>
+                            <p className="text-sm whitespace-pre-wrap">{selectedBooking.message.split("===CONSULTATION_END===")[1].trim()}</p>
+                          </div>
+                        )}
                       </>
                     ) : (
                       <div>
                         <p className="text-sm text-muted-foreground mb-2">AI 상담 기록</p>
-                        <div className="bg-muted p-3 rounded text-xs whitespace-pre-wrap">
+                        <div className="bg-muted p-3 rounded text-xs whitespace-pre-wrap max-h-80 overflow-y-auto">
                           {selectedBooking.message}
                         </div>
                       </div>

@@ -91,11 +91,11 @@ export default function Booking() {
       return;
     }
     
-    // AI 상담 기록과 사용자 입력을 모두 저장
+    // AI 상담 기록과 사용자 입력을 모두 저장 (===로 분리)
     const finalData = {
       ...data,
       message: recommendation 
-        ? recommendation + (data.message ? "\n\n" + data.message : "") 
+        ? recommendation + (data.message ? "\n===CONSULTATION_END===\n" + data.message : "") 
         : data.message,
     };
     
