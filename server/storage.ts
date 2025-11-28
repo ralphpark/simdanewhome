@@ -416,14 +416,19 @@ export class DbStorage implements IStorage {
 
   // Bookings
   async createBooking(data: InsertBooking): Promise<Booking> {
+    console.log("[DbStorage] Creating booking:", data);
     const [result] = await db.insert(schema.bookings).values(data).returning();
+    console.log("[DbStorage] Booking created:", result);
     return result;
   }
 
   async getAllBookings(): Promise<Booking[]> {
-    return await db.query.bookings.findMany({
+    console.log("[DbStorage] getAllBookings called");
+    const result = await db.query.bookings.findMany({
       orderBy: [desc(schema.bookings.createdAt)],
     });
+    console.log("[DbStorage] getAllBookings result count:", result.length);
+    return result;
   }
 
   async getBookingById(id: string): Promise<Booking | undefined> {
@@ -443,14 +448,19 @@ export class DbStorage implements IStorage {
 
   // B2B proposals
   async createB2bProposal(data: InsertB2bProposal): Promise<B2bProposal> {
+    console.log("[DbStorage] Creating B2B proposal:", data.companyName);
     const [result] = await db.insert(schema.b2bProposals).values(data).returning();
+    console.log("[DbStorage] B2B proposal created:", result.id);
     return result;
   }
 
   async getAllB2bProposals(): Promise<B2bProposal[]> {
-    return await db.query.b2bProposals.findMany({
+    console.log("[DbStorage] getAllB2bProposals called");
+    const result = await db.query.b2bProposals.findMany({
       orderBy: [desc(schema.b2bProposals.createdAt)],
     });
+    console.log("[DbStorage] getAllB2bProposals result count:", result.length);
+    return result;
   }
 
   async getB2bProposalById(id: string): Promise<B2bProposal | undefined> {
@@ -470,14 +480,19 @@ export class DbStorage implements IStorage {
 
   // Portfolios
   async createPortfolio(data: InsertPortfolio): Promise<Portfolio> {
+    console.log("[DbStorage] Creating portfolio:", data.title);
     const [result] = await db.insert(schema.portfolios).values(data).returning();
+    console.log("[DbStorage] Portfolio created:", result.id);
     return result;
   }
 
   async getAllPortfolios(): Promise<Portfolio[]> {
-    return await db.query.portfolios.findMany({
+    console.log("[DbStorage] getAllPortfolios called");
+    const result = await db.query.portfolios.findMany({
       orderBy: [desc(schema.portfolios.createdAt)],
     });
+    console.log("[DbStorage] getAllPortfolios result count:", result.length);
+    return result;
   }
 
   async getPortfolioById(id: string): Promise<Portfolio | undefined> {
@@ -501,14 +516,19 @@ export class DbStorage implements IStorage {
 
   // Posts
   async createPost(data: InsertPost): Promise<Post> {
+    console.log("[DbStorage] Creating post:", data.title);
     const [result] = await db.insert(schema.posts).values(data).returning();
+    console.log("[DbStorage] Post created:", result.id);
     return result;
   }
 
   async getAllPosts(): Promise<Post[]> {
-    return await db.query.posts.findMany({
+    console.log("[DbStorage] getAllPosts called");
+    const result = await db.query.posts.findMany({
       orderBy: [desc(schema.posts.createdAt)],
     });
+    console.log("[DbStorage] getAllPosts result count:", result.length);
+    return result;
   }
 
   async getPostById(id: string): Promise<Post | undefined> {
