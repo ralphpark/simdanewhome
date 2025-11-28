@@ -750,6 +750,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "File not found" });
       }
       
+      console.log(`[ObjectStorage] Download started - path: ${objectPath}, value type: ${typeof result.value}, value length: ${(result.value as any).length}`);
+      
       // Determine content type based on extension
       const ext = path.extname(objectPath).toLowerCase();
       const contentTypes: Record<string, string> = {
@@ -765,12 +767,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       const contentType = contentTypes[ext] || 'application/octet-stream';
-      const fileBuffer = Buffer.from(result.value);
+      
+      // Convert Uint8Array to Buffer properly
+      const fileBuffer = Buffer.isBuffer(result.value) ? result.value : Buffer.from(result.value);
+      console.log(`[ObjectStorage] Buffer created - size: ${fileBuffer.length} bytes`);
       
       res.setHeader('Content-Type', contentType);
       res.setHeader('Content-Length', fileBuffer.length.toString());
       res.setHeader('Content-Disposition', `attachment; filename="${path.basename(objectPath)}"`);
-      res.send(fileBuffer);
+      
+      // Use end() instead of send() for binary data
+      res.end(fileBuffer);
+      console.log(`[ObjectStorage] Download completed - size sent: ${fileBuffer.length} bytes`);
     } catch (error) {
       console.error("[ObjectStorage] Download error:", error);
       res.status(500).json({ error: "Failed to download file" });
