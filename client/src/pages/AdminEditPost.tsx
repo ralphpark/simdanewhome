@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { apiRequest } from "@/lib/queryClient";
+import { compressImage } from "@/lib/compressImage";
 import { Link } from "wouter";
 import { ArrowLeft, Save, Bold, Italic, Heading2, List, Image as ImageIcon, Link2 } from "lucide-react";
 import { useEditor, EditorContent } from "@tiptap/react";
@@ -85,7 +86,7 @@ export default function AdminEditPost({ id }: EditPostParams) {
         variant: "destructive",
       });
       setTimeout(() => {
-        navigate("/");
+        navigate("/admin");
       }, 500);
     }
   }, [isAuthenticated, authLoading, navigate, toast]);
@@ -154,15 +155,11 @@ export default function AdminEditPost({ id }: EditPostParams) {
     });
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const url = event.target?.result as string;
-        editor?.chain().focus().setImage({ src: url }).run();
-      };
-      reader.readAsDataURL(file);
+      const url = await compressImage(file);
+      editor?.chain().focus().setImage({ src: url }).run();
     }
   };
 
@@ -172,19 +169,11 @@ export default function AdminEditPost({ id }: EditPostParams) {
 
     setThumbnailUploading(true);
     try {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const base64 = event.target?.result as string;
-        // 파일명 생성
-        const fileName = `thumbnails/${Date.now()}-${file.name}`;
-        // 데이터 URL을 사용 (실제 프로덕션에서는 서버에서 처리)
-        setFormData({ ...formData, thumbnailUrl: base64 });
-        toast({
-          title: "성공",
-          description: "썸네일이 선택되었습니다",
-        });
-      };
-      reader.readAsDataURL(file);
+      setFormData({ ...formData, thumbnailUrl: await compressImage(file) });
+      toast({
+        title: "성공",
+        description: "썸네일이 선택되었습니다",
+      });
     } catch (error) {
       toast({
         title: "오류",

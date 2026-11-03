@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { chatWithAI } from "./gemini";
 import { sendBookingConfirmation, sendB2BProposalNotification } from "./email";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./auth";
 import {
   insertBookingSchema,
   insertB2bProposalSchema,
@@ -14,39 +14,16 @@ import {
   insertDocumentSchema,
 } from "@shared/schema";
 import multer from "multer";
-import { promises as fsPromises } from "fs";
 import path from "path";
-import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import { put } from "@vercel/blob";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
-  await setupAuth(app);
-
-  // Initialize timeline data if empty
-  const existingTimelines = await storage.getAllTimelines();
-  if (existingTimelines.length === 0) {
-    const initialTimelines = [
-      { year: "2017", title: "일산의 작은 식물가게 오픈", description: "도시 생활 속 자연과의 연결을 위해 humble한 시작" },
-      { year: "2019", title: "온라인 플랫폼 simgo.kr 런칭", description: "전국의 고객들에게 프리미엄 식물 직배송 서비스 시작" },
-      { year: "2021", title: "AI 큐레이션 기능 개발", description: "머신러닝 기반의 식물 추천 알고리즘 도입" },
-      { year: "2023", title: "지역 기반 마켓플레이스 simda.me 오픈", description: "AI 추천 + 지역 판매자 매칭 서비스 론칭" },
-      { year: "2024", title: "지속 가능한 성장의 시대", description: "글로벌 확장과 AI 기술 고도화를 통한 더 나은 식물 경험 제공" },
-    ];
-    for (const timeline of initialTimelines) {
-      await storage.createTimeline(timeline);
-    }
-  }
+  setupAuth(app);
 
   // Auth endpoint
-  app.get("/api/auth/user", isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
+  app.get("/api/auth/user", isAuthenticated, (_req, res) => {
+    res.json({ id: "admin" });
   });
   // AI Chat endpoint
   app.post("/api/chat", async (req, res) => {
@@ -91,7 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/bookings", async (req, res) => {
+  app.get("/api/bookings", isAuthenticated, async (req, res) => {
     try {
       const bookings = await storage.getAllBookings();
       res.json(bookings);
@@ -101,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/bookings/:id", async (req, res) => {
+  app.get("/api/bookings/:id", isAuthenticated, async (req, res) => {
     try {
       const booking = await storage.getBookingById(req.params.id);
       if (!booking) {
@@ -114,7 +91,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/bookings/:id/status", async (req, res) => {
+  app.patch("/api/bookings/:id/status", isAuthenticated, async (req, res) => {
     try {
       const { status } = req.body;
       const booking = await storage.updateBookingStatus(req.params.id, status);
@@ -146,7 +123,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/b2b-proposals", async (req, res) => {
+  app.get("/api/b2b-proposals", isAuthenticated, async (req, res) => {
     try {
       const proposals = await storage.getAllB2bProposals();
       res.json(proposals);
@@ -156,7 +133,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/b2b-proposals/:id", async (req, res) => {
+  app.get("/api/b2b-proposals/:id", isAuthenticated, async (req, res) => {
     try {
       const proposal = await storage.getB2bProposalById(req.params.id);
       if (!proposal) {
@@ -169,7 +146,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/b2b-proposals/:id/status", async (req, res) => {
+  app.patch("/api/b2b-proposals/:id/status", isAuthenticated, async (req, res) => {
     try {
       const { status } = req.body;
       const proposal = await storage.updateB2bProposalStatus(req.params.id, status);
@@ -342,7 +319,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.patch("/api/comments/:id/approve", async (req, res) => {
+  app.patch("/api/comments/:id/approve", isAuthenticated, async (req, res) => {
     try {
       const comment = await storage.approveComment(req.params.id);
       if (!comment) {
@@ -355,25 +332,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/comments/:id", async (req, res) => {
+  app.delete("/api/comments/:id", isAuthenticated, async (req, res) => {
     try {
       await storage.deleteComment(req.params.id);
       res.json({ success: true });
     } catch (error) {
       console.error("Delete comment error:", error);
       res.status(500).json({ error: "Failed to delete comment" });
-    }
-  });
-
-  // Image upload endpoint (protected)
-  app.post("/api/upload", isAuthenticated, async (req, res) => {
-    try {
-      // File upload would typically be handled by multer middleware
-      // For now, this endpoint validates authentication for image uploads
-      res.json({ message: "Image upload endpoint ready" });
-    } catch (error) {
-      console.error("Upload error:", error);
-      res.status(400).json({ error: "Upload failed" });
     }
   });
 
@@ -416,53 +381,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Schedule post error:", error);
       res.status(500).json({ error: "Failed to schedule post" });
-    }
-  });
-
-  // Protected admin endpoints for posts and comments
-  app.patch("/api/posts/:id", isAuthenticated, async (req, res) => {
-    try {
-      const post = await storage.updatePost(req.params.id, req.body);
-      if (!post) {
-        return res.status(404).json({ error: "Post not found" });
-      }
-      res.json(post);
-    } catch (error) {
-      console.error("Update post error:", error);
-      res.status(400).json({ error: "Failed to update post" });
-    }
-  });
-
-  app.delete("/api/posts/:id", isAuthenticated, async (req, res) => {
-    try {
-      await storage.deletePost(req.params.id);
-      res.json({ success: true });
-    } catch (error) {
-      console.error("Delete post error:", error);
-      res.status(500).json({ error: "Failed to delete post" });
-    }
-  });
-
-  app.patch("/api/comments/:id/approve", isAuthenticated, async (req, res) => {
-    try {
-      const comment = await storage.approveComment(req.params.id);
-      if (!comment) {
-        return res.status(404).json({ error: "Comment not found" });
-      }
-      res.json(comment);
-    } catch (error) {
-      console.error("Approve comment error:", error);
-      res.status(500).json({ error: "Failed to approve comment" });
-    }
-  });
-
-  app.delete("/api/comments/:id", isAuthenticated, async (req, res) => {
-    try {
-      await storage.deleteComment(req.params.id);
-      res.json({ success: true });
-    } catch (error) {
-      console.error("Delete comment error:", error);
-      res.status(500).json({ error: "Failed to delete comment" });
     }
   });
 
@@ -536,12 +454,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Document upload endpoint
-  const upload = multer({ 
+  // ponytail: Vercel 함수 요청 한도 4.5MB 때문에 4MB 로 제한. 더 큰 파일이 필요하면 @vercel/blob/client 의 upload() 로 브라우저에서 직접 올린다
+  const upload = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB limit
+    limits: { fileSize: 4 * 1024 * 1024 },
   });
 
-  app.post("/api/documents/upload", isAuthenticated, upload.single("file"), async (req: any, res) => {
+  app.post("/api/documents/upload", isAuthenticated, (req, res, next) => {
+    upload.single("file")(req, res, (err) =>
+      err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE"
+        ? res.status(413).json({ error: "파일은 4MB 이하만 올릴 수 있습니다" })
+        : next(err),
+    );
+  }, async (req: any, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "파일을 선택해주세요" });
@@ -556,11 +481,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const ext = path.extname(req.file.originalname);
       const safeFileName = `${Date.now()}-${Math.random().toString(36).substring(2, 11)}${ext}`;
       
-      // Upload to Object Storage using ObjectStorageService
-      const objectStorageService = new ObjectStorageService();
-      const objectPath = `public/documents/${safeFileName}`;
-      
-      // Determine content type
       const contentTypes: Record<string, string> = {
         '.pdf': 'application/pdf',
         '.doc': 'application/msword',
@@ -568,15 +488,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         '.xls': 'application/vnd.ms-excel',
         '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       };
-      const contentType = contentTypes[ext.toLowerCase()] || 'application/octet-stream';
-      
-      await objectStorageService.uploadFile(objectPath, req.file.buffer, contentType);
-      
-      console.log(`[ObjectStorage] Document uploaded: ${objectPath}, size: ${req.file.buffer.length} bytes`);
-      
-      // Get the public URL for the uploaded file
-      const fileUrl = `/object-storage/${objectPath}`;
-      
+      const blob = await put(`documents/${safeFileName}`, req.file.buffer, {
+        access: "public",
+        contentType: contentTypes[ext.toLowerCase()] || "application/octet-stream",
+      });
+      const fileUrl = blob.url;
+
       const document = await storage.createDocument({
         name,
         type,
@@ -608,21 +525,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Delete document error:", error);
       res.status(500).json({ error: "Failed to delete document" });
-    }
-  });
-
-  // Booking and B2B status update endpoints
-  app.patch("/api/b2b-proposals/:id/status", isAuthenticated, async (req, res) => {
-    try {
-      const { status } = req.body;
-      const proposal = await storage.updateB2bProposalStatus(req.params.id, status);
-      if (!proposal) {
-        return res.status(404).json({ error: "Proposal not found" });
-      }
-      res.json(proposal);
-    } catch (error) {
-      console.error("Update B2B proposal status error:", error);
-      res.status(500).json({ error: "Failed to update proposal status" });
     }
   });
 
@@ -737,29 +639,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Sitemap generation error:", error);
       res.status(500).send("Failed to generate sitemap");
-    }
-  });
-
-  // Object Storage file download endpoint
-  app.get("/object-storage/*", async (req, res) => {
-    try {
-      const objectPath = (req.params as Record<string, string>)[0];
-      const objectStorageService = new ObjectStorageService();
-      
-      console.log(`[ObjectStorage] Download request for: ${objectPath}`);
-      
-      const file = await objectStorageService.getFile(objectPath);
-      
-      // Use streaming download
-      await objectStorageService.downloadObject(file, res);
-      
-    } catch (error) {
-      if (error instanceof ObjectNotFoundError) {
-        console.error(`[ObjectStorage] File not found: ${(req.params as Record<string, string>)[0]}`);
-        return res.status(404).json({ error: "File not found" });
-      }
-      console.error("[ObjectStorage] Download error:", error);
-      res.status(500).json({ error: "Failed to download file" });
     }
   });
 

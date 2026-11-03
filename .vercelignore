@@ -1,0 +1,6 @@
+.env
+.env.local
+server/migrate-data.ts
+.DS_Store
+dist
+node_modules

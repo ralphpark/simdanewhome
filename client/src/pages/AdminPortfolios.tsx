@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { apiRequest } from "@/lib/queryClient";
+import { compressImage } from "@/lib/compressImage";
 import { Link } from "wouter";
 import { ArrowLeft, Plus, Edit2, Trash2, AlertCircle } from "lucide-react";
 import {
@@ -65,7 +66,7 @@ export default function AdminPortfolios() {
         variant: "destructive",
       });
       setTimeout(() => {
-        navigate("/");
+        navigate("/admin");
       }, 500);
     }
   }, [isAuthenticated, authLoading, navigate, toast]);
@@ -160,16 +161,11 @@ export default function AdminPortfolios() {
 
     setThumbnailUploading(true);
     try {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target?.result as string;
-        setFormData({ ...formData, thumbnailUrl: base64 });
-        toast({
-          title: "성공",
-          description: "썸네일이 선택되었습니다",
-        });
-      };
-      reader.readAsDataURL(file);
+      setFormData({ ...formData, thumbnailUrl: await compressImage(file) });
+      toast({
+        title: "성공",
+        description: "썸네일이 선택되었습니다",
+      });
     } catch (error) {
       toast({
         title: "오류",
@@ -186,17 +182,8 @@ export default function AdminPortfolios() {
     if (!files) return;
 
     try {
-      const newImages: string[] = formData.images || [];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const base64 = event.target?.result as string;
-          newImages.push(base64);
-          setFormData({ ...formData, images: newImages });
-        };
-        reader.readAsDataURL(file);
-      }
+      const added = await Promise.all(Array.from(files).map((f) => compressImage(f)));
+      setFormData({ ...formData, images: [...(formData.images || []), ...added] });
       toast({
         title: "성공",
         description: `${files.length}개의 이미지가 추가되었습니다`,

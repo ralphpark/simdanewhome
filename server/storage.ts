@@ -85,6 +85,8 @@ export class MemStorage implements IStorage {
   private b2bProposals: Map<string, B2bProposal> = new Map();
   private portfolios: Map<string, Portfolio> = new Map();
   private posts: Map<string, Post> = new Map();
+  private timelines: Map<string, Timeline> = new Map();
+  private documents: Map<string, Document> = new Map();
 
   constructor() {
     // Seed with sample data
@@ -384,6 +386,71 @@ export class MemStorage implements IStorage {
 
   async deleteComment(id: string): Promise<void> {
     // No-op for MemStorage
+  }
+
+  // Timelines
+  async createTimeline(data: InsertTimeline): Promise<Timeline> {
+    const id = `time-${Date.now()}-${Math.random()}`;
+    const timeline: Timeline = {
+      id,
+      ...data,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.timelines.set(id, timeline);
+    return timeline;
+  }
+
+  async getAllTimelines(): Promise<Timeline[]> {
+    return Array.from(this.timelines.values()).sort((a, b) => {
+      const yearA = parseInt(a.year);
+      const yearB = parseInt(b.year);
+      return yearB - yearA;
+    });
+  }
+
+  async getTimelineById(id: string): Promise<Timeline | undefined> {
+    return this.timelines.get(id);
+  }
+
+  async updateTimeline(id: string, data: Partial<InsertTimeline>): Promise<Timeline | undefined> {
+    const timeline = this.timelines.get(id);
+    if (timeline) {
+      const updated = { ...timeline, ...data, updatedAt: new Date() };
+      this.timelines.set(id, updated);
+      return updated;
+    }
+    return undefined;
+  }
+
+  async deleteTimeline(id: string): Promise<void> {
+    this.timelines.delete(id);
+  }
+
+  // Documents
+  async createDocument(data: InsertDocument): Promise<Document> {
+    const id = `doc-${Date.now()}-${Math.random()}`;
+    const document: Document = {
+      id,
+      ...data,
+      createdAt: new Date(),
+    };
+    this.documents.set(id, document);
+    return document;
+  }
+
+  async getAllDocuments(): Promise<Document[]> {
+    return Array.from(this.documents.values()).sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+    );
+  }
+
+  async getDocumentById(id: string): Promise<Document | undefined> {
+    return this.documents.get(id);
+  }
+
+  async deleteDocument(id: string): Promise<void> {
+    this.documents.delete(id);
   }
 
   async getUser(id: string): Promise<User | undefined> {

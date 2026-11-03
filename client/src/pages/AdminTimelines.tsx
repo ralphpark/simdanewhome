@@ -46,7 +46,7 @@ export default function AdminTimelines() {
         variant: "destructive",
       });
       setTimeout(() => {
-        navigate("/");
+        navigate("/admin");
       }, 500);
     }
   }, [isAuthenticated, authLoading, navigate, toast]);

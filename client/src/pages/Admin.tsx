@@ -41,19 +41,6 @@ export default function Admin() {
     return sessionStorage.getItem('adminActiveTab') || 'posts';
   });
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      toast({
-        title: "인증 필요",
-        description: "관리자 로그인이 필요합니다",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-    }
-  }, [isAuthenticated, isLoading, toast]);
-
   // Invalidate all admin queries on component mount to ensure fresh data
   useEffect(() => {
     console.log("[Admin] Invalidating all queries");
@@ -307,7 +294,11 @@ export default function Admin() {
     },
   });
 
-  if (isLoading || !isAuthenticated) {
+  if (!isLoading && !isAuthenticated) {
+    return <AdminLogin />;
+  }
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -377,9 +368,15 @@ export default function Admin() {
           <Link href="/">
             <Button variant="outline">사이트 보기</Button>
           </Link>
-          <a href="/api/logout">
-            <Button variant="outline">로그아웃</Button>
-          </a>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              await apiRequest("POST", "/api/logout");
+              window.location.href = "/";
+            }}
+          >
+            로그아웃
+          </Button>
         </div>
 
         <Tabs value={activeTab} onValueChange={(val) => {
@@ -1129,6 +1126,54 @@ export default function Admin() {
           </DialogContent>
         </Dialog>
       </div>
+    </div>
+  );
+}
+
+function AdminLogin() {
+  const queryClient = useQueryClient();
+  const [password, setPassword] = useState("");
+  const login = useMutation({
+    mutationFn: () => apiRequest("POST", "/api/login", { password }),
+    // 로그인 전에 401 로 실패한 관리자 데이터까지 모두 다시 불러온다
+    onSuccess: () => queryClient.invalidateQueries(),
+  });
+
+  return (
+    <div className="flex items-center justify-center min-h-screen px-4">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>관리자 로그인</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              login.mutate();
+            }}
+          >
+            <Input
+              type="password"
+              autoComplete="current-password"
+              aria-label="관리자 비밀번호"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoFocus
+              data-testid="input-admin-password"
+            />
+            {login.isError && (
+              <p className="text-sm text-destructive" role="alert">
+                비밀번호가 올바르지 않습니다
+              </p>
+            )}
+            <Button type="submit" className="w-full" disabled={login.isPending || !password}>
+              {login.isPending ? "확인 중..." : "로그인"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -66,18 +66,25 @@ app.use((req, res, next) => {
   next();
 });
 
-export default async function runApp(
-  setup: (app: Express, server: Server) => Promise<void>,
-) {
+// 라우트와 에러 처리까지 붙인 앱. Vercel 함수(server/vercel.ts)와 로컬 서버가 같이 쓴다
+export async function setupApp(): Promise<Server> {
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
+    console.error(err);
     res.status(status).json({ message });
-    throw err;
   });
+
+  return server;
+}
+
+export default async function runApp(
+  setup: (app: Express, server: Server) => Promise<void>,
+) {
+  const server = await setupApp();
 
   // Serve static files from public directory
   app.use(express.static(path.resolve(import.meta.dirname, "..", "public")));
@@ -93,8 +100,7 @@ export default async function runApp(
   const port = parseInt(process.env.PORT || '5000', 10);
   server.listen({
     port,
-    host: "0.0.0.0",
-    reusePort: true,
+    host: "127.0.0.1",
   }, () => {
     log(`serving on port ${port}`);
   });
