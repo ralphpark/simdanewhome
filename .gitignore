@@ -8,3 +8,7 @@ vite.config.ts.*
 server/migrate-data.ts
 .vercel
 .env*
+docs/redesign/verification/
+.bkit/
+docs/.bkit-memory.json
+docs/.pdca-status.json

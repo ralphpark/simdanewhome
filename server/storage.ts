@@ -1,4 +1,6 @@
 import type {
+  SiteImage,
+  InsertSiteImage,
   ChatHistory,
   InsertChatHistory,
   Booking,
@@ -23,6 +25,9 @@ import * as schema from "@shared/schema";
 import { eq, desc, and } from "drizzle-orm";
 
 export interface IStorage {
+  getSiteImages(): Promise<SiteImage[]>;
+  upsertSiteImage(data: InsertSiteImage): Promise<SiteImage>;
+  deleteSiteImage(key: string): Promise<void>;
   // Chat histories
   createChatHistory(data: InsertChatHistory): Promise<ChatHistory>;
   getChatHistoriesBySession(sessionId: string): Promise<ChatHistory[]>;
@@ -80,6 +85,22 @@ export interface IStorage {
 
 // In-memory storage implementation
 export class MemStorage implements IStorage {
+  private siteImages = new Map<string, SiteImage>();
+
+  async getSiteImages(): Promise<SiteImage[]> {
+    return Array.from(this.siteImages.values());
+  }
+
+  async upsertSiteImage(data: InsertSiteImage): Promise<SiteImage> {
+    const image: SiteImage = { ...data, alt: data.alt ?? null, updatedAt: new Date() };
+    this.siteImages.set(data.key, image);
+    return image;
+  }
+
+  async deleteSiteImage(key: string): Promise<void> {
+    this.siteImages.delete(key);
+  }
+
   private chatHistories: Map<string, ChatHistory> = new Map();
   private bookings: Map<string, Booking> = new Map();
   private b2bProposals: Map<string, B2bProposal> = new Map();
@@ -468,6 +489,23 @@ export class MemStorage implements IStorage {
 
 // Database storage implementation using Drizzle ORM
 export class DbStorage implements IStorage {
+  async getSiteImages(): Promise<SiteImage[]> {
+    return db.select().from(schema.siteImages);
+  }
+
+  async upsertSiteImage(data: InsertSiteImage): Promise<SiteImage> {
+    const values = { ...data, alt: data.alt ?? null, updatedAt: new Date() };
+    const [image] = await db.insert(schema.siteImages).values(values).onConflictDoUpdate({
+      target: schema.siteImages.key,
+      set: { url: values.url, alt: values.alt, updatedAt: values.updatedAt },
+    }).returning();
+    return image;
+  }
+
+  async deleteSiteImage(key: string): Promise<void> {
+    await db.delete(schema.siteImages).where(eq(schema.siteImages.key, key));
+  }
+
   // Chat histories
   async createChatHistory(data: InsertChatHistory): Promise<ChatHistory> {
     const [result] = await db.insert(schema.chatHistories).values(data).returning();

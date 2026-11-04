@@ -1,5 +1,13 @@
 import { type Server } from "node:http";
 import path from "node:path";
+import { inspect } from "node:util";
+import { ZodError } from "zod";
+
+// ponytail: Node 25 의 console.error 가 ZodError 를 출력하다 예외를 던져 서버가 죽는다(라우트 38곳이 그렇게 로그를 찍음).
+// 출력 형식을 여기 한 곳에서 지정한다. Node·zod 가 고쳐지면 삭제
+(ZodError.prototype as any)[inspect.custom] = function (this: ZodError) {
+  return `ZodError: ${this.message}`;
+};
 
 import express, {
   type Express,

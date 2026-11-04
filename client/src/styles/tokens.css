@@ -1,0 +1,88 @@
+/* Public site tokens. Keep the existing shadcn HSL variables independent. */
+:root {
+  --site-white: #FFFFFF;
+  --site-surface: #F5F5F7;
+  --site-black: #000000;
+  --site-ink: #1D1D1F;
+  --site-secondary: #6E6E73;
+  --site-caption: #86868B;
+  --site-green: #03473E;
+  --site-link: #0E6B4E;
+  --site-gold: #B08D4F;
+  --site-font: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  --site-hero: 80px;
+  --site-hero-leading: 84px;
+  --site-headline: 56px;
+  --site-headline-leading: 60px;
+  --site-title: 40px;
+  --site-title-leading: 44px;
+  --site-subtitle: 28px;
+  --site-subtitle-leading: 32px;
+  --site-body: 17px;
+  --site-body-leading: 25px;
+  --site-caption-size: 12px;
+  --site-caption-leading: 16px;
+  --site-heading-tracking: -0.015em;
+  --site-heading-weight: 600;
+  --site-radius-card: 18px;
+  --site-radius-tile: 28px;
+  --site-radius-input: 12px;
+  --site-radius-pill: 980px;
+  --site-space-1: 8px;
+  --site-space-2: 16px;
+  --site-space-3: 24px;
+  --site-space-4: 32px;
+  --site-space-6: 48px;
+  --site-space-8: 64px;
+  --site-space-10: 80px;
+  --site-space-15: 120px;
+  --site-section: 64px;
+  --site-gutter: 24px;
+  --site-ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --site-reveal-duration: 0.8s;
+  --site-stagger: 0.08s;
+}
+
+@media (min-width: 734px) {
+  :root { --site-section: 80px; --site-gutter: 40px; }
+}
+@media (min-width: 1068px) {
+  :root { --site-section: 120px; --site-gutter: 64px; }
+}
+
+.site-shell {
+  font-family: var(--site-font);
+  font-size: var(--site-body);
+  line-height: var(--site-body-leading);
+  color: var(--site-ink);
+  background: var(--site-white);
+  -webkit-font-smoothing: antialiased;
+}
+.site-shell :is(h1, h2, h3) { font-weight: var(--site-heading-weight); letter-spacing: var(--site-heading-tracking); text-wrap: balance; }
+.site-shell :is(a, button, input, [tabindex]):focus-visible { outline: 3px solid var(--site-link); outline-offset: 5px; }
+.site-container { width: min(100% - var(--site-gutter) * 2, 1200px); margin-inline: auto; }
+.site-section { padding-block: var(--site-section); }
+.site-hero-title { font-size: clamp(40px, 6vw, var(--site-hero)); line-height: 1.05; }
+.site-headline { font-size: clamp(32px, 4.2vw, var(--site-headline)); line-height: 1.07143; }
+.site-link { color: var(--site-link); text-underline-offset: 4px; }
+.site-link:hover { text-decoration: underline; }
+.site-pill { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; border-radius: var(--site-radius-pill); background: var(--site-link); color: var(--site-white); }
+.site-pill:hover { background: var(--site-green); }
+.site-nav { height: 48px; background: rgba(255,255,255,.72); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(29,29,31,.12); }
+.site-nav[data-scrolled="true"] { height: 44px; }
+.site-skip { position: fixed; top: 8px; left: 16px; z-index: 100; padding: 12px 20px; background: var(--site-white); color: var(--site-green); transform: translateY(-150%); border-radius: var(--site-radius-input); }
+.site-skip:focus { transform: translateY(0); }
+
+@keyframes site-bracket-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes site-loader-out { to { opacity: 0; transform: scale(1.035); } }
+@keyframes site-brand-spin { to { transform: rotate(360deg); } }
+.site-logo-intro { overflow: visible; }
+.site-logo-intro [data-logo-part="bracket"] { transform-box: fill-box; transform-origin: center; animation: site-bracket-grow .5s var(--site-ease) both; }
+.site-loader { animation: site-loader-out .32s var(--site-ease) 1.6s both; }
+.site-brand-spinner { animation: site-brand-spin 3.2s linear infinite; transform-origin: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .site-shell *, .site-shell *::before, .site-shell *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .site-loader { display: none; }
+  .site-brand-spinner { animation: none !important; }
+}

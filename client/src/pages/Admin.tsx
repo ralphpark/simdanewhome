@@ -28,6 +28,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Link } from "wouter";
+import { SiteImagesTab } from "@/components/admin/SiteImagesTab";
 
 export default function Admin() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -383,7 +384,7 @@ export default function Admin() {
           setActiveTab(val);
           sessionStorage.setItem('adminActiveTab', val);
         }} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1">
             <TabsTrigger value="posts">포스트 ({posts.length})</TabsTrigger>
             <TabsTrigger value="portfolios">포트폴리오 ({portfolios.length})</TabsTrigger>
             <TabsTrigger value="bookings">예약 ({bookings.length})</TabsTrigger>
@@ -391,7 +392,10 @@ export default function Admin() {
             <TabsTrigger value="comments">댓글 ({comments.length})</TabsTrigger>
             <TabsTrigger value="timelines">연혁 ({timelines.length})</TabsTrigger>
             <TabsTrigger value="documents">문서 ({documents.length})</TabsTrigger>
+            <TabsTrigger value="site-images">사이트 이미지</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="site-images"><SiteImagesTab /></TabsContent>
 
           {/* 포스트 탭 */}
           <TabsContent value="posts" className="space-y-6">

@@ -127,6 +127,24 @@ export const documents = pgTable("documents", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Public site image overrides. Defaults stay in client/src/content/images.ts.
+export const siteImages = pgTable("site_images", {
+  key: varchar("key").primaryKey(),
+  url: text("url").notNull(),
+  alt: text("alt"),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const insertSiteImageSchema = createInsertSchema(siteImages).omit({ updatedAt: true }).extend({
+  url: z.string().url().refine((value) => {
+    try { const url = new URL(value); return url.protocol === "https:" && !url.username && !url.password; }
+    catch { return false; }
+  }, "이미지 URL은 HTTPS 주소여야 합니다"),
+  alt: z.string().max(1000).nullable().optional(),
+});
+export type SiteImage = typeof siteImages.$inferSelect;
+export type InsertSiteImage = z.infer<typeof insertSiteImageSchema>;
+
 // Insert schemas
 export const insertChatHistorySchema = createInsertSchema(chatHistories).omit({
   id: true,
