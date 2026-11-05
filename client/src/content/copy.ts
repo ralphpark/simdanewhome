@@ -20,9 +20,9 @@ export const copy = {
       title: '숫자로 보는 심다',
     },
     platform: {
-      eyebrow: 'PlantBid 플랫폼',
-      title: '동네 화원의 선물',
-      lead: '가장 가까운 가게가 정성껏 준비해 직접 문 앞까지 배송합니다.',
+      eyebrow: 'simda 플랫폼',
+      title: '동네 가게의 선물',
+      lead: '가장 가까운 가게가 정성껏 준비해 문 앞까지 배송합니다.',
       badge: '위치 기반 비대면 입찰 특허',
       cta: 'simda.me 바로가기',
     },
@@ -102,8 +102,8 @@ export const copy = {
       {
         key: 'platform',
         eyebrow: '중개 플랫폼',
-        title: 'PlantBid 플랫폼',
-        lead: '동네 화원과 가까운 이웃을 잇는 식물 및 플라워 선물 중개 서비스입니다.',
+        title: 'simda 플랫폼',
+        lead: '동네 가게와 가까운 이웃을 잇는 식물 및 플라워 선물 중개 서비스입니다.',
         points: [
           '특허 등록된 위치 기반 비대면 안심 입찰 시스템',
           '주변 전문 판매자가 정성껏 직접 완성하는 로컬 배송',
@@ -111,7 +111,7 @@ export const copy = {
         ],
         cases: [
           'simda.me 선물 큐레이션',
-          '동네 화원 상생 네트워크',
+          '동네 가게 상생 네트워크',
           '위치 기반 빠른 당일 배송',
         ],
         cta: {
@@ -236,7 +236,7 @@ export const copy = {
   },
   support: {
     hero: {
-      title: '무엇을 도와드릴까요',
+      title: '무엇을 도와드릴까요?',
       lead: '견적 문의부터 관리 상담까지 언제든 편안하게 문의해 주세요.',
     },
     contact: {
@@ -370,7 +370,7 @@ export const copy = {
   seo: {
     '/': {
       title: '심다 (simda) — 식물과 함께하는 일상의 큐레이션',
-      description: '공간의 결에 맞는 식재 연출, 정기 유지관리, 정원 조경 및 위치 기반 선물 플랫폼 PlantBid를 선보입니다.',
+      description: '공간의 결에 맞는 식재 연출, 정기 유지관리, 정원 조경 및 위치 기반 선물 플랫폼 simda를 선보입니다.',
     },
     '/story': {
       title: '브랜드 스토리 — 심다 (simda)',
@@ -378,7 +378,7 @@ export const copy = {
     },
     '/services': {
       title: '서비스 — 심다 (simda)',
-      description: 'PlantBid 플랫폼, 전문 식물관리, 기업 출강 교육, 가든 조경 설계, 식물 셀렉션 판매를 안내합니다.',
+      description: 'simda 플랫폼, 전문 식물관리, 기업 출강 교육, 가든 조경 설계, 식물 셀렉션 판매를 안내합니다.',
     },
     '/portfolio': {
       title: '포트폴리오 — 심다 (simda)',

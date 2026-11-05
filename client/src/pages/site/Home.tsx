@@ -1,6 +1,9 @@
-import { HomeHero, HomeNumbers, HomePlatform, HomeServices, HomeWork, HomeClients, HomeMagazine, HomeClosing } from "./home/sections";
+import { HomeSections } from "./home/sections";
+import { usePageTitle } from "./portfolio/ui";
+import { copy } from "@/content/copy";
 import "./home/home.css";
 
 export default function Home() {
-  return <div className="a-home"><HomeHero /><HomeNumbers /><HomePlatform /><HomeServices /><HomeWork /><HomeClients /><HomeMagazine /><HomeClosing /></div>;
+  usePageTitle(copy.seo["/"].title);
+  return <HomeSections />;
 }

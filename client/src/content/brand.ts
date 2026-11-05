@@ -20,10 +20,15 @@ export const founder: { name: string; title: string; career: string[] } = {
   ]
 };
 
-export const company: { name: string; brand: string; tagline: string } = {
+export const company = {
   name: "주식회사 에스아이엠지오",
   brand: "simda",
-  tagline: "식물과 함께하는 일상의 큐레이션"
+  tagline: "식물과 함께하는 일상의 큐레이션",
+  registrationNumber: "574-88-02211",
+  address: "서울특별시 서초구 바우뫼로6길 22, 2층 1호",
+  phone: "1551-0525",
+  email: "simda@simda.kr",
+  hours: "평일 09:00–18:00"
 };
 
 export const milestones: { date: string; title: string; detail?: string; tag: "PATENT" | "CERT" | "AWARD" | "SELECT" | "FUND" | "MVP" }[] = [

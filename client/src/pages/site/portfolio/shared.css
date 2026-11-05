@@ -35,3 +35,13 @@
 @media (prefers-reduced-motion: reduce) {
   .team-b *, .team-b *::before, .team-b *::after { animation: none !important; transition: none !important; }
 }
+/* Phase 2: these overrides are deliberately scoped away from the approved home. */
+.subpage .b-result-count{margin:24px 0 32px;color:var(--ink2);font-size:14px}
+.subpage .b-page-state{padding:128px 22px;min-height:400px}
+.subpage .b-page-state :is(h1,h2){font-size:32px;line-height:1.25}
+.subpage .b-page-state p{font-size:17px;color:var(--ink2)}
+.subpage .b-page-state>svg{color:var(--green)}
+.subpage .b-image-placeholder{background:var(--alt);color:var(--green)}
+.subpage .b-empty-inline{font-size:17px;color:var(--ink2)}
+.subpage .b-back{font-size:17px;color:var(--link)}
+@media(max-width:734px){.subpage .b-page-state{padding:80px 22px}.subpage .b-page-state :is(h1,h2){font-size:28px}}

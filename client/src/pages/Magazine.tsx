@@ -20,7 +20,7 @@ export default function Magazine() {
   });
 
   const categories = posts
-    ? ["all", ...new Set(posts.map((p) => p.category))]
+    ? ["all", ...Array.from(new Set(posts.map((p) => p.category)))]
     : ["all"];
 
   const filteredPosts = posts?.filter((post) => {

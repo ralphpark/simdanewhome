@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { Logo } from "./Logo";
 
 const sessionKey = "simda:site-intro-seen";
@@ -11,22 +10,24 @@ function shouldShowIntro() {
 }
 
 export function SiteLoader() {
-  const reduce = useReducedMotion();
-  const [visible, setVisible] = useState(shouldShowIntro);
+  const eligible = useRef<boolean | null>(null);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (eligible.current === null) eligible.current = shouldShowIntro();
+    setVisible(eligible.current && !media.matches);
     seenInMemory = true;
     try { sessionStorage.setItem(sessionKey, "1"); } catch { /* Session storage can be disabled. */ }
-    if (reduce) { setVisible(false); return; }
-    // Bracket 0–.5s → letters .42–1.3s → emblem 1.05–1.35s →
-    // hold until 1.6s → fade/scale out by 1.92s; remove before 2 seconds.
-    const timer = window.setTimeout(() => setVisible(false), 1950);
-    return () => window.clearTimeout(timer);
-  }, [reduce]);
+    const stop = () => { if (media.matches) setVisible(false); };
+    media.addEventListener("change", stop);
+    const timer = window.setTimeout(() => setVisible(false), 2700);
+    return () => { window.clearTimeout(timer); media.removeEventListener("change", stop); };
+  }, []);
 
-  if (!visible || reduce) return null;
+  if (!visible) return null;
   return (
-    <div className="site-loader site-shell pointer-events-none fixed inset-0 z-[100] flex items-center justify-center bg-site-white text-site-green" aria-hidden="true">
-      <Logo variant="full" intro className="w-[240px] max-w-[72vw] tablet:w-[300px]" />
+    <div className="ld" aria-hidden="true">
+      <Logo variant="full" />
     </div>
   );
 }

@@ -68,8 +68,6 @@
 .site-link:hover { text-decoration: underline; }
 .site-pill { display: inline-flex; align-items: center; justify-content: center; padding: 12px 24px; border-radius: var(--site-radius-pill); background: var(--site-link); color: var(--site-white); }
 .site-pill:hover { background: var(--site-green); }
-.site-nav { height: 48px; background: rgba(255,255,255,.72); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); border-bottom: 1px solid rgba(29,29,31,.12); }
-.site-nav[data-scrolled="true"] { height: 44px; }
 .site-skip { position: fixed; top: 8px; left: 16px; z-index: 100; padding: 12px 20px; background: var(--site-white); color: var(--site-green); transform: translateY(-150%); border-radius: var(--site-radius-input); }
 .site-skip:focus { transform: translateY(0); }
 
@@ -86,3 +84,132 @@
   .site-loader { display: none; }
   .site-brand-spinner { animation: none !important; }
 }
+
+
+/* Approved home design: shared typography, controls, navigation and footer. */
+
+:root{
+  --ink:#1d1d1f;--ink2:#6e6e73;--ink3:#86868b;--alt:#f5f5f7;--hair:#d2d2d7;
+  --green:#03473e;--green2:#02362f;--link:#03684f;--mint:#2fae86;--gold:#9a7a3f;--tint:#e8f0ec;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro KR","SF Pro Display","Apple SD Gothic Neo","Pretendard Variable",Pretendard,"Noto Sans KR",sans-serif;
+  --pad:max(22px,calc((100vw - 1240px) / 2));
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+:where(.site-shell) .t-hero{font-size:80px;line-height:1.15;letter-spacing:-.005em}
+:where(.site-shell) .t-h2{font-size:48px;line-height:1.19}
+:where(.site-shell) .t-eye{font-size:24px;line-height:1.3;font-weight:600}
+:where(.site-shell) .t-intro{font-size:21px;line-height:1.52;color:var(--ink2)}
+:where(.site-shell) .t-intro b{color:var(--ink);font-weight:600}
+:where(.site-shell) .btns{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:17px}
+:where(.site-shell) .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 21px;border-radius:980px;border:1px solid transparent;background:var(--green);color:#fff;font-size:17px;white-space:nowrap;box-sizing:border-box;transition:background .2s}
+:where(.site-shell) .btn:hover{background:var(--green2);text-decoration:none}
+:where(.site-shell) .btn-o{background:transparent;color:var(--link);border-color:var(--link)}
+:where(.site-shell) .btn-o:hover{background:var(--link);color:#fff}
+:where(.site-shell) .btn-sm{min-height:28px;padding:0 12px;font-size:12px}
+:where(.site-shell) .lk{font-size:17px;color:var(--link)}
+:where(.site-shell) .ld{position:fixed;inset:0;z-index:50;background:#fff;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;visibility:hidden;animation:simda-ldPlay 2.7s ease}
+:where(.site-shell) .ld svg{width:min(280px,60vw);height:auto;color:var(--green);overflow:visible}
+:where(.site-shell) .ld .p-brk{transform-box:fill-box;transform-origin:50% 50%;animation:simda-brkIn .7s var(--ease) .1s both}
+:where(.site-shell) .ld .p-l{transform-box:fill-box;animation:simda-rise .7s var(--ease) both}
+:where(.site-shell) .ld .p-s{animation-delay:.45s}
+:where(.site-shell) .ld .p-i{animation-delay:.53s}
+:where(.site-shell) .ld .p-m{animation-delay:.61s}
+:where(.site-shell) .ld .p-d{animation-delay:.69s}
+:where(.site-shell) .ld .p-a{animation-delay:.77s}
+:where(.site-shell) .ld .p-emb{transform-box:fill-box;transform-origin:50% 50%;animation:simda-embIn .9s var(--ease) 1s both}
+:where(.site-shell) .gn{position:sticky;top:0;z-index:11;height:52px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.08)}
+:where(.site-shell) .gn-in{max-width:1024px;height:100%;margin:0 auto;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+:where(.site-shell) .gn-logo{display:flex;align-items:center;color:var(--green)}
+:where(.site-shell) .gn-logo svg{height:19px;width:auto;display:block}
+:where(.site-shell) .gn-menu{display:flex;gap:34px}
+:where(.site-shell) .gn-menu a{color:rgba(0,0,0,.8);font-size:13px}
+:where(.site-shell) .gn-menu a:hover{color:#000;text-decoration:none}
+:where(.site-shell) .gn-right{display:flex;align-items:center;gap:20px}
+:where(.site-shell) .gn-shop{font-size:13px;color:rgba(0,0,0,.8)}
+:where(.site-shell) .gn-shop:hover{color:#000;text-decoration:none}
+:where(.site-shell) .gn-burger{display:none;flex-direction:column;gap:6px;width:36px;height:44px;align-items:center;justify-content:center}
+:where(.site-shell) .gn-burger span{display:block;width:17px;height:1.5px;border-radius:1px;background:var(--ink)}
+:where(.site-shell) .ft{background:var(--alt);color:var(--ink2);font-size:12px;line-height:1.5;padding:40px 0 28px;word-break:keep-all}
+:where(.site-shell) .ft-in{max-width:980px;margin:0 auto;padding:0 22px}
+:where(.site-shell) .ft-logo{height:20px;width:auto;display:block;color:var(--green)}
+:where(.site-shell) .ft-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin-top:24px;padding-bottom:22px;border-bottom:1px solid var(--hair)}
+:where(.site-shell) .ft-cols h4{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:4px}
+:where(.site-shell) .ft-cols a,:where(.site-shell) .ft-cols span{display:block;color:#424245;margin-top:8px}
+:where(.site-shell) .ft-bot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;padding-top:16px}
+@media (max-width:1068px){
+  :where(.site-shell) .t-hero{font-size:64px}
+}
+@media (max-width:1068px){
+  :where(.site-shell) .gn-menu{gap:22px}
+}
+@media (max-width:734px){
+  :where(.site-shell) .t-hero{font-size:40px}
+}
+@media (max-width:734px){
+  :where(.site-shell) .t-h2{font-size:32px}
+}
+@media (max-width:734px){
+  :where(.site-shell) .t-eye{font-size:19px}
+}
+@media (max-width:734px){
+  :where(.site-shell) .t-intro{font-size:17px}
+}
+@media (max-width:734px){
+  :where(.site-shell) .gn-menu,:where(.site-shell) .gn-shop{display:none}
+}
+@media (max-width:734px){
+  :where(.site-shell) .gn-right{gap:8px}
+}
+@media (max-width:734px){
+  :where(.site-shell) .gn-burger{display:flex}
+}
+@media (max-width:734px){
+  :where(.site-shell) .ft-cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){
+  :where(.site-shell) .ld{display:none}
+}
+@keyframes simda-ldPlay{0%,78%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
+@keyframes simda-brkIn{from{transform:scaleX(0)}to{transform:none}}
+@keyframes simda-rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes simda-embIn{from{opacity:0;transform:rotate(-160deg) scale(.2)}to{opacity:1;transform:none}}
+
+/* Compatibility aliases preserve the existing secondary-page type scale. */
+:root {
+  --site-ink: var(--ink); --site-secondary: var(--ink2); --site-caption: var(--ink3);
+  --site-surface: var(--alt); --site-green: var(--green); --site-link: var(--link);
+  --site-gold: var(--gold); --site-font: var(--sans); --site-ease: var(--ease);
+}
+.site-shell .gn, .site-shell .ft { font-family:var(--sans); letter-spacing:normal; }
+.site-shell .gn, .site-shell .gn * , .site-shell .ft, .site-shell .ft * { box-sizing:content-box; }
+.site-shell .gn { font-size:16px; line-height:normal; }
+.site-shell .gn .btn { box-sizing:border-box; }
+.site-shell .gn a { text-decoration:none; }
+.site-shell .gn a[aria-current="page"] { color:var(--green); text-decoration:underline; text-decoration-color:rgba(3,71,62,.28); text-underline-offset:6px; }
+.site-shell .gn-item { position:relative; white-space:nowrap; }
+.site-shell .gn-sub-trigger { position:absolute; left:100%; top:50%; transform:translateY(-50%); width:18px; height:32px; display:flex; align-items:center; justify-content:center; }
+.site-shell .gn-burger { border:0; background:none; padding:0; cursor:pointer; }
+.site-shell .ft a:hover { text-decoration:underline; text-underline-offset:3px; }
+.site-shell .ft h4 { margin:0 0 4px; line-height:1.5; }
+.gn-popover { z-index:60; min-width:180px; padding:12px; border:1px solid rgba(0,0,0,.08); border-radius:18px; background:rgba(255,255,255,.85); backdrop-filter:blur(20px) saturate(180%); box-shadow:0 12px 36px rgba(0,0,0,.08); }
+.gn-popover a { display:block; padding:12px 16px; border-radius:12px; font-size:14px; }
+.gn-popover a:hover { background:var(--alt); }
+.gn-menu-overlay { position:fixed; inset:0; z-index:69; background:white; }
+.gn-mobile { position:fixed; inset:0; z-index:70; overflow-y:auto; background:#fff; padding:0 22px 40px; }
+.gn-mobile-top { height:52px; display:flex; align-items:center; justify-content:space-between; }
+.gn-mobile-top button { display:flex; width:44px; height:44px; align-items:center; justify-content:center; }
+.gn-mobile nav { max-width:500px; margin:36px auto 0; }
+.gn-mobile nav a { display:block; color:var(--ink); font-size:30px; font-weight:600; line-height:1.25; padding:12px 0; animation:simda-menu-in .45s var(--ease) calc(var(--menu-index)*.055s) both; }
+.gn-mobile nav a.gn-mobile-sub { font-size:19px; color:var(--ink2); padding:10px 0; }
+.gn-mobile nav a[aria-current="page"] { color:var(--link); }
+@keyframes simda-menu-in { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:none; } }
+/* Logo.tsx supplies the official contours; CSS owns the loader's assembly. */
+.site-shell .ld [data-logo-part="bracket"] { transform-box:fill-box; transform-origin:50% 50%; animation:simda-brkIn .7s var(--ease) .1s both; }
+.site-shell .ld [data-logo-part^="letter-"] { transform-box:fill-box; animation:simda-rise .7s var(--ease) both; }
+.site-shell .ld [data-logo-part="letter-s"] { animation-delay:.45s; }
+.site-shell .ld [data-logo-part="letter-i"] { animation-delay:.53s; }
+.site-shell .ld [data-logo-part="letter-m"] { animation-delay:.61s; }
+.site-shell .ld [data-logo-part="letter-d"] { animation-delay:.69s; }
+.site-shell .ld [data-logo-part="letter-a"] { animation-delay:.77s; }
+.site-shell .ld [data-logo-part="emblem"] { transform-box:fill-box; transform-origin:50% 50%; animation:simda-embIn .9s var(--ease) 1s both; }
+@media (prefers-reduced-motion:reduce) { .site-shell .ld { display:none; } }

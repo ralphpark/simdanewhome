@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 
@@ -18,7 +18,7 @@ export default function PortfolioPage() {
   });
 
   const categories = portfolios
-    ? ["all", ...new Set(portfolios.map((p) => p.category))]
+    ? ["all", ...Array.from(new Set(portfolios.map((p) => p.category)))]
     : ["all"];
 
   const filteredPortfolios = portfolios?.filter(

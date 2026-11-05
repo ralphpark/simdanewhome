@@ -1,5 +1,3 @@
-import { forwardRef, useId, type InputHTMLAttributes, type TextareaHTMLAttributes } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import { z } from "zod";
 import { insertBookingSchema, insertB2bProposalSchema } from "@shared/schema";
 
@@ -31,36 +29,7 @@ export const proposalSchema = insertB2bProposalSchema.extend({
 export type BookingValues = z.infer<typeof bookingSchema>;
 export type ProposalValues = z.infer<typeof proposalSchema>;
 
-type FieldProps = { label: string; error?: string; hint?: string };
-export const FloatingInput = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement> & FieldProps>(function FloatingInput({ label, error, hint, id: suppliedId, ...props }, ref) {
-  const generated = useId();
-  const id = suppliedId ?? generated;
-  return <div className="c-field-block">
-    <div className={`c-floating ${error ? "c-invalid" : ""}`}>
-      <input {...props} ref={ref} id={id} placeholder=" " aria-invalid={!!error} aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined} />
-      <label htmlFor={id}>{label}{props.required ? " *" : ""}</label>
-    </div>
-    {error ? <p id={`${id}-error`} className="c-field-error" aria-live="polite">{error}</p> : hint ? <p id={`${id}-hint`} className="c-hint">{hint}</p> : null}
-  </div>;
-});
-export const FloatingTextarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement> & FieldProps>(function FloatingTextarea({ label, error, hint, id: suppliedId, ...props }, ref) {
-  const generated = useId();
-  const id = suppliedId ?? generated;
-  return <div className="c-field-block">
-    <div className={`c-floating c-floating-area ${error ? "c-invalid" : ""}`}>
-      <textarea {...props} ref={ref} id={id} placeholder=" " aria-invalid={!!error} aria-describedby={error ? `${id}-error` : hint ? `${id}-hint` : undefined} />
-      <label htmlFor={id}>{label}{props.required ? " *" : ""}</label>
-    </div>
-    {error ? <p id={`${id}-error`} className="c-field-error" aria-live="polite">{error}</p> : hint ? <p id={`${id}-hint`} className="c-hint">{hint}</p> : null}
-  </div>;
-});
-
-export function SuccessCheck() {
-  const reduce = useReducedMotion();
-  return <motion.div className="c-success-check" initial={reduce ? false : { scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}>
-    <svg viewBox="0 0 56 56" fill="none" aria-hidden="true"><motion.path d="M15 28 24 37 42 19" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" initial={reduce ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: reduce ? 0 : 0.2, duration: reduce ? 0 : 0.6 }} /></svg>
-  </motion.div>;
-}
+export { FloatingInput, FloatingTextarea, SuccessCheck } from "@/components/site/AppleFields";
 
 export function requestError(error: unknown) {
   const message = error instanceof Error ? error.message : "";

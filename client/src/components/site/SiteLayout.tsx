@@ -37,9 +37,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     <div className="site-shell min-h-screen">
       <SiteLoader />
       <SiteNav />
-      <main id="site-main" ref={main} tabIndex={-1} className="grid min-h-[70svh] pt-12 focus:outline-none">
-        <AnimatePresence initial={false}>
-          <motion.div key={location} className="min-w-0 [grid-area:1/1]" initial={reduce ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: reduce ? 0 : -8, pointerEvents: "none" }} transition={{ duration: reduce ? 0 : 0.22, ease: siteEase }}>
+      <main id="site-main" ref={main} tabIndex={-1} className="min-h-[70svh] focus:outline-none">
+        <AnimatePresence initial={false} mode="wait">
+          <motion.div key={location} className="site-page min-w-0" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, pointerEvents: "none" }} transition={{ duration: reduce ? 0 : 0.22, ease: siteEase }}>
             {children}
           </motion.div>
         </AnimatePresence>

@@ -24,7 +24,15 @@ import { db } from "./db";
 import * as schema from "@shared/schema";
 import { eq, desc, and } from "drizzle-orm";
 
-export interface IStorage {
+// Memory records retain their existing omitted fields; DB rows remain strict.
+// These aliases affect types only and do not normalize or mutate stored values.
+type MemoryBooking = Omit<Booking, "aiRecommendation"> & Partial<Pick<Booking, "aiRecommendation">>;
+type MemoryProposal = Omit<B2bProposal, "businessField" | "attachmentUrl"> & Partial<Pick<B2bProposal, "businessField" | "attachmentUrl">>;
+type MemoryPortfolio = Omit<Portfolio, "clientName" | "completedDate" | "featured"> & Partial<Pick<Portfolio, "clientName" | "completedDate" | "featured">>;
+type MemoryPost = Omit<Post, "author" | "published" | "publishedAt"> & Partial<Pick<Post, "author" | "published" | "publishedAt">>;
+type MemoryDocument = Omit<Document, "updatedAt"> & Partial<Pick<Document, "updatedAt">>;
+
+export interface IStorage<StoredBooking = Booking, StoredProposal = B2bProposal, StoredPortfolio = Portfolio, StoredPost = Post, StoredDocument = Document> {
   getSiteImages(): Promise<SiteImage[]>;
   upsertSiteImage(data: InsertSiteImage): Promise<SiteImage>;
   deleteSiteImage(key: string): Promise<void>;
@@ -33,29 +41,29 @@ export interface IStorage {
   getChatHistoriesBySession(sessionId: string): Promise<ChatHistory[]>;
 
   // Bookings
-  createBooking(data: InsertBooking): Promise<Booking>;
-  getAllBookings(): Promise<Booking[]>;
-  getBookingById(id: string): Promise<Booking | undefined>;
-  updateBookingStatus(id: string, status: string): Promise<Booking | undefined>;
+  createBooking(data: InsertBooking): Promise<StoredBooking>;
+  getAllBookings(): Promise<StoredBooking[]>;
+  getBookingById(id: string): Promise<StoredBooking | undefined>;
+  updateBookingStatus(id: string, status: string): Promise<StoredBooking | undefined>;
 
   // B2B proposals
-  createB2bProposal(data: InsertB2bProposal): Promise<B2bProposal>;
-  getAllB2bProposals(): Promise<B2bProposal[]>;
-  getB2bProposalById(id: string): Promise<B2bProposal | undefined>;
-  updateB2bProposalStatus(id: string, status: string): Promise<B2bProposal | undefined>;
+  createB2bProposal(data: InsertB2bProposal): Promise<StoredProposal>;
+  getAllB2bProposals(): Promise<StoredProposal[]>;
+  getB2bProposalById(id: string): Promise<StoredProposal | undefined>;
+  updateB2bProposalStatus(id: string, status: string): Promise<StoredProposal | undefined>;
 
   // Portfolios
-  createPortfolio(data: InsertPortfolio): Promise<Portfolio>;
-  getAllPortfolios(): Promise<Portfolio[]>;
-  getPortfolioById(id: string): Promise<Portfolio | undefined>;
-  updatePortfolio(id: string, data: Partial<InsertPortfolio>): Promise<Portfolio | undefined>;
+  createPortfolio(data: InsertPortfolio): Promise<StoredPortfolio>;
+  getAllPortfolios(): Promise<StoredPortfolio[]>;
+  getPortfolioById(id: string): Promise<StoredPortfolio | undefined>;
+  updatePortfolio(id: string, data: Partial<InsertPortfolio>): Promise<StoredPortfolio | undefined>;
   deletePortfolio(id: string): Promise<void>;
 
   // Posts
-  createPost(data: InsertPost): Promise<Post>;
-  getAllPosts(): Promise<Post[]>;
-  getPostById(id: string): Promise<Post | undefined>;
-  updatePost(id: string, data: Partial<InsertPost>): Promise<Post | undefined>;
+  createPost(data: InsertPost): Promise<StoredPost>;
+  getAllPosts(): Promise<StoredPost[]>;
+  getPostById(id: string): Promise<StoredPost | undefined>;
+  updatePost(id: string, data: Partial<InsertPost>): Promise<StoredPost | undefined>;
   deletePost(id: string): Promise<void>;
   incrementPostViewCount(id: string): Promise<void>;
 
@@ -73,9 +81,9 @@ export interface IStorage {
   deleteTimeline(id: string): Promise<void>;
 
   // Documents
-  createDocument(data: InsertDocument): Promise<Document>;
-  getAllDocuments(): Promise<Document[]>;
-  getDocumentById(id: string): Promise<Document | undefined>;
+  createDocument(data: InsertDocument): Promise<StoredDocument>;
+  getAllDocuments(): Promise<StoredDocument[]>;
+  getDocumentById(id: string): Promise<StoredDocument | undefined>;
   deleteDocument(id: string): Promise<void>;
 
   // Users (Replit Auth)
@@ -84,7 +92,7 @@ export interface IStorage {
 }
 
 // In-memory storage implementation
-export class MemStorage implements IStorage {
+export class MemStorage implements IStorage<MemoryBooking, MemoryProposal, MemoryPortfolio, MemoryPost, MemoryDocument> {
   private siteImages = new Map<string, SiteImage>();
 
   async getSiteImages(): Promise<SiteImage[]> {
@@ -102,12 +110,12 @@ export class MemStorage implements IStorage {
   }
 
   private chatHistories: Map<string, ChatHistory> = new Map();
-  private bookings: Map<string, Booking> = new Map();
-  private b2bProposals: Map<string, B2bProposal> = new Map();
-  private portfolios: Map<string, Portfolio> = new Map();
-  private posts: Map<string, Post> = new Map();
+  private bookings: Map<string, MemoryBooking> = new Map();
+  private b2bProposals: Map<string, MemoryProposal> = new Map();
+  private portfolios: Map<string, MemoryPortfolio> = new Map();
+  private posts: Map<string, MemoryPost> = new Map();
   private timelines: Map<string, Timeline> = new Map();
-  private documents: Map<string, Document> = new Map();
+  private documents: Map<string, MemoryDocument> = new Map();
 
   constructor() {
     // Seed with sample data
@@ -116,7 +124,7 @@ export class MemStorage implements IStorage {
 
   private seedData() {
     // Sample portfolios
-    const samplePortfolios: Portfolio[] = [
+    const samplePortfolios: MemoryPortfolio[] = [
       {
         id: "port-1",
         title: "강남 오피스 그린 인테리어",
@@ -170,7 +178,7 @@ export class MemStorage implements IStorage {
     samplePortfolios.forEach((p) => this.portfolios.set(p.id, p));
 
     // Sample posts
-    const samplePosts: Post[] = [
+    const samplePosts: MemoryPost[] = [
       {
         id: "post-1",
         title: "초보자를 위한 겨울철 식물 관리 가이드",
@@ -237,9 +245,9 @@ export class MemStorage implements IStorage {
   }
 
   // Bookings
-  async createBooking(data: InsertBooking): Promise<Booking> {
+  async createBooking(data: InsertBooking): Promise<MemoryBooking> {
     const id = `book-${Date.now()}-${Math.random()}`;
-    const booking: Booking = {
+    const booking: MemoryBooking = {
       id,
       ...data,
       status: "pending",
@@ -249,17 +257,17 @@ export class MemStorage implements IStorage {
     return booking;
   }
 
-  async getAllBookings(): Promise<Booking[]> {
+  async getAllBookings(): Promise<MemoryBooking[]> {
     return Array.from(this.bookings.values()).sort(
       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
     );
   }
 
-  async getBookingById(id: string): Promise<Booking | undefined> {
+  async getBookingById(id: string): Promise<MemoryBooking | undefined> {
     return this.bookings.get(id);
   }
 
-  async updateBookingStatus(id: string, status: string): Promise<Booking | undefined> {
+  async updateBookingStatus(id: string, status: string): Promise<MemoryBooking | undefined> {
     const booking = this.bookings.get(id);
     if (booking) {
       booking.status = status;
@@ -270,9 +278,9 @@ export class MemStorage implements IStorage {
   }
 
   // B2B proposals
-  async createB2bProposal(data: InsertB2bProposal): Promise<B2bProposal> {
+  async createB2bProposal(data: InsertB2bProposal): Promise<MemoryProposal> {
     const id = `b2b-${Date.now()}-${Math.random()}`;
-    const proposal: B2bProposal = {
+    const proposal: MemoryProposal = {
       id,
       ...data,
       status: "pending",
@@ -282,17 +290,17 @@ export class MemStorage implements IStorage {
     return proposal;
   }
 
-  async getAllB2bProposals(): Promise<B2bProposal[]> {
+  async getAllB2bProposals(): Promise<MemoryProposal[]> {
     return Array.from(this.b2bProposals.values()).sort(
       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
     );
   }
 
-  async getB2bProposalById(id: string): Promise<B2bProposal | undefined> {
+  async getB2bProposalById(id: string): Promise<MemoryProposal | undefined> {
     return this.b2bProposals.get(id);
   }
 
-  async updateB2bProposalStatus(id: string, status: string): Promise<B2bProposal | undefined> {
+  async updateB2bProposalStatus(id: string, status: string): Promise<MemoryProposal | undefined> {
     const proposal = this.b2bProposals.get(id);
     if (proposal) {
       proposal.status = status;
@@ -303,9 +311,9 @@ export class MemStorage implements IStorage {
   }
 
   // Portfolios
-  async createPortfolio(data: InsertPortfolio): Promise<Portfolio> {
+  async createPortfolio(data: InsertPortfolio): Promise<MemoryPortfolio> {
     const id = `port-${Date.now()}-${Math.random()}`;
-    const portfolio: Portfolio = {
+    const portfolio: MemoryPortfolio = {
       id,
       ...data,
       createdAt: new Date(),
@@ -315,17 +323,17 @@ export class MemStorage implements IStorage {
     return portfolio;
   }
 
-  async getAllPortfolios(): Promise<Portfolio[]> {
+  async getAllPortfolios(): Promise<MemoryPortfolio[]> {
     return Array.from(this.portfolios.values()).sort(
       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
     );
   }
 
-  async getPortfolioById(id: string): Promise<Portfolio | undefined> {
+  async getPortfolioById(id: string): Promise<MemoryPortfolio | undefined> {
     return this.portfolios.get(id);
   }
 
-  async updatePortfolio(id: string, data: Partial<InsertPortfolio>): Promise<Portfolio | undefined> {
+  async updatePortfolio(id: string, data: Partial<InsertPortfolio>): Promise<MemoryPortfolio | undefined> {
     const portfolio = this.portfolios.get(id);
     if (portfolio) {
       const updated = { ...portfolio, ...data, updatedAt: new Date() };
@@ -340,9 +348,9 @@ export class MemStorage implements IStorage {
   }
 
   // Posts
-  async createPost(data: InsertPost): Promise<Post> {
+  async createPost(data: InsertPost): Promise<MemoryPost> {
     const id = `post-${Date.now()}-${Math.random()}`;
-    const post: Post = {
+    const post: MemoryPost = {
       id,
       ...data,
       viewCount: 0,
@@ -353,17 +361,17 @@ export class MemStorage implements IStorage {
     return post;
   }
 
-  async getAllPosts(): Promise<Post[]> {
+  async getAllPosts(): Promise<MemoryPost[]> {
     return Array.from(this.posts.values()).sort(
       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
     );
   }
 
-  async getPostById(id: string): Promise<Post | undefined> {
+  async getPostById(id: string): Promise<MemoryPost | undefined> {
     return this.posts.get(id);
   }
 
-  async updatePost(id: string, data: Partial<InsertPost>): Promise<Post | undefined> {
+  async updatePost(id: string, data: Partial<InsertPost>): Promise<MemoryPost | undefined> {
     const post = this.posts.get(id);
     if (post) {
       const updated = { ...post, ...data, updatedAt: new Date() };
@@ -449,9 +457,9 @@ export class MemStorage implements IStorage {
   }
 
   // Documents
-  async createDocument(data: InsertDocument): Promise<Document> {
+  async createDocument(data: InsertDocument): Promise<MemoryDocument> {
     const id = `doc-${Date.now()}-${Math.random()}`;
-    const document: Document = {
+    const document: MemoryDocument = {
       id,
       ...data,
       createdAt: new Date(),
@@ -460,13 +468,13 @@ export class MemStorage implements IStorage {
     return document;
   }
 
-  async getAllDocuments(): Promise<Document[]> {
+  async getAllDocuments(): Promise<MemoryDocument[]> {
     return Array.from(this.documents.values()).sort(
       (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
     );
   }
 
-  async getDocumentById(id: string): Promise<Document | undefined> {
+  async getDocumentById(id: string): Promise<MemoryDocument | undefined> {
     return this.documents.get(id);
   }
 

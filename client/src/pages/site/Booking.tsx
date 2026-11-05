@@ -7,9 +7,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
-import { ArrowLeft, Check, ChevronLeft, ChevronRight, Leaf, Sprout, Trees, ShoppingBag, MessageCircle, Users } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, Sprout, Trees, ShoppingBag, MessageCircle, Users } from "lucide-react";
 import { copy } from "@/content/copy";
-import { useSiteImage } from "@/hooks/useSiteImage";
+import { PageHead, Subpage } from "@/components/site/PagePrimitives";
 import { BrandSpinner } from "@/components/site/SiteLoader";
 import { siteEase } from "@/components/site/motion";
 import { apiRequest } from "@/lib/queryClient";
@@ -34,7 +34,6 @@ function BookingSummary({ values }: { values: Partial<BookingValues> }) {
 }
 
 export default function Booking() {
-  const image = useSiteImage("booking.hero");
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
@@ -77,16 +76,12 @@ export default function Booking() {
     const invalidStep = stepFields.findIndex((fields) => fields.some((field) => field in fieldErrors));
     if (invalidStep >= 0) move(invalidStep);
   });
-  return <div className="team-c c-booking">
-    <div className="c-booking-layout c-wrap">
-      <aside className="c-booking-aside">
-        <Link href="/support" className="c-back-link"><ArrowLeft size={16} aria-hidden="true" /> 고객센터</Link>
-        <p className="c-eyebrow">심다와의 첫 대화</p><h1>{copy.booking.hero.title}</h1><p className="c-intro-lead">{copy.booking.hero.lead}</p>
-        <div className="c-booking-photo"><img src={image.url} alt={image.alt} decoding="async" loading="lazy" /><div><Leaf size={22} strokeWidth={1.4} aria-hidden="true" /><span>당신의 공간에,<br />가장 자연스러운 시작.</span></div></div>
-        <p className="c-booking-help">상담이 필요하신가요? <a href="tel:1551-0525">1551-0525</a></p>
-      </aside>
+  return <Subpage className="team-c c-booking" passBar={false}>
+    <PageHead eyebrow="심다와의 첫 대화" title={copy.booking.hero.title} intro={copy.booking.hero.lead} />
+    <section className="c-booking-area">
+      <div className="sp-wrap c-booking-layout">
       <div className="c-booking-panel">
-        {submitted ? <div id="booking-success" className="c-booking-success c-success" tabIndex={-1} role="status"><SuccessCheck /><h2>{copy.booking.success.title}</h2><p>{copy.booking.success.lead}</p><BookingSummary values={submitted} /><p className="c-request-note">선택하신 일정은 희망 일정입니다.<br />담당자와 확인 후 상담 일정이 확정됩니다.</p><Link href="/support" className="c-button">고객센터로 돌아가기 <ChevronRight size={18} aria-hidden="true" /></Link></div>
+        {submitted ? <div id="booking-success" className="c-booking-success c-success" tabIndex={-1} role="status"><SuccessCheck /><h2>{copy.booking.success.title}</h2><p>{copy.booking.success.lead}</p><BookingSummary values={submitted} /><p className="c-request-note">선택하신 일정은 희망 일정입니다.<br />담당자와 확인 후 상담 일정이 확정됩니다.</p><Link href="/support" className="btn">고객센터로 돌아가기 <ChevronRight size={18} aria-hidden="true" /></Link></div>
         : <>
           <ol className="c-booking-progress" aria-label="예약 진행 단계">{copy.booking.steps.map((label, i) => <li key={label} aria-current={step === i ? "step" : undefined} data-done={i < step}><span className="c-progress-dot">{i < step ? <Check size={14} aria-hidden="true" /> : i + 1}</span><span>{label}</span></li>)}</ol>
           <form noValidate onSubmit={(event) => { event.preventDefault(); if (step < 3) void next(); else void submit(event); }} aria-label="상담 예약" aria-busy={mutation.isPending}>
@@ -107,10 +102,11 @@ export default function Booking() {
               </motion.div>
             </AnimatePresence>
             {mutation.isError && <p className="c-form-error" role="alert">{requestError(mutation.error)}</p>}
-            <div className="c-booking-actions">{step > 0 && <button type="button" className="c-back-button" onClick={() => move(step - 1)} disabled={mutation.isPending}><ChevronLeft size={18} aria-hidden="true" /> 이전</button>}<button className="c-button" type="submit" disabled={mutation.isPending}>{mutation.isPending ? <><BrandSpinner label="상담 요청 접수 중" /> 접수 중</> : <>{step < 3 ? "다음" : "상담 예약 요청"}<ChevronRight size={18} aria-hidden="true" /></>}</button></div>
+            <div className="c-booking-actions">{step > 0 && <button type="button" className="btn btn-o c-back-button" onClick={() => move(step - 1)} disabled={mutation.isPending}><ChevronLeft size={18} aria-hidden="true" /> 이전</button>}<button className="btn" type="submit" disabled={mutation.isPending}>{mutation.isPending ? <><BrandSpinner label="상담 요청 접수 중" /> 접수 중</> : <>{step < 3 ? "다음" : "상담 예약 요청"}<ChevronRight size={18} aria-hidden="true" /></>}</button></div>
           </form>
         </>}
       </div>
-    </div>
-  </div>;
+      </div>
+    </section>
+  </Subpage>;
 }

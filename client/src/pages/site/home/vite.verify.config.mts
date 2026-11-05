@@ -1,5 +1,8 @@
 import { defineConfig, mergeConfig } from "vite";
 import base from "../../../../../vite.config";
 
-// Verification does not load environment files or run the API server.
-export default defineConfig(mergeConfig(base, { envDir: new URL("./verification-empty", import.meta.url).pathname, build: { outDir: "/tmp/team-a-dist", emptyOutDir: true } }));
+// Frontend-only: this directory is empty and never loads the repository environment.
+export default defineConfig(mergeConfig(base, {
+  envDir: new URL("./verification-empty", import.meta.url).pathname,
+  build: { outDir: "/tmp/simda-home-v2-dist", emptyOutDir: true },
+}));

@@ -75,7 +75,7 @@ export default function PlantCareConsultation() {
 
       setMessages((prev) => {
         const withoutPlaceholder = prev.slice(0, -1);
-        const updatedMessages = [...withoutPlaceholder, { role: "assistant", content: aiReply }];
+        const updatedMessages: Message[] = [...withoutPlaceholder, { role: "assistant", content: aiReply }];
         
         // Check if consultation is complete
         if (aiReply.includes("[상담완료]")) {

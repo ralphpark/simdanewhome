@@ -266,6 +266,7 @@ export default function B2B() {
                             placeholder="IT, 금융, 서비스업 등"
                             data-testid="input-business-field"
                             {...field}
+                            value={field.value ?? ""}
                           />
                         </FormControl>
                         <FormMessage />
