@@ -37,13 +37,13 @@
 :where(.home-v2) .h-cap p:last-child{font-size:21px;line-height:1.5;margin-top:12px;opacity:.92}
 :where(.home-v2) .hl{background:var(--alt)}
 :where(.home-v2) .hl-track{height:3600px;view-timeline-name:--hl;view-timeline-axis:block}
-:where(.home-v2) .hl-stage{position:sticky;top:0;height:min(100svh,1100px);overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:36px;padding-top:30px;box-sizing:border-box}
+:where(.home-v2) .hl-stage{position:sticky;top:0;height:min(100svh,1100px);overflow:hidden;display:flex;flex-direction:column;justify-content:safe center;gap:36px;padding-top:68px;box-sizing:border-box}
 :where(.home-v2) .hl-head{padding:0 var(--pad);display:flex;justify-content:space-between;align-items:flex-end;gap:12px 24px;flex-wrap:wrap}
-:where(.home-v2) .hl-row{display:flex;gap:20px;width:max-content;padding-left:var(--pad)}
-:where(.home-v2) .gc{position:relative;flex:none;width:min(960px,80vw);height:min(560px,58svh);border-radius:28px;overflow:hidden;background:#fff}
-:where(.home-v2) .gc-cap{position:relative;z-index:1;padding:40px 48px 0;text-align:center;font-size:28px;line-height:1.25;font-weight:600}
+:where(.home-v2) .hl-row{display:flex;gap:20px;width:max-content;padding-left:var(--pad);flex:0 1 min(560px,58svh);min-height:240px}
+:where(.home-v2) .gc{position:relative;flex:none;width:min(960px,80vw);display:flex;flex-direction:column;border-radius:28px;overflow:hidden;background:#fff}
+:where(.home-v2) .gc-cap{position:relative;z-index:1;flex:none;padding:40px 48px;text-align:center;font-size:28px;line-height:1.25;font-weight:600;word-break:keep-all}
 :where(.home-v2) .gc-cap span{color:var(--ink2)}
-:where(.home-v2) .gc-ph{position:absolute;left:0;right:0;bottom:0;top:150px;overflow:hidden}
+:where(.home-v2) .gc-ph{position:relative;flex:1;min-height:0;overflow:hidden}
 :where(.home-v2) .gc-ph img{width:100%;height:100%;object-fit:cover;display:block}
 :where(.home-v2) .ring-card{position:absolute;z-index:2;right:24px;bottom:24px;display:flex;align-items:center;gap:16px;padding:16px 22px 16px 16px;border-radius:24px;background:rgba(255,255,255,.78);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);box-shadow:0 10px 30px rgba(0,0,0,.12)}
 :where(.home-v2) .ring-card svg{width:96px;height:96px;display:block}
@@ -55,7 +55,13 @@
 :where(.home-v2) .rg1{stroke:#00c7be;stroke-dasharray:.82 1;--p:.82}:where(.home-v2) .rg-t1{stroke:rgba(0,199,190,.16)}
 :where(.home-v2) .rg2{stroke:#ffcc00;stroke-dasharray:.68 1;--p:.68}:where(.home-v2) .rg-t2{stroke:rgba(255,204,0,.18)}
 :where(.home-v2) .rg3{stroke:#ff9500;stroke-dasharray:.91 1;--p:.91}:where(.home-v2) .rg-t3{stroke:rgba(255,149,0,.16)}
-:where(.home-v2) .hl-dots{display:flex;justify-content:center}
+:where(.home-v2) .hl-dots{display:flex;justify-content:center;align-items:center;gap:12px}
+:where(.home-v2) .hl-cue{position:relative;display:grid;place-items:center;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:rgba(210,210,215,.5);color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:transparent}
+:where(.home-v2) .hl-cue::after{content:"";position:absolute;inset:-4px}
+:where(.home-v2) .hl-cue:hover{background:rgba(210,210,215,.8)}
+:where(.home-v2) .hl-cue:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+:where(.home-v2) .hl-cue svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;width:16px;height:16px;animation:simda-cueBob 1.6s ease-in-out infinite}
+@keyframes simda-cueBob{0%,100%{transform:translateY(-3px)}50%{transform:translateY(3px)}}
 :where(.home-v2) .hl-dots-in{position:relative;display:flex;gap:10px;padding:14px 18px;border-radius:980px;background:rgba(210,210,215,.5)}
 :where(.home-v2) .hl-dots-in i{display:block;width:8px;height:8px;border-radius:50%;background:rgba(0,0,0,.3)}
 :where(.home-v2) .hl-dots-in b{position:absolute;left:18px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--ink)}
@@ -333,9 +339,9 @@
   :where(.home-v2) .h-cap p:first-child{font-size:32px}
   :where(.home-v2) .h-cap p:last-child{font-size:17px}
   :where(.home-v2) .hl-stage{padding-bottom:64px}
-  :where(.home-v2) .gc{width:84vw;height:58svh}
-  :where(.home-v2) .gc-cap{font-size:21px;padding:28px 24px 0}
-  :where(.home-v2) .gc-ph{top:130px}
+  :where(.home-v2) .hl-row{flex-basis:min(58svh,600px)}
+  :where(.home-v2) .gc{width:84vw}
+  :where(.home-v2) .gc-cap{font-size:21px;padding:28px 24px 32px}
   :where(.home-v2) .ring-card{right:12px;bottom:12px;padding:10px 14px 10px 10px}
   :where(.home-v2) .ring-card svg{width:64px;height:64px}
   :where(.home-v2) .imm{clip-path:inset(10% 5% 10% 5% round 22px)}

@@ -92,7 +92,14 @@ export function HomeSections() {
           <div className="gc-ph"><img src={platform.url} alt={platform.alt} /></div>
         </article>
       </div>
-      <div className="hl-dots" aria-hidden="true"><div className="hl-dots-in"><i></i><i></i><i></i><i></i><i></i><b></b></div></div>
+      <div className="hl-dots">
+        <div className="hl-dots-in" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+        <button type="button" className="hl-cue" aria-label="아래로 스크롤해 다음 서비스 보기" onClick={event => {
+          // The row moves with vertical scroll: 5 cards = 4 steps across 92% of the pinned range.
+          const track = event.currentTarget.closest(".hl-track") as HTMLElement;
+          window.scrollBy({ top: (track.offsetHeight - window.innerHeight) * 0.23, behavior: "smooth" });
+        }}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg></button>
+      </div>
     </div>
   </div>
 </section>
