@@ -215,12 +215,12 @@
 :where(.home-v2) .way h3{font-size:24px;line-height:1.25;margin-top:24px}
 :where(.home-v2) .way p{font-size:17px;line-height:1.55;color:var(--ink2);margin-top:10px}
 :where(.home-v2) .way .lk{display:inline-block;margin-top:18px}
-:where(.home-v2) .sig{padding:40px 22px 160px;text-align:center;view-timeline-name:--sig;view-timeline-axis:block}
-:where(.home-v2) .sig svg{width:min(420px,72vw);height:auto;display:block;margin:0 auto;color:var(--green);overflow:visible}
+:where(.home-v2) .sig{padding:40px 22px 120px;text-align:center;view-timeline-name:--sig;view-timeline-axis:block}
+:where(.home-v2) .sig svg{width:min(320px,64vw);height:auto;display:block;margin:0 auto;color:var(--green);overflow:visible}
 :where(.home-v2) .sig .p-brk,:where(.home-v2) .sig .p-emb{transform-box:fill-box;transform-origin:50% 50%}
 :where(.home-v2) .sig .p-l{transform-box:fill-box}
 :where(.home-v2) .sig p{font-size:21px;color:var(--ink2);margin-top:28px}
-:where(.home-v2) .pass-wrap{position:sticky;bottom:24px;height:0;z-index:9}
+:where(.home-v2) .pass-wrap{position:sticky;bottom:24px;height:0;margin-bottom:40px;z-index:9}
 :where(.home-v2) .pass{position:absolute;left:50%;bottom:0;translate:-50% 0;display:flex;align-items:center;gap:16px;padding:8px 8px 8px 22px;border-radius:980px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(0,0,0,.06);box-shadow:0 8px 32px rgba(0,0,0,.12);white-space:nowrap}
 :where(.home-v2) .pass p{font-size:14px}
 :where(.home-v2) .pass .btn{min-height:36px;padding:0 16px;font-size:14px}

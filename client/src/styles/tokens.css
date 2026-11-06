@@ -120,7 +120,7 @@
 :where(.site-shell) .gn{position:sticky;top:0;z-index:11;height:52px;background:rgba(255,255,255,.72);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.08)}
 :where(.site-shell) .gn-in{max-width:1024px;height:100%;margin:0 auto;padding:0 22px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 :where(.site-shell) .gn-logo{display:flex;align-items:center;color:var(--green)}
-:where(.site-shell) .gn-logo svg{height:19px;width:auto;display:block}
+:where(.site-shell) .gn-logo svg{height:24px;width:auto;display:block}
 :where(.site-shell) .gn-menu{display:flex;gap:34px}
 :where(.site-shell) .gn-menu a{color:rgba(0,0,0,.8);font-size:13px}
 :where(.site-shell) .gn-menu a:hover{color:#000;text-decoration:none}
