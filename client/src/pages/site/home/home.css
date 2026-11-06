@@ -183,11 +183,12 @@
 :where(.home-v2) .cli{padding:112px 0}
 :where(.home-v2) .cli-l{font-size:17px;font-weight:600;color:var(--ink2);text-align:center}
 :where(.home-v2) .mq-box{overflow:hidden;margin-top:32px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
-:where(.home-v2) .mq-row{display:flex;width:max-content;animation:simda-mq 60s linear infinite}
+:where(.home-v2) .mq-row{display:flex;width:max-content;animation:simda-mq var(--mq-duration) linear infinite;will-change:transform}
 :where(.home-v2) .mq-rev{animation-direction:reverse;margin-top:10px}
-:where(.home-v2) .mq-row span{font-size:40px;font-weight:600;letter-spacing:-.01em;padding:0 28px;white-space:nowrap;color:var(--ink)}
-:where(.home-v2) .mq-rev span{color:var(--ink3)}
-@keyframes simda-mq{to{transform:translateX(-50%)}}
+:where(.home-v2) .mq-group{display:flex;align-items:center;flex-shrink:0;gap:68px;padding-right:68px;height:60px}
+:where(.home-v2) .mq-logo{display:block;flex:none;width:var(--mq-w);height:var(--mq-h);max-width:none;object-fit:contain;opacity:.55}
+:where(.home-v2) .mq-rev .mq-logo{opacity:.46}
+@keyframes simda-mq{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
 :where(.home-v2) .mag{background:var(--alt);padding:128px 0}
 :where(.home-v2) .row-h{display:flex;justify-content:space-between;align-items:flex-end;gap:12px 24px;flex-wrap:wrap}
 :where(.home-v2) .mg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:40px}
@@ -347,7 +348,9 @@
   :where(.home-v2) .tile{height:460px}
   :where(.home-v2) .tile-tx h3{font-size:30px}
   :where(.home-v2) .tile-tx p{font-size:17px}
-  :where(.home-v2) .mq-row span{font-size:28px}
+  :where(.home-v2) .mq-row{animation-duration:var(--mq-mobile-duration)}
+  :where(.home-v2) .mq-group{gap:32px;padding-right:32px;height:36px}
+  :where(.home-v2) .mq-logo{width:calc(var(--mq-w) * .6);height:calc(var(--mq-h) * .6)}
   :where(.home-v2) .mg,:where(.home-v2) .ways-g{grid-template-columns:minmax(0,1fr)}
   :where(.home-v2) .pass p{display:none}
   :where(.home-v2) .pass{padding:6px}

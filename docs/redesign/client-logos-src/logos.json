@@ -1,0 +1,275 @@
+[
+  {
+    "name": "아모레퍼시픽",
+    "source": "amorepacific.svg",
+    "slug": "amorepacific",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "db1e075d368bb00dd6a3f8aacb4f226dd7a53d04762f6853f582c7e297c28841"
+  },
+  {
+    "name": "삼성물산",
+    "source": "samsung-cnt.svg",
+    "slug": "samsung-cnt",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "c4aca5f9a11072c1dc09a50c5d92dc1aa56c4c1d6d582413b51197113fced8c6"
+  },
+  {
+    "name": "신세계",
+    "source": "shinsegae.svg",
+    "slug": "shinsegae",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "a7a90615755890945692352475e624a2ae6cbd346051548ae20f32caecff1ecf"
+  },
+  {
+    "name": "한화갤러리아",
+    "source": "hanwha-galleria.svg",
+    "slug": "hanwha-galleria",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "1ac0a025697804c878fd7e474301ead3afd618e6569383782900d1714e7a70ec"
+  },
+  {
+    "name": "현대백화점",
+    "source": "hyundai-department-store.svg",
+    "slug": "hyundai-department-store",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "b79ce376bb21ec7aab670b53ebd787f333850f9dc4bc47ed1e21d98e56801fd7"
+  },
+  {
+    "name": "롯데백화점",
+    "source": "lotte-department-store.svg",
+    "slug": "lotte-department-store",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "60d27a9502e1fb833cf5a5cfc8c806dd3f24a092a9e5278f521a449338a8b289"
+  },
+  {
+    "name": "GS칼텍스",
+    "source": "gs-caltex.svg",
+    "slug": "gs-caltex",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "1961856ceb5b31c8d869ed900d8f138d4b1ac7d1ce4d563aa699a7f93efe7aae"
+  },
+  {
+    "name": "신세계인터내셔날",
+    "source": "shinsegae-international.png",
+    "slug": "shinsegae-international",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "8745e596d685aec77bb5350046931e43851d1f5388a14142326702c12c62fbbc"
+  },
+  {
+    "name": "삼성카드",
+    "source": "samsung-card.jpg",
+    "slug": "samsung-card",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "fff3ba9a85ba8344b6789b135b3d68988e3b3e3d0d3413f22dd46a32eabcb1c3"
+  },
+  {
+    "name": "KB국민카드",
+    "source": "kb-kookmin-card.svg",
+    "slug": "kb-kookmin-card",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "460821fd138b8651115fb24a874fd7b32440210aa77bbb775a3861fee2a3ba23"
+  },
+  {
+    "name": "캘러웨이",
+    "source": "callaway.svg",
+    "slug": "callaway",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "99741b7ed91e02d6dfba977ffd243893fd8d39a884fc152174f42838dc06d9e1"
+  },
+  {
+    "name": "아스트라제네카",
+    "source": "astrazeneca.svg",
+    "slug": "astrazeneca",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "da627312a76563c3bbe6109465cb7d0655850e6e5881e416e447f54a1e61a9b2"
+  },
+  {
+    "name": "HSBC",
+    "source": "hsbc.svg",
+    "slug": "hsbc",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "2483a568d5a57db10f61d14ac95befa4ec8c6c67027be9a478a6a8bf8f734249"
+  },
+  {
+    "name": "LH",
+    "source": "lh.png",
+    "slug": "lh",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "6c21bc0f9f62e6c50a068c04821e4048f72ffb5d64f697eeb0ae69db00e4b86b"
+  },
+  {
+    "name": "서울특별시",
+    "source": "seoul.png",
+    "slug": "seoul",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "25278e2b62e2253def75e9ae91473e01cebacb4197a578ba699a6c9716cfaf20",
+    "provenance": "서울시청 www.seoul.go.kr/seoul/emblem.do, ci_png.zip / 서울특별시_CI_좌우조합_서울특별시.png (사용자 제공)"
+  },
+  {
+    "name": "문화체육관광부",
+    "source": "mcst.svg",
+    "slug": "mcst",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "d56256e522df5abf2ad4f39d585a47ec854a5cfd651767e6a339ccca1fdd9f86"
+  },
+  {
+    "name": "한국농업기술진흥원",
+    "source": "koat.png",
+    "slug": "koat",
+    "row": 0,
+    "mode": "knockout",
+    "sha256": "5c06e0a92aed4880f80e5fefeb46f23b344dffa13bd92192f95cb1c70fbee2af"
+  },
+  {
+    "name": "신용보증기금",
+    "source": "kodit.png",
+    "slug": "kodit",
+    "row": 1,
+    "mode": "silhouette",
+    "sha256": "45ce8567e2b9ae5d4abcf4dcbaf788316b40c1b3c5232159d52d1f29b324ea34"
+  },
+  {
+    "name": "마이리얼트립",
+    "source": "myrealtrip.svg",
+    "slug": "myrealtrip",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "4bb9c9220ee0c3a4b0d05e7c51f8e1284ac310582086eb2c04968365a475d91e"
+  },
+  {
+    "name": "캐리어",
+    "source": "otec-carrier.svg",
+    "slug": "otec-carrier",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "c15399b118dbe651c76cafc9b52825881e92c3636b781c339ab894b79214d662"
+  },
+  {
+    "name": "클래스101",
+    "source": "class101.svg",
+    "slug": "class101",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "15a635a15ccdfd1af7db8451b67fd4ab8281bdce28d85fb44e44114823a6475e"
+  },
+  {
+    "name": "이마트",
+    "source": "emart.svg",
+    "slug": "emart",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "39bbb58cfaaed68c5db3477f8401053d3ca4f02f3b3879a03ab392217b269aea"
+  },
+  {
+    "name": "CJ ENM",
+    "source": "cj-enm.svg",
+    "slug": "cj-enm",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "d0b8f023550dd09fc7fc9fadb2e640d85d598f93302a8bf64818a060a72a28eb"
+  },
+  {
+    "name": "와디즈",
+    "source": "wadiz.png",
+    "slug": "wadiz",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "a513e031b831417464f6bc12d8f903b3616c17fb8ce325abb27111b6b2770d89"
+  },
+  {
+    "name": "컴패션",
+    "source": "compassion.png",
+    "slug": "compassion",
+    "row": 1,
+    "mode": "silhouette",
+    "sha256": "810f54b63918d08d193b0a0a8b9345a0929fc00ab70dfa5d48a9c507212e3584"
+  },
+  {
+    "name": "서울시평생교육진흥원",
+    "source": "smile.png",
+    "slug": "smile",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "bee472cbfb66db410353c20b782950f942e26cccbf99e1f87f4769738861b2fb"
+  },
+  {
+    "name": "대우건설",
+    "source": "daewoo-enc.svg",
+    "slug": "daewoo-enc",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "85efec015ed9c899440051d93d2b3a5e3acb097c58c28566bb89302e245e456d"
+  },
+  {
+    "name": "래미안",
+    "source": "raemian.png",
+    "slug": "raemian",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "03763a642aa8f5d6478996bc820692b98b9577e0b48101f0c9c693171c5c625e"
+  },
+  {
+    "name": "이오테크닉스",
+    "source": "eo-technics.png",
+    "slug": "eo-technics",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "4c057a98d7551c86468dbb56c5f0b5619e29fc557f433cf9034f6d81cee6d588"
+  },
+  {
+    "name": "골든듀",
+    "source": "golden-dew.png",
+    "slug": "golden-dew",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "07f9baeeef2a4fc01e174e6d06623eebf7e0c41e46d9e16c80e73afcf38897e9"
+  },
+  {
+    "name": "조이그라이슨",
+    "source": "joy-gryson.png",
+    "slug": "joy-gryson",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "f3ec052ebbb6bd223e17c1bc0e13f4127ffbb251d7d6f5cc493b833b07886b4b"
+  },
+  {
+    "name": "앤더슨벨",
+    "source": "andersson-bell.svg",
+    "slug": "andersson-bell",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "247c7f82a477cfc49b8955069d61cd2074c9c645148ffeeb5601ee5d2fb49d43"
+  },
+  {
+    "name": "브리즘",
+    "source": "brism.svg",
+    "slug": "brism",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "536dcdc1580dcefba64c35360e71197700ac60812eb2020c855cc3265acc515d"
+  },
+  {
+    "name": "광주비엔날레",
+    "source": "gwangju-biennale.svg",
+    "slug": "gwangju-biennale",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "ffa1164e597f3e179d83d016e45efd8c8351f4b94ed61559f9e897eb2750a2fb"
+  }
+]

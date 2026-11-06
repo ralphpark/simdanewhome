@@ -1,5 +1,6 @@
 import { Link } from "wouter";
-import { clients } from "@/content/brand";
+import type { CSSProperties } from "react";
+import { clientLogoTracks } from "@/content/clientLogos";
 import { useSiteImage } from "@/hooks/useSiteImage";
 import { categoryLabel, usePortfolios } from "../portfolio/data";
 import { newestPosts, postDate, usePosts } from "../magazine/data";
@@ -35,10 +36,11 @@ export function HomeWork() {
 }
 
 export function HomeClients() {
-  const middle = Math.ceil(clients.length / 2);
   return <section className="cli" aria-label="함께한 곳"><p className="cli-l">함께한 곳</p><div className="mq-box">
-    {[clients.slice(0, middle), clients.slice(middle)].map((row, index) => <div key={index} className={`mq-row${index ? " mq-rev" : ""}`}>
-      {[...row, ...row].map((name, i) => <span key={`${name}-${i}`} aria-hidden={i >= row.length ? true : undefined}>{name}</span>)}
+    {clientLogoTracks.map(({ logos, duration, mobileDuration }, index) => <div key={index} className={`mq-row${index ? " mq-rev" : ""}`} style={{ "--mq-duration": `${duration}s`, "--mq-mobile-duration": `${mobileDuration}s` } as CSSProperties}>
+      {[0, 1].map(copy => <div className="mq-group" key={copy} aria-hidden={copy === 1 ? true : undefined}>
+        {logos.map(logo => <img key={logo.file} className="mq-logo" src={logo.file} alt={logo.name} width={logo.w} height={logo.h} decoding="async" style={{ "--mq-w": `${logo.w}px`, "--mq-h": `${logo.h}px` } as CSSProperties} />)}
+      </div>)}
     </div>)}
   </div></section>;
 }
