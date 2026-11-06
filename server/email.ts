@@ -1,257 +1,221 @@
 import nodemailer from "nodemailer";
 import type { Booking, B2bProposal } from "@shared/schema";
 
-// Create transporter
+// Keep in sync with client/src/content/copy.ts footer (no client-side import).
+const CONTACT_PHONE = "1551-0525";
+const CONTACT_EMAIL = "simda@simda.kr";
+const CONTACT_HOURS = "평일 09:00–18:00";
+const BRAND_COLOR = "#03473E";
+const ADMIN_URL = "https://simda.kr/admin";
+
 const createTransporter = () => {
-  // For development, use ethereal email (test account)
-  // In production, configure with real SMTP credentials
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    const port = parseInt(process.env.SMTP_PORT || "587");
     return nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || "587"),
-      secure: process.env.SMTP_SECURE === "true",
+      port,
+      secure: process.env.SMTP_SECURE !== undefined
+        ? process.env.SMTP_SECURE === "true"
+        : port === 465,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
+      connectionTimeout: 10_000,
+      greetingTimeout: 10_000,
+      socketTimeout: 10_000,
     });
   }
-  
-  // Fallback: console logging in development
   return null;
 };
 
 const transporter = createTransporter();
 
-// Email templates
-const bookingConfirmationTemplate = (booking: Booking) => {
-  return {
-    subject: `[simda] 상담 예약 확인 - ${booking.name}님`,
-    html: `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <style>
-            body { font-family: 'Pretendard', -apple-system, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-            .content { background: #fff; padding: 30px; border: 1px solid #e5e7eb; border-radius: 0 0 8px 8px; }
-            .info-box { background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0; }
-            .info-row { margin: 10px 0; }
-            .label { font-weight: 600; color: #16a34a; }
-            .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 14px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1 style="margin: 0; font-size: 28px;">🌿 simda</h1>
-              <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">상담 예약이 접수되었습니다</p>
-            </div>
-            <div class="content">
-              <h2 style="color: #16a34a; margin-top: 0;">안녕하세요, ${booking.name}님!</h2>
-              <p>simda에 상담을 요청해 주셔서 감사합니다. 예약하신 내용을 확인해 주세요.</p>
-              
-              <div class="info-box">
-                <div class="info-row">
-                  <span class="label">예약번호:</span> ${booking.id}
-                </div>
-                <div class="info-row">
-                  <span class="label">상담 유형:</span> ${booking.consultationType}
-                </div>
-                <div class="info-row">
-                  <span class="label">희망 날짜:</span> ${new Date(booking.preferredDate).toLocaleDateString('ko-KR')}
-                </div>
-                <div class="info-row">
-                  <span class="label">희망 시간:</span> ${booking.preferredTime}
-                </div>
-                <div class="info-row">
-                  <span class="label">연락처:</span> ${booking.phone}
-                </div>
-              </div>
-
-              ${booking.message ? `
-                <div style="margin: 20px 0;">
-                  <p class="label">문의 내용:</p>
-                  <p style="background: #f9fafb; padding: 15px; border-radius: 8px; white-space: pre-wrap;">${booking.message}</p>
-                </div>
-              ` : ''}
-
-              <p style="margin-top: 30px;">
-                담당자가 확인 후 24시간 이내에 연락드리겠습니다.<br>
-                급하신 경우 고객센터(1588-0000)로 문의해 주세요.
-              </p>
-            </div>
-            <div class="footer">
-              <p><strong>simda</strong> - 식물과 함께하는 더 나은 공간</p>
-              <p>이메일: contact@simda.kr | 전화: 1588-0000</p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `,
-    text: `
-안녕하세요, ${booking.name}님!
-
-simda에 상담을 요청해 주셔서 감사합니다.
-
-[예약 정보]
-- 예약번호: ${booking.id}
-- 상담 유형: ${booking.consultationType}
-- 희망 날짜: ${new Date(booking.preferredDate).toLocaleDateString('ko-KR')}
-- 희망 시간: ${booking.preferredTime}
-- 연락처: ${booking.phone}
-
-${booking.message ? `[문의 내용]\n${booking.message}\n` : ''}
-
-담당자가 확인 후 24시간 이내에 연락드리겠습니다.
-급하신 경우 고객센터(1588-0000)로 문의해 주세요.
-
----
-simda - 식물과 함께하는 더 나은 공간
-이메일: contact@simda.kr | 전화: 1588-0000
-    `,
-  };
-};
-
-const b2bProposalNotificationTemplate = (proposal: B2bProposal) => {
-  return {
-    subject: `[simda] B2B 협업 제안 접수 - ${proposal.companyName}`,
-    html: `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <style>
-            body { font-family: 'Pretendard', -apple-system, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-            .content { background: #fff; padding: 30px; border: 1px solid #e5e7eb; border-radius: 0 0 8px 8px; }
-            .info-box { background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0; }
-            .info-row { margin: 10px 0; }
-            .label { font-weight: 600; color: #16a34a; }
-            .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 14px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1 style="margin: 0; font-size: 28px;">🌿 simda</h1>
-              <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">B2B 협업 제안이 접수되었습니다</p>
-            </div>
-            <div class="content">
-              <h2 style="color: #16a34a; margin-top: 0;">안녕하세요, ${proposal.contactName}님!</h2>
-              <p>simda에 협업 제안을 보내주셔서 감사합니다. 제안하신 내용을 확인해 주세요.</p>
-              
-              <div class="info-box">
-                <div class="info-row">
-                  <span class="label">제안번호:</span> ${proposal.id}
-                </div>
-                <div class="info-row">
-                  <span class="label">회사명:</span> ${proposal.companyName}
-                </div>
-                <div class="info-row">
-                  <span class="label">담당자:</span> ${proposal.contactName}
-                </div>
-                ${proposal.businessField ? `
-                <div class="info-row">
-                  <span class="label">사업 분야:</span> ${proposal.businessField}
-                </div>
-                ` : ''}
-                <div class="info-row">
-                  <span class="label">연락처:</span> ${proposal.phone}
-                </div>
-                <div class="info-row">
-                  <span class="label">이메일:</span> ${proposal.email}
-                </div>
-              </div>
-
-              <div style="margin: 20px 0;">
-                <p class="label">제안 내용:</p>
-                <p style="background: #f9fafb; padding: 15px; border-radius: 8px; white-space: pre-wrap;">${proposal.proposalContent}</p>
-              </div>
-
-              <p style="margin-top: 30px;">
-                담당 부서에서 검토 후 영업일 기준 3-5일 이내에 연락드리겠습니다.<br>
-                급하신 경우 B2B 전용 라인(02-1234-5678)으로 문의해 주세요.
-              </p>
-            </div>
-            <div class="footer">
-              <p><strong>simda</strong> - 식물과 함께하는 더 나은 공간</p>
-              <p>B2B 문의: b2b@simda.kr | 전화: 02-1234-5678</p>
-            </div>
-          </div>
-        </body>
-      </html>
-    `,
-    text: `
-안녕하세요, ${proposal.contactName}님!
-
-simda에 협업 제안을 보내주셔서 감사합니다.
-
-[제안 정보]
-- 제안번호: ${proposal.id}
-- 회사명: ${proposal.companyName}
-- 담당자: ${proposal.contactName}
-${proposal.businessField ? `- 사업 분야: ${proposal.businessField}\n` : ''}- 연락처: ${proposal.phone}
-- 이메일: ${proposal.email}
-
-[제안 내용]
-${proposal.proposalContent}
-
-담당 부서에서 검토 후 영업일 기준 3-5일 이내에 연락드리겠습니다.
-급하신 경우 B2B 전용 라인(02-1234-5678)으로 문의해 주세요.
-
----
-simda - 식물과 함께하는 더 나은 공간
-B2B 문의: b2b@simda.kr | 전화: 02-1234-5678
-    `,
-  };
-};
-
-// Send booking confirmation email
-export async function sendBookingConfirmation(booking: Booking): Promise<void> {
-  if (!transporter) {
-    console.log("📧 Email would be sent (SMTP not configured):");
-    console.log(`To: ${booking.email}`);
-    console.log(`Subject: [simda] 상담 예약 확인 - ${booking.name}님`);
-    return;
-  }
-
-  try {
-    const template = bookingConfirmationTemplate(booking);
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"simda" <noreply@simda.kr>',
-      to: booking.email,
-      subject: template.subject,
-      html: template.html,
-      text: template.text,
-    });
-    console.log(`✅ Booking confirmation sent to ${booking.email}`);
-  } catch (error) {
-    console.error("❌ Failed to send booking confirmation:", error);
-  }
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => {
+    switch (character) {
+      case "&": return "&amp;";
+      case "<": return "&lt;";
+      case ">": return "&gt;";
+      case '"': return "&quot;";
+      default: return "&#39;";
+    }
+  });
 }
 
-// Send B2B proposal notification email
-export async function sendB2BProposalNotification(proposal: B2bProposal): Promise<void> {
+function confirmationName(value: string): string {
+  const characters = Array.from(value);
+  return characters.length > 40 ? `${characters.slice(0, 40).join("")}…` : value;
+}
+
+function notifyRecipients(): string[] {
+  const recipients = (process.env.NOTIFY_EMAIL || "")
+    .split(",")
+    .map((email) => email.trim())
+    .filter(Boolean);
+  return recipients.length ? recipients : [CONTACT_EMAIL];
+}
+
+function receivedAt(date: Date): string {
+  return new Date(date).toLocaleString("ko-KR", {
+    timeZone: "Asia/Seoul",
+    dateStyle: "long",
+    timeStyle: "medium",
+  }) + " (한국 시간)";
+}
+
+type EmailRow = [label: string, value: string | null];
+type EmailTemplate = {
+  to: string | string[];
+  replyTo: string;
+  subject: string;
+  html: string;
+  text: string;
+};
+
+function bookingRows(booking: Booking): EmailRow[] {
+  return [
+    ["예약번호", booking.id],
+    ["이름", booking.name],
+    ["연락처", booking.phone],
+    ["이메일", booking.email],
+    ["상담 유형", booking.consultationType],
+    ["희망 날짜", new Date(booking.preferredDate).toLocaleDateString("ko-KR", { timeZone: "Asia/Seoul" })],
+    ["희망 시간", booking.preferredTime],
+    ["문의 내용", booking.message],
+    ["AI 추천 내용", booking.aiRecommendation],
+    ["접수 시각", receivedAt(booking.createdAt)],
+  ];
+}
+
+function proposalRows(proposal: B2bProposal): EmailRow[] {
+  return [
+    ["제안번호", proposal.id],
+    ["회사명", proposal.companyName],
+    ["담당자", proposal.contactName],
+    ["연락처", proposal.phone],
+    ["이메일", proposal.email],
+    ["사업 분야", proposal.businessField],
+    ["제안 내용", proposal.proposalContent],
+    ["첨부 URL", proposal.attachmentUrl],
+    ["접수 시각", receivedAt(proposal.createdAt)],
+  ];
+}
+
+function emailTemplate(
+  to: string | string[],
+  replyTo: string,
+  subject: string,
+  introduction: string,
+  rows: EmailRow[],
+  internal = false,
+): EmailTemplate {
+  const title = subject.replace(/[\r\n\u2028\u2029]/g, "");
+  const contact = `이메일: ${CONTACT_EMAIL} | 전화: ${CONTACT_PHONE} | 상담 시간: ${CONTACT_HOURS}`;
+
+  return {
+    to,
+    replyTo,
+    subject: title,
+    html: `<!DOCTYPE html>
+<html lang="ko">
+  <head><meta charset="UTF-8"><title>${escapeHtml(title)}</title></head>
+  <body style="font-family: sans-serif; line-height: 1.6; color: #333;">
+    <div style="max-width: 640px; margin: 0 auto; padding: 24px;">
+      <h1 style="background: ${BRAND_COLOR}; color: #fff; padding: 20px;">심다</h1>
+      <h2 style="color: ${BRAND_COLOR};">${escapeHtml(title)}</h2>
+      <p style="white-space: pre-wrap;">${escapeHtml(introduction)}</p>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tbody>${rows.map(([label, value]) => `
+          <tr>
+            <th scope="row" style="border: 1px solid #ddd; padding: 10px; text-align: left; vertical-align: top; color: ${BRAND_COLOR};">${escapeHtml(label)}</th>
+            <td style="border: 1px solid #ddd; padding: 10px; white-space: pre-wrap; overflow-wrap: anywhere;">${escapeHtml(value ?? "미입력")}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+      ${internal ? `<p><a href="${ADMIN_URL}" style="color: ${BRAND_COLOR};">관리자 화면에서 확인하기</a></p>` : ""}
+      <p style="color: #666;">${contact}</p>
+    </div>
+  </body>
+</html>`,
+    text: `${title}\n\n${introduction}\n\n${rows.map(([label, value]) => `${label}: ${value ?? "미입력"}`).join("\n")}\n${internal ? `\n관리자 화면: ${ADMIN_URL}\n` : ""}\n심다\n${contact}`,
+  };
+}
+
+export function bookingConfirmationTemplate(booking: Booking): EmailTemplate {
+  const name = confirmationName(booking.name);
+  return emailTemplate(
+    booking.email,
+    CONTACT_EMAIL,
+    `[심다] 상담 예약 접수 — ${name}`,
+    `안녕하세요, ${name}님.\n심다에 상담을 요청해 주셔서 감사합니다. 담당자가 확인한 뒤 연락드리겠습니다.`,
+    bookingRows({ ...booking, name }).filter(([label]) =>
+      ["예약번호", "이름", "상담 유형", "희망 날짜", "희망 시간", "접수 시각"].includes(label),
+    ),
+  );
+}
+
+export function bookingNotificationTemplate(booking: Booking): EmailTemplate {
+  return emailTemplate(
+    notifyRecipients(),
+    booking.email,
+    `[심다] 새 상담 예약 — ${booking.name}`,
+    "새 상담 예약이 접수되었습니다.",
+    bookingRows(booking),
+    true,
+  );
+}
+
+export function b2bProposalConfirmationTemplate(proposal: B2bProposal): EmailTemplate {
+  const companyName = confirmationName(proposal.companyName);
+  const contactName = confirmationName(proposal.contactName);
+  return emailTemplate(
+    proposal.email,
+    CONTACT_EMAIL,
+    `[심다] 협업 제안 접수 — ${companyName}`,
+    `안녕하세요, ${contactName}님.\n심다에 협업 제안을 보내주셔서 감사합니다. 담당자가 확인한 뒤 연락드리겠습니다.`,
+    proposalRows({ ...proposal, companyName, contactName }).filter(([label]) =>
+      ["제안번호", "회사명", "담당자", "접수 시각"].includes(label),
+    ),
+  );
+}
+
+export function b2bProposalNotificationTemplate(proposal: B2bProposal): EmailTemplate {
+  return emailTemplate(
+    notifyRecipients(),
+    proposal.email,
+    `[심다] 새 협업 제안 — ${proposal.companyName}`,
+    "새 협업 제안이 접수되었습니다.",
+    proposalRows(proposal),
+    true,
+  );
+}
+
+async function sendEmail(template: EmailTemplate): Promise<void> {
   if (!transporter) {
-    console.log("📧 Email would be sent (SMTP not configured):");
-    console.log(`To: ${proposal.email}`);
-    console.log(`Subject: [simda] B2B 협업 제안 접수 - ${proposal.companyName}`);
+    console.log("Email skipped (SMTP not configured):", { to: template.to, subject: template.subject });
     return;
   }
 
-  try {
-    const template = b2bProposalNotificationTemplate(proposal);
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"simda" <noreply@simda.kr>',
-      to: proposal.email,
-      subject: template.subject,
-      html: template.html,
-      text: template.text,
-    });
-    console.log(`✅ B2B proposal notification sent to ${proposal.email}`);
-  } catch (error) {
-    console.error("❌ Failed to send B2B proposal notification:", error);
-  }
+  // Let the route log rejected sends after both email attempts have settled.
+  await transporter.sendMail({
+    ...template,
+    from: process.env.SMTP_FROM || `"심다" <${process.env.SMTP_USER}>`,
+  });
+}
+
+export async function sendBookingConfirmation(booking: Booking): Promise<void> {
+  await sendEmail(bookingConfirmationTemplate(booking));
+}
+
+export async function sendBookingNotification(booking: Booking): Promise<void> {
+  await sendEmail(bookingNotificationTemplate(booking));
+}
+
+export async function sendB2BProposalConfirmation(proposal: B2bProposal): Promise<void> {
+  await sendEmail(b2bProposalConfirmationTemplate(proposal));
+}
+
+export async function sendB2BProposalNotification(proposal: B2bProposal): Promise<void> {
+  await sendEmail(b2bProposalNotificationTemplate(proposal));
 }

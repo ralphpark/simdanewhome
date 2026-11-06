@@ -2,7 +2,12 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { chatWithAI } from "./gemini";
-import { sendBookingConfirmation, sendB2BProposalNotification } from "./email";
+import {
+  sendBookingConfirmation,
+  sendBookingNotification,
+  sendB2BProposalConfirmation,
+  sendB2BProposalNotification,
+} from "./email";
 import { setupAuth, isAuthenticated } from "./auth";
 import {
   insertBookingSchema,
@@ -58,10 +63,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertBookingSchema.parse(req.body);
       const booking = await storage.createBooking(validatedData);
       
-      // Send confirmation email (non-blocking)
-      sendBookingConfirmation(booking).catch(err => 
-        console.error("Failed to send booking confirmation email:", err)
-      );
+      const emailResults = await Promise.allSettled([
+        sendBookingNotification(booking),
+        sendBookingConfirmation(booking),
+      ]);
+      emailResults.forEach((result, index) => {
+        if (result.status === "rejected") {
+          console.error(`Failed to send booking ${index === 0 ? "notification" : "confirmation"} email:`, result.reason);
+        }
+      });
       
       res.json(booking);
     } catch (error) {
@@ -113,10 +123,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertB2bProposalSchema.parse(req.body);
       const proposal = await storage.createB2bProposal(validatedData);
       
-      // Send notification email (non-blocking)
-      sendB2BProposalNotification(proposal).catch(err =>
-        console.error("Failed to send B2B proposal notification email:", err)
-      );
+      const emailResults = await Promise.allSettled([
+        sendB2BProposalNotification(proposal),
+        sendB2BProposalConfirmation(proposal),
+      ]);
+      emailResults.forEach((result, index) => {
+        if (result.status === "rejected") {
+          console.error(`Failed to send B2B proposal ${index === 0 ? "notification" : "confirmation"} email:`, result.reason);
+        }
+      });
       
       res.json(proposal);
     } catch (error) {
