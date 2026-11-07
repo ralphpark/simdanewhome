@@ -1,3 +1,4 @@
+import { constants } from "node:crypto";
 import nodemailer from "nodemailer";
 import type { Booking, B2bProposal } from "@shared/schema";
 
@@ -21,6 +22,14 @@ const createTransporter = () => {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
+      // ponytail: 카페24가 TLS 1.0만 지원해서 허용한다. 카페24가 TLS 1.2를 지원하거나 다른 메일 서비스로 옮기면 지운다.
+      ...(process.env.SMTP_HOST.endsWith(".cafe24.com") ? {
+        tls: {
+          minVersion: "TLSv1",
+          ciphers: "DEFAULT@SECLEVEL=0",
+          secureOptions: constants.SSL_OP_LEGACY_SERVER_CONNECT,
+        },
+      } : {}),
       connectionTimeout: 10_000,
       greetingTimeout: 10_000,
       socketTimeout: 10_000,
