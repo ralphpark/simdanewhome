@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { useSiteImage } from "@/hooks/useSiteImage";
+import { defaultImages } from "@/content/images";
 import { HomeWork, HomeClients, HomeMagazine } from "./content";
 
 // Markup and SVG geometry ported from the approved home.dc.html, without canvas code.
@@ -115,7 +116,7 @@ export function HomeSections() {
       <div className="imm">
         <img src={story.url} alt={story.alt} />
         <div className="imm-sh"></div>
-        <p className="imm-cap">조경 · 2025<b>오페라박물관 조경 디자인 및 시공</b></p>
+        {story.url === defaultImages["home.story"].url && <p className="imm-cap">조경 · 2025<b>오페라박물관 조경 디자인 및 시공</b></p>}
       </div>
     </div>
   </div>

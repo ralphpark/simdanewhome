@@ -74,7 +74,7 @@ export const siteImageGuides: Record<SiteImageKey, SiteImageGuide> = {
   "home.landscape": { label: "조경 서비스 사진", where: "홈 '심다를 한눈에.'의 조경 카드.", ratio: "80/31", ratioLabel: "약 5:2", size: wide },
   "home.sales": { label: "판매 서비스 사진", where: "홈 '심다를 한눈에.'의 판매 카드.", ratio: "80/31", ratioLabel: "약 5:2", size: wide },
   "home.platform": { label: "simda 플랫폼 사진", where: "홈 '심다를 한눈에.'의 simda 플랫폼 카드. 아래 휴대폰 그림의 '동네 꽃집' 작은 사진과, 컴퓨터 화면에서 휴대폰 옆에 뜨는 사진 카드에도 나옵니다.", ratio: "80/31", ratioLabel: "약 5:2", size: wide },
-  "home.story": { label: "브랜드 스토리 큰 사진", where: "홈 '식물로 공간을 바꿉니다.' 아래. 스크롤하면 화면 전체로 커집니다. 포트폴리오 작업이나 사진이 없거나 사진을 불러오지 못하면 홈 '공간이 달라졌습니다.' 칸에도 나옵니다.", ratio: "8/5", size: full },
+  "home.story": { label: "브랜드 스토리 큰 사진", where: "홈 '식물로 공간을 바꿉니다.' 아래. 스크롤하면 화면 전체로 커집니다. 포트폴리오 작업이나 사진이 없거나 사진을 불러오지 못하면 홈 '공간이 달라졌습니다.' 칸에도 나옵니다. 직접 사진을 올리면 사진 위의 '조경 · 2025 오페라박물관…' 글자는 사라집니다.", ratio: "8/5", size: full },
   "home.gift": { label: "선물 도착 사진", where: "홈 휴대폰 그림의 '선물이 도착했습니다.' 사진, 컴퓨터 화면에서 휴대폰 옆에 뜨는 사진 카드, 서비스 페이지의 휴대폰 그림. 매거진 글이나 사진이 없거나 사진을 불러오지 못하면 홈 '매거진' 칸에도 나옵니다.", ratio: "16/10", size: wide },
   "home.work2": { label: "작업 소개 사진 (캘러웨이 코리아)", where: "홈 '공간이 달라졌습니다.' 첫째 칸. 첫째 작업의 사진이 없거나 불러오지 못할 때 나옵니다.", ratio: "351/290", ratioLabel: "약 6:5", size: wide },
   "home.work3": { label: "작업 소개 사진 (헤이즈밀 베이커리)", where: "홈 '공간이 달라졌습니다.' 둘째 칸. 둘째 작업의 사진이 없거나 불러오지 못할 때 나옵니다.", ratio: "351/290", ratioLabel: "약 6:5", size: wide },
