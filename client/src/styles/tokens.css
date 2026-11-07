@@ -142,6 +142,12 @@
 @media (max-width:1068px){
   :where(.site-shell) .gn-menu{gap:22px}
 }
+@media (min-width:735px) and (max-width:819px){
+  /* With both 컴패션 and SHOP links the header wraps below ~760px; tighten only this range. */
+  :where(.site-shell) .gn-menu{gap:14px}
+  :where(.site-shell) .gn-right{gap:12px}
+  :where(.site-shell) .gn-shop{font-size:12px}
+}
 @media (max-width:734px){
   :where(.site-shell) .t-hero{font-size:40px}
 }

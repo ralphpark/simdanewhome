@@ -55,7 +55,7 @@ try {
         if (path === '/api/portfolios') body = portfolioFixtures;
         if (path === '/api/posts') body = postFixtures;
       }
-      if (scenario === 'override' && path === '/api/site-images') body = [{ key: 'home.hero', url: defaultImages['home.cta'].url, alt: '검수용 관리자 교체 이미지', updatedAt: '2026-11-04' }];
+      if (scenario === 'override' && path === '/api/site-images') body = [{ key: 'home.hero', url: 'https://images.unsplash.com/photo-1547936785-c57315d64694?auto=format&fit=crop&w=2400&q=80', alt: '검수용 관리자 교체 이미지', updatedAt: '2026-11-04' }];
       const fail = scenario === 'error' && path !== '/api/site-images';
       send('Fetch.fulfillRequest', { requestId, responseCode: fail ? 503 : 200, responseHeaders: [{ name: 'Content-Type', value: 'application/json' }], body: Buffer.from(JSON.stringify(fail ? { error: 'verification failure' } : body)).toString('base64') }).catch(error => report.exceptions.push(String(error)));
     }

@@ -12,7 +12,8 @@ const navigation = [
   { name: "포트폴리오", href: "/portfolio" },
   { name: "매거진", href: "/magazine" },
   { name: "B2B 협업", href: "/b2b" },
-  { name: "온라인샵", href: "https://simgo.kr/", external: true },
+  { name: "컴패션과 함께하는", href: "https://simgo.kr", external: true },
+  { name: "SHOP", href: "https://www.simda.me", external: true },
   { name: "예약/상담", href: "/booking" },
   { name: "고객센터", href: "/support" },
 ];
@@ -36,7 +37,7 @@ export function Header() {
             </div>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-1">
+          <nav className="hidden xl:flex items-center space-x-1">
             {navigation.map((item) => (
               item.external ? (
                 <a
@@ -66,7 +67,7 @@ export function Header() {
           </nav>
 
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild className="md:hidden">
+            <SheetTrigger asChild className="xl:hidden">
               <Button variant="ghost" size="icon" data-testid="button-mobile-menu">
                 <Menu className="h-5 w-5" />
                 <span className="sr-only">메뉴 열기</span>

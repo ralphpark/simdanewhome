@@ -42,7 +42,8 @@ export function SiteNav() {
         </div>)}
       </nav>
       <div className="gn-right">
-        <a className="gn-shop" href="https://www.simda.me" target="_blank" rel="noopener">온라인샵 ↗</a>
+        <a className="gn-shop" href="https://simgo.kr" target="_blank" rel="noopener">컴패션과 함께하는 ↗</a>
+        <a className="gn-shop" href="https://www.simda.me" target="_blank" rel="noopener">SHOP ↗</a>
         <Link className="btn btn-sm" href="/support/booking">예약상담</Link>
         <Dialog.Root open={open} onOpenChange={setOpen}>
           <Dialog.Trigger asChild><button className="gn-burger" type="button" aria-label="메뉴 열기"><span /><span /></button></Dialog.Trigger>
@@ -53,7 +54,8 @@ export function SiteNav() {
               <Dialog.Close asChild><button type="button" aria-label="메뉴 닫기"><X size={22} strokeWidth={1.5} /></button></Dialog.Close>
             </div>
             <nav aria-label="모바일 메뉴">{[...siteLinks, ...supportLinks].map((link, index) => <Link key={link.href} href={link.href} onClick={() => setOpen(false)} aria-current={active(link.href) ? "page" : undefined} className={index > 4 ? "gn-mobile-sub" : undefined} style={{ "--menu-index": index } as CSSProperties}>{link.label}</Link>)}
-              <a className="gn-mobile-sub" style={{ "--menu-index": 7 } as CSSProperties} href="https://www.simda.me" target="_blank" rel="noopener" onClick={() => setOpen(false)}>온라인샵 ↗</a>
+              <a className="gn-mobile-sub" style={{ "--menu-index": 7 } as CSSProperties} href="https://simgo.kr" target="_blank" rel="noopener" onClick={() => setOpen(false)}>컴패션과 함께하는 ↗</a>
+              <a className="gn-mobile-sub" style={{ "--menu-index": 8 } as CSSProperties} href="https://www.simda.me" target="_blank" rel="noopener" onClick={() => setOpen(false)}>SHOP ↗</a>
             </nav>
           </Dialog.Content></Dialog.Portal>
         </Dialog.Root>
