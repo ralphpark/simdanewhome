@@ -1,3 +1,4 @@
+import { SiteText } from "@/components/site/SiteText";
 import { useRef, useState } from "react";
 import { Link } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -77,11 +78,11 @@ export default function Booking() {
     if (invalidStep >= 0) move(invalidStep);
   });
   return <Subpage className="team-c c-booking" passBar={false}>
-    <PageHead eyebrow="심다와의 첫 대화" title={copy.booking.hero.title} intro={copy.booking.hero.lead} />
+    <PageHead eyebrow={<SiteText k="booking.hero.eyebrow" />} title={<SiteText k="booking.hero.title" />} intro={<SiteText k="booking.hero.lead" />} />
     <section className="c-booking-area">
       <div className="sp-wrap c-booking-layout">
       <div className="c-booking-panel">
-        {submitted ? <div id="booking-success" className="c-booking-success c-success" tabIndex={-1} role="status"><SuccessCheck /><h2>{copy.booking.success.title}</h2><p>{copy.booking.success.lead}</p><BookingSummary values={submitted} /><p className="c-request-note">선택하신 일정은 희망 일정입니다.<br />담당자와 확인 후 상담 일정이 확정됩니다.</p><Link href="/support" className="btn">고객센터로 돌아가기 <ChevronRight size={18} aria-hidden="true" /></Link></div>
+        {submitted ? <div id="booking-success" className="c-booking-success c-success" tabIndex={-1} role="status"><SuccessCheck /><h2>{<SiteText k="booking.success.title" />}</h2><p><SiteText k="booking.success.lead" /></p><BookingSummary values={submitted} /><p className="c-request-note"><SiteText k="booking.success.note" /></p><Link href="/support" className="btn"><SiteText k="booking.success.link" /> <ChevronRight size={18} aria-hidden="true" /></Link></div>
         : <>
           <ol className="c-booking-progress" aria-label="예약 진행 단계">{copy.booking.steps.map((label, i) => <li key={label} aria-current={step === i ? "step" : undefined} data-done={i < step}><span className="c-progress-dot">{i < step ? <Check size={14} aria-hidden="true" /> : i + 1}</span><span>{label}</span></li>)}</ol>
           <form noValidate onSubmit={(event) => { event.preventDefault(); if (step < 3) void next(); else void submit(event); }} aria-label="상담 예약" aria-busy={mutation.isPending}>
@@ -102,7 +103,7 @@ export default function Booking() {
               </motion.div>
             </AnimatePresence>
             {mutation.isError && <p className="c-form-error" role="alert">{requestError(mutation.error)}</p>}
-            <div className="c-booking-actions">{step > 0 && <button type="button" className="btn btn-o c-back-button" onClick={() => move(step - 1)} disabled={mutation.isPending}><ChevronLeft size={18} aria-hidden="true" /> 이전</button>}<button className="btn" type="submit" disabled={mutation.isPending}>{mutation.isPending ? <><BrandSpinner label="상담 요청 접수 중" /> 접수 중</> : <>{step < 3 ? "다음" : "상담 예약 요청"}<ChevronRight size={18} aria-hidden="true" /></>}</button></div>
+            <div className="c-booking-actions">{step > 0 && <button type="button" className="btn btn-o c-back-button" onClick={() => move(step - 1)} disabled={mutation.isPending}><ChevronLeft size={18} aria-hidden="true" /> <SiteText k="booking.actions.back" /></button>}<button className="btn" type="submit" disabled={mutation.isPending}>{mutation.isPending ? <><BrandSpinner label="상담 요청 접수 중" /> 접수 중</> : <>{step < 3 ? <SiteText k="booking.actions.next" /> : <SiteText k="booking.actions.submit" />}<ChevronRight size={18} aria-hidden="true" /></>}</button></div>
           </form>
         </>}
       </div>

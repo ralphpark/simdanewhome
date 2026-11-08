@@ -1,4 +1,7 @@
 import type {
+  SiteText,
+  InsertSiteText,
+  SiteTextChange,
   SiteImage,
   InsertSiteImage,
   ChatHistory,
@@ -33,6 +36,10 @@ type MemoryPost = Omit<Post, "author" | "published" | "publishedAt"> & Partial<P
 type MemoryDocument = Omit<Document, "updatedAt"> & Partial<Pick<Document, "updatedAt">>;
 
 export interface IStorage<StoredBooking = Booking, StoredProposal = B2bProposal, StoredPortfolio = Portfolio, StoredPost = Post, StoredDocument = Document> {
+  getSiteTexts(): Promise<SiteText[]>;
+  upsertSiteText(data: InsertSiteText): Promise<SiteText>;
+  deleteSiteText(key: string): Promise<void>;
+  applySiteTextChanges(changes: SiteTextChange[]): Promise<void>;
   getSiteImages(): Promise<SiteImage[]>;
   upsertSiteImage(data: InsertSiteImage): Promise<SiteImage>;
   deleteSiteImage(key: string): Promise<void>;
@@ -93,6 +100,31 @@ export interface IStorage<StoredBooking = Booking, StoredProposal = B2bProposal,
 
 // In-memory storage implementation
 export class MemStorage implements IStorage<MemoryBooking, MemoryProposal, MemoryPortfolio, MemoryPost, MemoryDocument> {
+  private siteTexts = new Map<string, SiteText>();
+
+  async getSiteTexts(): Promise<SiteText[]> {
+    return Array.from(this.siteTexts.values());
+  }
+
+  async upsertSiteText(data: InsertSiteText): Promise<SiteText> {
+    const text: SiteText = { ...data, updatedAt: new Date() };
+    this.siteTexts.set(data.key, text);
+    return text;
+  }
+
+  async deleteSiteText(key: string): Promise<void> {
+    this.siteTexts.delete(key);
+  }
+
+  async applySiteTextChanges(changes: SiteTextChange[]): Promise<void> {
+    const next = new Map(this.siteTexts);
+    for (const { key, value } of changes) {
+      if (value === null) next.delete(key);
+      else next.set(key, { key, value, updatedAt: new Date() });
+    }
+    this.siteTexts = next;
+  }
+
   private siteImages = new Map<string, SiteImage>();
 
   async getSiteImages(): Promise<SiteImage[]> {
@@ -497,6 +529,35 @@ export class MemStorage implements IStorage<MemoryBooking, MemoryProposal, Memor
 
 // Database storage implementation using Drizzle ORM
 export class DbStorage implements IStorage {
+  async getSiteTexts(): Promise<SiteText[]> {
+    return db.select().from(schema.siteTexts);
+  }
+
+  async upsertSiteText(data: InsertSiteText): Promise<SiteText> {
+    const values = { ...data, updatedAt: new Date() };
+    const [text] = await db.insert(schema.siteTexts).values(values).onConflictDoUpdate({
+      target: schema.siteTexts.key,
+      set: { value: values.value, updatedAt: values.updatedAt },
+    }).returning();
+    return text;
+  }
+
+  async deleteSiteText(key: string): Promise<void> {
+    await db.delete(schema.siteTexts).where(eq(schema.siteTexts.key, key));
+  }
+
+  async applySiteTextChanges(changes: SiteTextChange[]): Promise<void> {
+    await db.transaction(async tx => {
+      for (const { key, value } of changes) {
+        if (value === null) await tx.delete(schema.siteTexts).where(eq(schema.siteTexts.key, key));
+        else await tx.insert(schema.siteTexts).values({ key, value, updatedAt: new Date() }).onConflictDoUpdate({
+          target: schema.siteTexts.key,
+          set: { value, updatedAt: new Date() },
+        });
+      }
+    });
+  }
+
   async getSiteImages(): Promise<SiteImage[]> {
     return db.select().from(schema.siteImages);
   }

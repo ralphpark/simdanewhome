@@ -23,7 +23,7 @@ const timelines = [
   { id:'timeline-3', year:'2025', title:'지역 기반 식물 플랫폼 특허 등록', description:'우리 동네 가게와 함께합니다.' },
 ];
 
-export async function openBrowser({ build = 'docs/redesign/verification/subpages-v2/dist', out = 'docs/redesign/verification/subpages-v2' } = {}) {
+export async function openBrowser({ build = 'docs/redesign/verification/subpages-v2/dist', out = 'docs/redesign/verification/subpages-v2', apiFixture } = {}) {
   build = resolve(build); out = resolve(out); await mkdir(out, { recursive:true });
   const report = { checks:[], pages:[], requests:[], exceptions:[] }; let scenario = 'normal';
   const server = createServer(async (req, res) => {
@@ -60,7 +60,10 @@ export async function openBrowser({ build = 'docs/redesign/verification/subpages
       try{
         if(url.pathname.startsWith('/api/')){
           let body=[], status=200; const path=url.pathname;
-          if(request.method==='POST'){
+          if(apiFixture){
+            report.requests.push({method:request.method,path,body:request.postData ? JSON.parse(request.postData) : undefined});
+            ({body,status=200}=await apiFixture({path,request}));
+          }else if(request.method==='POST'){
             report.requests.push({method:request.method,path,body:JSON.parse(request.postData || '{}')});
             body={id:'fixture-success',success:true,...JSON.parse(request.postData || '{}')};
           }else if(scenario==='error')status=503;

@@ -1,5 +1,7 @@
+import { SiteText } from "@/components/site/SiteText";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { siteTextPages } from "@/content/siteTexts";
 import type { SiteImageKey } from "@/content/images";
 import { useSiteImage } from "@/hooks/useSiteImage";
 import "./page-primitives.css";
@@ -90,30 +92,32 @@ export type PhotoTileItem = { id: string; href: string; title: string; eyebrow?:
 export function PhotoTile({ item }: { item: PhotoTileItem }) {
   return <Link className={`sp-tile ${item.image ? "" : "sp-tile-empty"}`} href={item.href}>
     {item.image && <img src={item.image} alt={item.alt ?? item.title} loading="lazy" decoding="async" />}
-    <div className="sp-tile-shade" /><div className="sp-tile-copy">{item.eyebrow && <p className="sp-tile-eye">{item.eyebrow}</p>}<h3>{item.title}</h3>{item.description && <p>{item.description}</p>}<span>더 알아보기 <span aria-hidden="true">›</span></span></div>
+    <div className="sp-tile-shade" /><div className="sp-tile-copy">{item.eyebrow && <p className="sp-tile-eye">{item.eyebrow}</p>}<h3>{item.title}</h3>{item.description && <p>{item.description}</p>}<span><SiteText k="portfolio.work.detail" /> <span aria-hidden="true">›</span></span></div>
   </Link>;
 }
 export function Tiles({ items, className = "" }: { items: PhotoTileItem[]; className?: string }) {
   return <div className={`sp-tiles ${className}`}>{items.map(item => <PhotoTile key={item.id} item={item} />)}</div>;
 }
 
-export type WayItem = { title: string; lead: string; href: string; label: string; icon?: "booking" | "business" | "shop" };
+export type WayItem = { title: ReactNode; lead: ReactNode; href: string; label: ReactNode; icon?: "booking" | "business" | "shop" };
 const defaultWays: WayItem[] = [
-  { title: "예약상담", lead: "식물 큐레이터와 마주 앉아 공간과 일상에 맞는 식물을 함께 고릅니다.", href: "/support/booking", label: "예약상담 신청하기", icon: "booking" },
-  { title: "B2B 협업", lead: "사옥과 매장, 공공 공간의 조경과 식물 관리를 함께 설계합니다.", href: "/support/b2b", label: "프로젝트 문의하기", icon: "business" },
-  { title: "온라인샵", lead: "simda.me에서 동네 가게가 준비하는 식물 선물을 보냅니다.", href: "https://www.simda.me", label: "simda.me 바로가기 ↗", icon: "shop" },
+  { title: <SiteText k="story.ways.item1.title" />, lead: <SiteText k="story.ways.item1.lead" />, href: "/support/booking", label: <SiteText k="story.ways.item1.link" />, icon: "booking" },
+  { title: <SiteText k="story.ways.item2.title" />, lead: <SiteText k="story.ways.item2.lead" />, href: "/support/b2b", label: <SiteText k="story.ways.item2.link" />, icon: "business" },
+  { title: <SiteText k="story.ways.item3.title" />, lead: <SiteText k="story.ways.item3.lead" />, href: "https://www.simda.me", label: <><SiteText k="story.ways.item3.link" /> ↗</>, icon: "shop" }
 ];
 function WayIcon({ kind = "booking" }: { kind?: WayItem["icon"] }) {
   const paths = kind === "booking" ? ["M8 2v4", "M16 2v4", "M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z", "M3 10h18"] : kind === "business" ? ["M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z", "M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2", "M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2", "M10 6h4M10 10h4M10 14h4M10 18h4"] : ["M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z", "M3 6h18", "M16 10a4 4 0 0 1-8 0"];
   return <svg viewBox="0 0 24 24" aria-hidden="true">{paths.map(path => <path key={path} d={path} pathLength="1" />)}</svg>;
 }
-export function WaysCards({ title = "심다와 시작하는 세 가지 방법.", intro, items = defaultWays, className = "" }: { title?: ReactNode; intro?: ReactNode; items?: WayItem[]; className?: string }) {
+export function WaysCards({ title = <SiteText k="story.ways.title" />, intro, items = defaultWays, className = "" }: { title?: ReactNode; intro?: ReactNode; items?: WayItem[]; className?: string }) {
   return <PageSection title={title} intro={intro} className={`sp-ways ${className}`}><div className="sp-ways-grid" style={{ "--sp-way-count": Math.min(items.length, 3) } as CSSProperties}>
     {items.map(item => <div className="sp-way" key={item.href}><WayIcon kind={item.icon} /><h3>{item.title}</h3><p>{item.lead}</p>{/^https?:/.test(item.href) ? <a className="sp-link" href={item.href} target="_blank" rel="noopener">{item.label}</a> : <Link className="sp-link" href={item.href}>{item.label} <span aria-hidden="true">›</span></Link>}</div>)}
   </div></PageSection>;
 }
 
 export function PassBar() {
+  const [location] = useLocation();
+  const page = siteTextPages.find(page => page.path === location)?.id ?? (location.startsWith("/portfolio/") ? "portfolio" : location.startsWith("/magazine/") ? "magazine" : "home");
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const update = () => setVisible(window.scrollY > Math.min(window.innerHeight, 640));
@@ -122,6 +126,6 @@ export function PassBar() {
   }, []);
   // Visibility also removes the offscreen link from keyboard navigation.
   return <aside className="sp-pass" data-visible={visible} aria-label="예약상담" aria-hidden={!visible}>
-    <p>공간에 맞는 식물, 큐레이터와 상담하세요.</p><Link className="btn" href="/support/booking" tabIndex={visible ? 0 : -1}>예약상담</Link>
+    <p><SiteText k={`${page === "booking" ? "home" : page}.pass.body`} /></p><Link className="btn" href="/support/booking" tabIndex={visible ? 0 : -1}><SiteText k={`${page === "booking" ? "home" : page}.pass.link`} /></Link>
   </aside>;
 }

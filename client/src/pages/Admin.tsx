@@ -28,14 +28,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Link } from "wouter";
+import { SiteTextsTab } from "@/components/admin/SiteTextsTab";
 import { SiteImagesTab } from "@/components/admin/SiteImagesTab";
 
-const adminTabs = ["site-images", "timelines", "portfolios", "posts", "comments", "bookings", "b2b"];
+const adminTabs = ["site-images", "site-texts", "timelines", "portfolios", "posts", "comments", "bookings", "b2b"];
 
 export default function Admin() {
   const { isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [textsDirty, setTextsDirty] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [selectedProposal, setSelectedProposal] = useState<B2bProposal | null>(null);
@@ -255,7 +257,7 @@ export default function Admin() {
 
   return (
     <div className="flex-1">
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className={`${activeTab === "site-texts" ? "w-full" : "max-w-7xl"} mx-auto px-6 py-12`}>
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">관리자 대시보드</h1>
           <p className="text-muted-foreground">콘텐츠, 예약, 제안을 관리하세요</p>
@@ -311,6 +313,7 @@ export default function Admin() {
           <Button
             variant="outline"
             onClick={async () => {
+              if (textsDirty && !window.confirm("저장하지 않은 변경이 있어요. 변경을 버리고 로그아웃할까요?")) return;
               await apiRequest("POST", "/api/logout");
               window.location.href = "/";
             }}
@@ -319,12 +322,15 @@ export default function Admin() {
           </Button>
         </div>
 
-        <Tabs value={activeTab} onValueChange={(val) => {
+        <Tabs value={activeTab} activationMode="manual" onValueChange={(val) => {
+          if (val !== activeTab && textsDirty && !window.confirm("저장하지 않은 변경이 있어요. 변경을 버리고 이동할까요?")) return;
+          setTextsDirty(false);
           setActiveTab(val);
           sessionStorage.setItem('adminActiveTab', val);
         }} className="space-y-8">
           <TabsList className="flex h-auto w-full flex-wrap justify-start gap-1">
             <TabsTrigger value="site-images">사이트 사진</TabsTrigger>
+            <TabsTrigger value="site-texts">사이트 문구</TabsTrigger>
             <TabsTrigger value="timelines">브랜드 스토리 연혁 ({timelines.length})</TabsTrigger>
             <TabsTrigger value="portfolios">포트폴리오 ({portfolios.length})</TabsTrigger>
             <TabsTrigger value="posts">매거진 ({posts.length})</TabsTrigger>
@@ -334,6 +340,7 @@ export default function Admin() {
           </TabsList>
 
           <TabsContent value="site-images"><SiteImagesTab /></TabsContent>
+          <TabsContent value="site-texts"><SiteTextsTab onDirtyChange={setTextsDirty} /></TabsContent>
 
           {/* 포스트 탭 */}
           <TabsContent value="posts" className="space-y-6">

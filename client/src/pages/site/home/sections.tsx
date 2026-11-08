@@ -1,3 +1,4 @@
+import { SiteText } from "@/components/site/SiteText";
 import { Link } from "wouter";
 import { useSiteImage } from "@/hooks/useSiteImage";
 import { defaultImages } from "@/content/images";
@@ -31,12 +32,12 @@ export function HomeSections() {
   <div className="hero-stage">
     <div className="hc">
       <div className="hc-in">
-        <p className="t-eye">심다</p>
-        <h1 className="t-hero">식물과 함께하는 <span className="grad">일상.</span></h1>
-        <p className="t-intro">국내 1호 식물 큐레이터가 공간의 결에 맞는 식물을 고르고, 가꾸고, 전합니다.</p>
+        <p className="t-eye"><SiteText k="home.hero.eyebrow" /></p>
+        <h1 className="t-hero"><SiteText k="home.hero.title" /></h1>
+        <p className="t-intro"><SiteText k="home.hero.lead" /></p>
         <div className="btns">
-          <Link className="btn" href="/support/booking">예약상담</Link>
-          <Link className="btn btn-o" href="/story">심다 이야기</Link>
+          <Link className="btn" href="/support/booking"><SiteText k="home.hero.primary" /></Link>
+          <Link className="btn btn-o" href="/story"><SiteText k="home.hero.secondary" /></Link>
         </div>
       </div>
     </div>
@@ -45,8 +46,8 @@ export function HomeSections() {
       <div className="hm-scrim"></div>
     </div>
     <div className="h-cap">
-      <p>한 그루에서 시작해,<br />공간 전체로.</p>
-      <p>2016년부터 100곳이 넘는 공간을 식물로 바꿨습니다.</p>
+      <p><SiteText k="home.hero.caption" /></p>
+      <p><SiteText k="home.hero.captionBody" /></p>
     </div>
   </div>
 </section>
@@ -55,12 +56,12 @@ export function HomeSections() {
   <div className="hl-track">
     <div className="hl-stage">
       <div className="hl-head">
-        <h2 className="t-h2">심다를 한눈에.</h2>
-        <Link className="lk" href="/services">서비스 전체 보기 ›</Link>
+        <h2 className="t-h2"><SiteText k="home.services.title" /></h2>
+        <Link className="lk" href="/services"><SiteText k="home.services.link" /> ›</Link>
       </div>
       <div className="hl-row">
         <article className="gc">
-          <p className="gc-cap">식물관리.<br /><span>정기 방문으로 물·빛·흙을 살피고 기록합니다.</span></p>
+          <p className="gc-cap"><SiteText k="home.services.care.title" /><br /><span><SiteText k="home.services.care.lead" /></span></p>
           <div className="gc-ph"><img src={care.url} alt={care.alt} /></div>
           <div className="ring-card" aria-hidden="true">
             <svg viewBox="0 0 300 300">
@@ -77,19 +78,19 @@ export function HomeSections() {
           </div>
         </article>
         <article className="gc">
-          <p className="gc-cap">교육.<br /><span>기업과 기관, 학교를 위한 식물 워크숍.</span></p>
+          <p className="gc-cap"><SiteText k="home.services.education.title" /><br /><span><SiteText k="home.services.education.lead" /></span></p>
           <div className="gc-ph"><img src={education.url} alt={education.alt} /></div>
         </article>
         <article className="gc">
-          <p className="gc-cap">조경.<br /><span>주거와 상업 공간의 정원을 설계하고 시공합니다.</span></p>
+          <p className="gc-cap"><SiteText k="home.services.landscape.title" /><br /><span><SiteText k="home.services.landscape.lead" /></span></p>
           <div className="gc-ph"><img src={landscape.url} alt={landscape.alt} /></div>
         </article>
         <article className="gc">
-          <p className="gc-cap">판매.<br /><span>공간에 맞는 식물을 골라 보내 드립니다.</span></p>
+          <p className="gc-cap"><SiteText k="home.services.sales.title" /><br /><span><SiteText k="home.services.sales.lead" /></span></p>
           <div className="gc-ph"><img src={sales.url} alt={sales.alt} /></div>
         </article>
         <article className="gc">
-          <p className="gc-cap">simda 플랫폼.<br /><span>동네 가게가 직접 전하는 식물 선물.</span></p>
+          <p className="gc-cap"><SiteText k="home.services.platform.title" /><br /><span><SiteText k="home.services.platform.lead" /></span></p>
           <div className="gc-ph"><img src={platform.url} alt={platform.alt} /></div>
         </article>
       </div>
@@ -107,9 +108,9 @@ export function HomeSections() {
 
 <section id="story" aria-label="브랜드 스토리">
   <div className="story wrap center">
-    <p className="t-eye rv">브랜드 스토리</p>
-    <h2 className="t-hero rv">식물로 공간을 바꿉니다.</h2>
-    <p className="t-intro rv2">2016년, 국내 1호 식물 큐레이터 이주연 대표가 심다를 시작했습니다. <b>정원을 짓고, 식물을 돌보고, 식물 생활을 가르쳐 온 10년.</b> 이제는 <b>동네 가게와 이웃을 잇는 simda 플랫폼</b>까지 넓혔습니다.</p>
+    <p className="t-eye rv"><SiteText k="home.story.eyebrow" /></p>
+    <h2 className="t-hero rv"><SiteText k="home.story.title" /></h2>
+    <p className="t-intro rv2"><SiteText k="home.story.body" /></p>
   </div>
   <div className="imm-track">
     <div className="imm-stage">
@@ -123,8 +124,8 @@ export function HomeSections() {
   <div className="facts">
     <div className="wide facts-in">
       <div>
-        <h3 className="t-h2 rv">숫자로 보는 심다.</h3>
-        <p className="body rv">기업 사옥과 매장, 박물관, 병원까지. 심다는 <b>공간마다 다른 빛과 바람을 읽고</b> 그곳에 맞는 식물을 고릅니다. 식물과 공간을 위한 기술도 <b>직접 연구하고 특허로 등록</b>했습니다.</p>
+        <h3 className="t-h2 rv"><SiteText k="home.numbers.title" /></h3>
+        <p className="body rv"><SiteText k="home.numbers.body" /></p>
       </div>
       <div className="stats">
         <div className="rv"><p className="st-n ggreen"><span className="cnt n100"></span>+</p><p className="st-l">대외 프로젝트</p></div>
@@ -138,18 +139,18 @@ export function HomeSections() {
 
 <section className="pf" id="platform" aria-label="simda 플랫폼">
   <div className="pfi">
-    <p className="t-eye rv">simda 플랫폼</p>
-    <h2 className="t-hero rv">동네 가게의 <span className="grad">선물.</span></h2>
-    <p className="t-intro rv2">가장 가까운 가게가 정성껏 준비해 문 앞까지 배송합니다.</p>
-    <span className="badge rv2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>특허 등록 · 위치 기반 비대면 식물 입찰 플랫폼</span>
+    <p className="t-eye rv"><SiteText k="home.platform.eyebrow" /></p>
+    <h2 className="t-hero rv"><SiteText k="home.platform.title" /></h2>
+    <p className="t-intro rv2"><SiteText k="home.platform.lead" /></p>
+    <span className="badge rv2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg><SiteText k="home.platform.badge" /></span>
   </div>
   <div className="pf-track">
     <div className="pf-stage">
       <div className="pf-caps">
-        <div className="cap c1"><p className="cap-n">01</p><h3>가장 가까운<br />가게가</h3><p className="cap-b">선물을 고르면, 내 위치에서 가까운 동네 가게를 먼저 찾습니다.</p></div>
-        <div className="cap c2"><p className="cap-n">02</p><h3>정성껏<br />준비해</h3><p className="cap-b">가게가 직접 고르고 다듬어, 마음을 담아 포장합니다.</p></div>
-        <div className="cap c3"><p className="cap-n">03</p><h3>문 앞까지<br />배송합니다.</h3><p className="cap-b">가까운 곳에서 바로 출발해 신선하게 도착합니다.</p></div>
-        <div className="cap c4"><p className="cap-n">simda.me</p><h3>가까워서<br />더 따뜻한 선물.</h3><p className="cap-b">마음을 전하고 싶은 날, 동네 가게가 대신 전해 드립니다.</p><a className="btn" href="https://www.simda.me" target="_blank" rel="noopener">simda.me 바로가기 ↗</a></div>
+        <div className="cap c1"><p className="cap-n">01</p><h3><SiteText k="home.platform.step1.title" /></h3><p className="cap-b"><SiteText k="home.platform.step1.lead" /></p></div>
+        <div className="cap c2"><p className="cap-n">02</p><h3><SiteText k="home.platform.step2.title" /></h3><p className="cap-b"><SiteText k="home.platform.step2.lead" /></p></div>
+        <div className="cap c3"><p className="cap-n">03</p><h3><SiteText k="home.platform.step3.title" /></h3><p className="cap-b"><SiteText k="home.platform.step3.lead" /></p></div>
+        <div className="cap c4"><p className="cap-n">simda.me</p><h3><SiteText k="home.platform.step4.title" /></h3><p className="cap-b"><SiteText k="home.platform.step4.lead" /></p><a className="btn" href="https://www.simda.me" target="_blank" rel="noopener"><SiteText k="home.platform.link" /> ↗</a></div>
       </div>
 
       <div className="ph-pos">
@@ -263,25 +264,25 @@ export function HomeSections() {
 
 <section className="ways" id="start" aria-label="시작하는 방법">
   <div className="wide">
-    <h2 className="t-h2 center rv">심다와 시작하는 세 가지 방법.</h2>
+    <h2 className="t-h2 center rv"><SiteText k="home.ways.title" /></h2>
     <div className="ways-g">
       <div className="way">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path className="wi" pathLength="1" d="M8 2v4"></path><path className="wi" pathLength="1" d="M16 2v4"></path><path className="wi" pathLength="1" d="M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"></path><path className="wi" pathLength="1" d="M3 10h18"></path></svg>
-        <h3>예약상담</h3>
-        <p>식물 큐레이터와 마주 앉아 공간과 일상에 맞는 식물을 함께 고릅니다.</p>
-        <Link className="lk" href="/support/booking">예약상담 신청하기 ›</Link>
+        <h3><SiteText k="home.ways.item1.title" /></h3>
+        <p><SiteText k="home.ways.item1.lead" /></p>
+        <Link className="lk" href="/support/booking"><SiteText k="home.ways.item1.link" /> ›</Link>
       </div>
       <div className="way" id="b2b">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path className="wi" pathLength="1" d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path className="wi" pathLength="1" d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path className="wi" pathLength="1" d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path><path className="wi" pathLength="1" d="M10 6h4M10 10h4M10 14h4M10 18h4"></path></svg>
-        <h3>B2B 협업</h3>
-        <p>사옥과 매장, 공공 공간의 조경과 식물 관리를 함께 설계합니다.</p>
-        <Link className="lk" href="/support/b2b">프로젝트 문의하기 ›</Link>
+        <h3><SiteText k="home.ways.item2.title" /></h3>
+        <p><SiteText k="home.ways.item2.lead" /></p>
+        <Link className="lk" href="/support/b2b"><SiteText k="home.ways.item2.link" /> ›</Link>
       </div>
       <div className="way">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path className="wi" pathLength="1" d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path className="wi" pathLength="1" d="M3 6h18"></path><path className="wi" pathLength="1" d="M16 10a4 4 0 0 1-8 0"></path></svg>
-        <h3>온라인샵</h3>
-        <p>simda.me에서 동네 가게가 준비하는 식물 선물을 보냅니다.</p>
-        <a className="lk" href="https://www.simda.me" target="_blank" rel="noopener">simda.me 바로가기 ↗</a>
+        <h3><SiteText k="home.ways.item3.title" /></h3>
+        <p><SiteText k="home.ways.item3.lead" /></p>
+        <a className="lk" href="https://www.simda.me" target="_blank" rel="noopener"><SiteText k="home.ways.item3.link" /> ↗</a>
       </div>
     </div>
   </div>
@@ -295,12 +296,12 @@ export function HomeSections() {
       <use className="p-l p-a" href="#simda-home-lg-a"></use>
       <use className="p-emb" href="#simda-home-lg-emb"></use>
     </svg>
-    <p>식물과 함께하는 일상의 큐레이션.</p>
+    <p><SiteText k="home.signature.body" /></p>
   </div>
 </section>
 
 <div className="pass-wrap">
-  <div className="pass"><p>공간에 맞는 식물, 큐레이터와 상담하세요.</p><Link className="btn" href="/support/booking">예약상담</Link></div>
+  <div className="pass"><p><SiteText k="home.pass.body" /></p><Link className="btn" href="/support/booking"><SiteText k="home.pass.link" /></Link></div>
 </div>
 
 

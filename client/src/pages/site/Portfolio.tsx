@@ -1,3 +1,4 @@
+import { SiteText } from "@/components/site/SiteText";
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -19,8 +20,8 @@ export default function Portfolio() {
     return Array.from(new Set(filtered.map(item => item.year))).sort((a, b) => b - a).map(year => ({ year, items: filtered.filter(item => item.year === year) }));
   }, [category]);
   return <Subpage className="portfolio-page">
-    <PageHead eyebrow={copy.nav.portfolio} title={copy.portfolio.hero.title} intro={copy.portfolio.hero.lead} imageKey="portfolio.hero" actions={<a href="#portfolio-work" className="btn">작업 둘러보기</a>} />
-    <PageSection id="portfolio-work" eyebrow="포트폴리오" title="선별된 공간들." intro={copy.home.work.lead}>
+    <PageHead eyebrow={<SiteText k="portfolio.hero.eyebrow" />} title={<SiteText k="portfolio.hero.title" />} intro={<SiteText k="portfolio.hero.lead" />} imageKey="portfolio.hero" actions={<a href="#portfolio-work" className="btn"><SiteText k="portfolio.hero.link" /></a>} />
+    <PageSection id="portfolio-work" eyebrow={<SiteText k="portfolio.work.eyebrow" />} title={<SiteText k="portfolio.work.title" />} intro={<SiteText k="portfolio.work.lead" />}>
       <SegmentedControl label="프로젝트 카테고리" options={copy.portfolio.filters} value={category} onChange={setCategory} />
       <p className="b-result-count" role="status" aria-live="polite">{isPending ? "프로젝트를 불러오는 중" : isError ? "프로젝트 사진을 불러오지 못했습니다" : `${visible.length}개의 프로젝트`} · 아카이브 {archive.reduce((sum, group) => sum + group.items.length, 0)}건</p>
       {isPending ? <PageState title="작업의 기록을 불러옵니다" loading /> : isError ? <PageState title="프로젝트 사진을 불러오지 못했습니다." detail="아래 아카이브는 계속 둘러볼 수 있습니다." retry={() => refetch()} /> : <>
@@ -30,11 +31,11 @@ export default function Portfolio() {
         {visible.length === 0 && <PageState title="이 분류의 프로젝트 사진을 준비하고 있습니다." detail="아래 아카이브에서 심다의 작업 기록을 만나보세요.">{category !== "all" && <button className="sp-link" onClick={() => setCategory("all")}>전체 작업 보기 ›</button>}</PageState>}
       </>}
     </PageSection>
-    <PageSection id="portfolio-archive" eyebrow={copy.portfolio.archive.title} title="차곡차곡 쌓아온 기록." intro={copy.portfolio.archive.lead} alt>
-      <div className="pb-archive-filter"><span>{copy.portfolio.filters.find(item => item.key === category)?.label}의 기록</span>{category !== "all" && <button onClick={() => setCategory("all")} className="sp-link">전체 보기 ›</button>}</div>
+    <PageSection id="portfolio-archive" eyebrow={<SiteText k="portfolio.archive.eyebrow" />} title={<SiteText k="portfolio.archive.title" />} intro={<SiteText k="portfolio.archive.lead" />} alt>
+      <div className="pb-archive-filter"><span>{copy.portfolio.filters.find(item => item.key === category)?.label}의 기록</span>{category !== "all" && <button onClick={() => setCategory("all")} className="sp-link"><SiteText k="portfolio.archive.reset" /> ›</button>}</div>
       {archive.map(group => <section key={group.year} className="pb-year" aria-labelledby={`year-${group.year}`}><h3 id={`year-${group.year}`}>{group.year}<span>{group.items.length}개 프로젝트</span></h3><ul>{group.items.map((item, index) => <li key={`${item.title}-${index}`}><span className="pb-month">{item.month}</span><p>{item.title}</p><span className="pb-archive-category">{item.category}</span></li>)}</ul></section>)}
       {archive.length === 0 && <p className="b-empty-inline">이 분류의 아카이브가 아직 없습니다.</p>}
     </PageSection>
-    <PageSection title="함께 만들고 싶은 공간이 있나요?" center><div className="sp-actions"><Link href="/support/b2b" className="btn">{copy.home.closing.primaryCta}</Link><Link href="/support/booking" className="btn btn-o">예약상담</Link></div></PageSection>
+    <PageSection title={<SiteText k="portfolio.closing.title" />} center><div className="sp-actions"><Link href="/support/b2b" className="btn">{<SiteText k="portfolio.closing.primary" />}</Link><Link href="/support/booking" className="btn btn-o"><SiteText k="portfolio.closing.booking" /></Link></div></PageSection>
   </Subpage>;
 }

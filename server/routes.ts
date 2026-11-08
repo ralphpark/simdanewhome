@@ -21,12 +21,14 @@ import {
 import multer from "multer";
 import path from "path";
 import { put } from "@vercel/blob";
+import { registerSiteTextRoutes } from "./site-text-routes";
 import { registerSiteImageRoutes } from "./site-image-routes";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   setupAuth(app);
   registerSiteImageRoutes(app, storage, isAuthenticated);
+  registerSiteTextRoutes(app, storage, isAuthenticated);
 
   // Auth endpoint
   app.get("/api/auth/user", isAuthenticated, (_req, res) => {

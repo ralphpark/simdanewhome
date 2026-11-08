@@ -145,6 +145,19 @@ export const insertSiteImageSchema = createInsertSchema(siteImages).omit({ updat
 export type SiteImage = typeof siteImages.$inferSelect;
 export type InsertSiteImage = z.infer<typeof insertSiteImageSchema>;
 
+// Public site text overrides. Defaults stay in client/src/content/siteTexts.ts.
+export const siteTexts = pgTable("site_texts", {
+  key: varchar("key").primaryKey(),
+  value: text("value").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+export const insertSiteTextSchema = createInsertSchema(siteTexts).omit({ updatedAt: true }).extend({
+  value: z.string().trim().min(1).max(2000),
+});
+export type SiteText = typeof siteTexts.$inferSelect;
+export type InsertSiteText = z.infer<typeof insertSiteTextSchema>;
+export type SiteTextChange = { key: string; value: string | null };
+
 // Insert schemas
 export const insertChatHistorySchema = createInsertSchema(chatHistories).omit({
   id: true,

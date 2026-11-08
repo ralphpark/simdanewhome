@@ -1,3 +1,4 @@
+import { SiteText } from "@/components/site/SiteText";
 import { Link } from "wouter";
 import type { CSSProperties } from "react";
 import { clientLogoTracks } from "@/content/clientLogos";
@@ -17,7 +18,7 @@ export function HomeWork() {
   ];
   const selected = [...data].sort((a, b) => Number(b.featured) - Number(a.featured) || (Date.parse(b.completedDate || "") || 0) - (Date.parse(a.completedDate || "") || 0)).slice(0, 3);
   return <section className="wk" id="work" aria-label="심다의 작업">
-    <div className="wk-head center"><p className="t-eye rv">포트폴리오</p><h2 className="t-hero rv">공간이 달라졌습니다.</h2></div>
+    <div className="wk-head center"><p className="t-eye rv"><SiteText k="home.work.eyebrow" /></p><h2 className="t-hero rv"><SiteText k="home.work.title" /></h2></div>
     <div className="tiles">
       {fallback.map((item, index) => {
         const project = selected[index];
@@ -27,16 +28,16 @@ export function HomeWork() {
         const description = project ? `${categoryLabel(project.category)}${year ? ` · ${year}` : ""}` : item.description;
         return <Link className="tile" key={project?.id || item.title} href={project ? `/portfolio/${encodeURIComponent(project.id)}` : "/portfolio"}>
           <img src={image} alt={project ? title : item.image.alt} onError={event => { if (event.currentTarget.getAttribute("src") !== item.image.url) event.currentTarget.src = item.image.url; }} />
-          <div className="tile-sh" /><div className="tile-tx"><h3>{title}</h3><p>{description}</p><span>자세히 보기 ›</span></div>
+          <div className="tile-sh" /><div className="tile-tx"><h3>{title}</h3><p>{description}</p><span><SiteText k="home.work.detail" /> ›</span></div>
         </Link>;
       })}
-      <Link className="tile tile-g" href="/portfolio"><div className="tile-tx"><h3>100곳이 넘는 공간.</h3><p>사옥, 매장, 박물관, 병원까지.</p><span>포트폴리오 전체 보기 ›</span></div></Link>
+      <Link className="tile tile-g" href="/portfolio"><div className="tile-tx"><h3><SiteText k="home.work.moreTitle" /></h3><p><SiteText k="home.work.moreLead" /></p><span><SiteText k="home.work.moreLink" /> ›</span></div></Link>
     </div>
   </section>;
 }
 
 export function HomeClients() {
-  return <section className="cli" aria-label="함께한 곳"><p className="cli-l">함께한 곳</p><div className="mq-box">
+  return <section className="cli" aria-label="함께한 곳"><p className="cli-l"><SiteText k="home.clients.title" /></p><div className="mq-box">
     {clientLogoTracks.map(({ logos, duration, mobileDuration }, index) => <div key={index} className={`mq-row${index ? " mq-rev" : ""}`} style={{ "--mq-duration": `${duration}s`, "--mq-mobile-duration": `${mobileDuration}s` } as CSSProperties}>
       {[0, 1].map(copy => <div className="mq-group" key={copy} aria-hidden={copy === 1 ? true : undefined}>
         {logos.map(logo => <img key={logo.file} className="mq-logo" src={logo.file} alt={logo.name} width={logo.w} height={logo.h} decoding="async" style={{ "--mq-w": `${logo.w}px`, "--mq-h": `${logo.h}px` } as CSSProperties} />)}
@@ -57,7 +58,7 @@ export function HomeMagazine() {
     { title: "실내 공기정화 식물 BEST 10", category: "가이드", image: care },
   ];
   return <section className="mag" id="magazine" aria-label="매거진"><div className="wide">
-    <div className="row-h"><h2 className="t-h2 rv">매거진.</h2><Link className="lk" href="/magazine">전체 글 보기 ›</Link></div>
+    <div className="row-h"><h2 className="t-h2 rv"><SiteText k="home.magazine.title" /></h2><Link className="lk" href="/magazine"><SiteText k="home.magazine.link" /> ›</Link></div>
     <div className="mg">{fallback.map((item, index) => {
       const post = posts[index];
       const title = post?.title || item.title;

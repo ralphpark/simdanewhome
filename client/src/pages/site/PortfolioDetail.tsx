@@ -1,3 +1,4 @@
+import { SiteText } from "@/components/site/SiteText";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { PageSection, PhotoReveal, ScrollReveal, Subpage, Tiles } from "@/components/site/PagePrimitives";
@@ -27,6 +28,6 @@ export default function PortfolioDetail({ id }: { id: string }) {
       <ScrollReveal><dl className="pb-meta"><div><dt>연도</dt><dd>{yearOf(project.completedDate) || "—"}</dd></div><div><dt>클라이언트</dt><dd>{project.clientName || "—"}</dd></div><div><dt>분류</dt><dd>{categoryLabel(project.category)}</dd></div></dl></ScrollReveal>
     </PageSection>
     {images.length > 0 && <PageSection alt className="pb-sequence"><div aria-label="프로젝트 사진">{images.map((src, index) => <PhotoReveal key={`${id}-${index}`} src={src} alt={`${project.title} — 공간 사진 ${index + 1}`} caption={<>{project.title} <span aria-hidden="true">/</span> {String(index + 1).padStart(2, "0")}</>} />)}</div></PageSection>}
-    {next ? <PageSection eyebrow={copy.portfolio.next.label} title="또 다른 공간의 이야기."><Tiles className="pb-next" items={[{ id: next.id, href: `/portfolio/${encodeURIComponent(next.id)}`, title: next.title, eyebrow: categoryLabel(next.category), image: next.thumbnailUrl || next.images?.[0] }]} /></PageSection> : <PageSection title="다음 공간을 함께 만듭니다." center><div className="sp-actions"><Link href="/support/b2b" className="btn">{copy.home.closing.primaryCta}</Link></div></PageSection>}
+    {next ? <PageSection eyebrow={copy.portfolio.next.label} title="또 다른 공간의 이야기."><Tiles className="pb-next" items={[{ id: next.id, href: `/portfolio/${encodeURIComponent(next.id)}`, title: next.title, eyebrow: categoryLabel(next.category), image: next.thumbnailUrl || next.images?.[0] }]} /></PageSection> : <PageSection title="다음 공간을 함께 만듭니다." center><div className="sp-actions"><Link href="/support/b2b" className="btn"><SiteText k="portfolio.closing.primary" /></Link></div></PageSection>}
   </Subpage>;
 }
