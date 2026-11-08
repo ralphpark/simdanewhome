@@ -42,7 +42,9 @@ export function registerSiteImageRoutes(app: Express, storage: Pick<IStorage, "g
     const body = tokenBodySchema.safeParse(req.body);
     if (!body.success) return res.status(400).json({ error: "업로드 요청이 올바르지 않습니다" });
     const { pathname, clientPayload: key } = body.data.payload;
-    if (!pathname.startsWith(`site-images/${key}/`) || !/^site-images\/[a-z.]+\/[a-zA-Z0-9_-]+\.(jpe?g|png|webp|gif|avif)$/i.test(pathname)) {
+    const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const pathnamePattern = new RegExp(`^site-images/${escapedKey}/[a-zA-Z0-9_-]+\\.(jpe?g|png|webp|gif|avif)$`, "i");
+    if (!pathname.startsWith(`site-images/${key}/`) || !pathnamePattern.test(pathname)) {
       return res.status(400).json({ error: "이미지 업로드 경로가 올바르지 않습니다" });
     }
     try {
