@@ -140,15 +140,23 @@
     "name": "신용보증기금",
     "source": "kodit.png",
     "slug": "kodit",
-    "row": 1,
+    "row": 0,
     "mode": "silhouette",
     "sha256": "45ce8567e2b9ae5d4abcf4dcbaf788316b40c1b3c5232159d52d1f29b324ea34"
+  },
+  {
+    "name": "법무법인 넥서스",
+    "source": "nexus.png",
+    "slug": "nexus",
+    "row": 0,
+    "mode": "knockout-clean",
+    "sha256": "4fb90f9bf730ead3d364c4459a9d1e4f8b805ca31867aa0c71751e5173dbc46d"
   },
   {
     "name": "마이리얼트립",
     "source": "myrealtrip.svg",
     "slug": "myrealtrip",
-    "row": 1,
+    "row": 0,
     "mode": "knockout",
     "sha256": "4bb9c9220ee0c3a4b0d05e7c51f8e1284ac310582086eb2c04968365a475d91e"
   },
@@ -161,12 +169,28 @@
     "sha256": "c15399b118dbe651c76cafc9b52825881e92c3636b781c339ab894b79214d662"
   },
   {
+    "name": "청년취업사관학교 새싹",
+    "source": "sesac.png",
+    "slug": "sesac",
+    "row": 1,
+    "mode": "knockout",
+    "sha256": "be53f252107fbe69debdf03d88e59f40b311025b5d06952e5c6385030e85ca86"
+  },
+  {
     "name": "클래스101",
     "source": "class101.svg",
     "slug": "class101",
     "row": 1,
     "mode": "knockout",
     "sha256": "15a635a15ccdfd1af7db8451b67fd4ab8281bdce28d85fb44e44114823a6475e"
+  },
+  {
+    "name": "스타일난다",
+    "source": "stylenanda.png",
+    "slug": "stylenanda",
+    "row": 1,
+    "mode": "knockout-clean",
+    "sha256": "9102b80fce535097c156108af712cb0df6e67982825f69a63ce4137db11dcac9"
   },
   {
     "name": "이마트",
@@ -199,6 +223,14 @@
     "row": 1,
     "mode": "silhouette",
     "sha256": "810f54b63918d08d193b0a0a8b9345a0929fc00ab70dfa5d48a9c507212e3584"
+  },
+  {
+    "name": "서울시민대학",
+    "source": "seoul-citizens-university.png",
+    "slug": "seoul-citizens-university",
+    "row": 1,
+    "mode": "knockout-clean",
+    "sha256": "848f37f5959ef2c0dc0bf0e5a3dae03edea3726ca86e4d0addda977f21694daf"
   },
   {
     "name": "서울시평생교육진흥원",
@@ -263,6 +295,22 @@
     "row": 1,
     "mode": "knockout",
     "sha256": "536dcdc1580dcefba64c35360e71197700ac60812eb2020c855cc3265acc515d"
+  },
+  {
+    "name": "오페라박물관",
+    "source": "opera-museum.png",
+    "slug": "opera-museum",
+    "row": 1,
+    "mode": "knockout-clean",
+    "sha256": "6356f04558650fde916c184d254fc6ba0fa6d10fb426f1d050dfeff3963b544a"
+  },
+  {
+    "name": "피스피스",
+    "source": "peace-piece.png",
+    "slug": "peace-piece",
+    "row": 1,
+    "mode": "knockout-clean",
+    "sha256": "5111a121a5d82c601f41400779128a1949b3013d546fcb9888fac11124fa3b71"
   },
   {
     "name": "광주비엔날레",

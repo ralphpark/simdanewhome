@@ -19,6 +19,7 @@ const browser = await openBrowser({ build: sourceDir, out: verification });
 const baked = [];
 try {
   for (const item of sources) {
+    assert.ok(['knockout', 'knockout-clean', 'silhouette'].includes(item.mode), item.name + ' known conversion mode');
     const original = await readFile(resolve(sourceDir, item.source));
     assert.equal(createHash('sha256').update(original).digest('hex'), item.sha256, item.source + ' original preserved');
     const mime = { '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png' }[extname(item.source)];
@@ -75,10 +76,13 @@ async function bakeInCanvas(item) {
   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
   const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const pixels = frame.data;
+  // Opt in only for raster originals with near-white compression noise.
+  // Keep the original knockout transfer function unchanged for existing assets.
+  const whitePoint = item.mode === 'knockout-clean' ? 235 : 255;
   let left = canvas.width, right = -1, top = canvas.height, bottom = -1;
   for (let y = 0; y < canvas.height; y++) for (let x = 0; x < canvas.width; x++) {
     const i = (y * canvas.width + x) * 4;
-    const coverage = item.mode === 'silhouette' ? 1 : Math.min(1, Math.max(0, (255 - Math.min(pixels[i], pixels[i + 1], pixels[i + 2])) / 40));
+    const coverage = item.mode === 'silhouette' ? 1 : Math.min(1, Math.max(0, (whitePoint - Math.min(pixels[i], pixels[i + 1], pixels[i + 2])) / 40));
     pixels[i + 3] = Math.round(pixels[i + 3] * coverage);
     pixels[i] = 29; pixels[i + 1] = 29; pixels[i + 2] = 31;
     if (pixels[i + 3] > 2) { left = Math.min(left, x); right = Math.max(right, x); top = Math.min(top, y); bottom = Math.max(bottom, y); }

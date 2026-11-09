@@ -6,10 +6,10 @@ import { join } from 'node:path';
 import { clients } from '../client/src/content/brand.ts';
 import { openBrowser, sleep } from '../client/src/pages/site/verification/browser.mjs';
 
-const out = '/tmp/simda-logos-check';
-const textOnly = ['법무법인 넥서스', '청년사관학교', '스타일난다', '서울시민대학', '오페라박물관', '피스피스'];
+const out = '/tmp/simda-six-logos';
+const textOnly = [];
 assert.equal(clients.length, 40);
-assert.equal(clients.filter(client => client.logo).length, 34);
+assert.equal(clients.filter(client => client.logo).length, 40);
 assert.deepEqual(clients.filter(client => !client.logo).map(client => client.name), textOnly);
 let overrideTexts = false;
 const browser = await openBrowser({ build: 'dist/public', out, apiFixture: ({ path }) => ({
@@ -65,6 +65,8 @@ try {
     assert.ok(state.scrollWidth <= width, 'no page overflow');
     assert.equal(new Set(state.cells.map(cell => cell.height)).size, 1, 'all 40 cells have the same height');
     assert.deepEqual(state.cells.map(cell => cell.name), clients.map(client => client.name));
+    assert.equal(state.cells.filter(cell => cell.logo).length, 40, '40 rendered logos');
+    assert.equal(state.cells.filter(cell => !cell.logo).length, 0, 'no text-only cells');
     for (const [index, cell] of state.cells.entries()) {
       assert.equal(cell.overflow, false, `${width}: ${cell.name} stays in its cell`);
       assert.ok(cell.centered && cell.leftAligned, `${width}: ${cell.name} alignment`);
@@ -99,7 +101,7 @@ try {
     const screenshot = await browser.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: true, clip });
     await writeFile(join(out, `services-clients-${width}.png`), Buffer.from(screenshot.data, 'base64'));
     report.push(state);
-    console.log(`PASS ${width}px: ${state.columns} columns, 34 loaded logos, 6 text cells, all cells ${state.cells[0].height}px high, no overflow`);
+    console.log(`PASS ${width}px: ${state.columns} columns, 40 loaded logos, 0 text cells, all cells ${state.cells[0].height}px high, no overflow`);
   }
   overrideTexts = true;
   await browser.nav('/services');
