@@ -1,3 +1,5 @@
+import { clientLogoRows, type ClientLogo } from "./clientLogos";
+
 // 심다 브랜드·프로젝트 데이터 (이주연 대표 이력서 2026.11 기준, Gemini Flash 정리)
 export type ProjectCategory = "정원" | "조경" | "플랜트" | "연출" | "유지관리" | "교육" | "기획" | "언론" | "공공" | "서비스";
 
@@ -151,47 +153,51 @@ export const media: { date: string; outlet: string; title: string }[] = [
   }
 ];
 
-export const clients: string[] = [
-  "아모레퍼시픽",
-  "삼성물산",
-  "신세계",
-  "한화갤러리아",
-  "현대백화점",
-  "롯데백화점",
-  "GS칼텍스",
-  "신세계인터내셔날",
-  "삼성카드",
-  "국민카드",
-  "캘러웨이코리아",
-  "아스트라제네카",
-  "HSBC",
-  "한국토지주택공사(LH)",
-  "서울시",
-  "문화체육관광부",
-  "한국농업기술진흥원",
-  "신용보증기금",
-  "법무법인 넥서스",
-  "마이리얼트립",
-  "오텍캐리어",
-  "청년사관학교",
-  "클래스101",
-  "스타일난다",
-  "이마트",
-  "CJ ENM(CJ오쇼핑)",
-  "와디즈",
-  "컴패션",
-  "서울시민대학",
-  "서울평생교육진흥원",
-  "대우건설",
-  "삼성물산 건설부문(래미안)",
-  "이오테크닉스",
-  "골든듀",
-  "조이그라이슨",
-  "앤더슨벨",
-  "브리즘",
-  "오페라박물관",
-  "피스피스",
-  "광주비엔날레(광주폴리)"
+// Explicit file references keep service names independent from home logo names.
+// Optical sizes come only from clientLogos.ts; add a logo reference to a text-only row when available.
+const clientLogosByFile = new Map(clientLogoRows.flat().map(logo => [logo.file, logo]));
+
+export const clients: { name: string; logo?: ClientLogo }[] = [
+  { name: "아모레퍼시픽", logo: clientLogosByFile.get("/images/clients/amorepacific.png") },
+  { name: "삼성물산", logo: clientLogosByFile.get("/images/clients/samsung-cnt.png") },
+  { name: "신세계", logo: clientLogosByFile.get("/images/clients/shinsegae.png") },
+  { name: "한화갤러리아", logo: clientLogosByFile.get("/images/clients/hanwha-galleria.png") },
+  { name: "현대백화점", logo: clientLogosByFile.get("/images/clients/hyundai-department-store.png") },
+  { name: "롯데백화점", logo: clientLogosByFile.get("/images/clients/lotte-department-store.png") },
+  { name: "GS칼텍스", logo: clientLogosByFile.get("/images/clients/gs-caltex.png") },
+  { name: "신세계인터내셔날", logo: clientLogosByFile.get("/images/clients/shinsegae-international.png") },
+  { name: "삼성카드", logo: clientLogosByFile.get("/images/clients/samsung-card.png") },
+  { name: "국민카드", logo: clientLogosByFile.get("/images/clients/kb-kookmin-card.png") },
+  { name: "캘러웨이코리아", logo: clientLogosByFile.get("/images/clients/callaway.png") },
+  { name: "아스트라제네카", logo: clientLogosByFile.get("/images/clients/astrazeneca.png") },
+  { name: "HSBC", logo: clientLogosByFile.get("/images/clients/hsbc.png") },
+  { name: "한국토지주택공사(LH)", logo: clientLogosByFile.get("/images/clients/lh.png") },
+  { name: "서울시", logo: clientLogosByFile.get("/images/clients/seoul.png") },
+  { name: "문화체육관광부", logo: clientLogosByFile.get("/images/clients/mcst.png") },
+  { name: "한국농업기술진흥원", logo: clientLogosByFile.get("/images/clients/koat.png") },
+  { name: "신용보증기금", logo: clientLogosByFile.get("/images/clients/kodit.png") },
+  { name: "법무법인 넥서스" },
+  { name: "마이리얼트립", logo: clientLogosByFile.get("/images/clients/myrealtrip.png") },
+  { name: "오텍캐리어", logo: clientLogosByFile.get("/images/clients/otec-carrier.png") },
+  { name: "청년사관학교" },
+  { name: "클래스101", logo: clientLogosByFile.get("/images/clients/class101.png") },
+  { name: "스타일난다" },
+  { name: "이마트", logo: clientLogosByFile.get("/images/clients/emart.png") },
+  { name: "CJ ENM(CJ오쇼핑)", logo: clientLogosByFile.get("/images/clients/cj-enm.png") },
+  { name: "와디즈", logo: clientLogosByFile.get("/images/clients/wadiz.png") },
+  { name: "컴패션", logo: clientLogosByFile.get("/images/clients/compassion.png") },
+  { name: "서울시민대학" },
+  { name: "서울평생교육진흥원", logo: clientLogosByFile.get("/images/clients/smile.png") },
+  { name: "대우건설", logo: clientLogosByFile.get("/images/clients/daewoo-enc.png") },
+  { name: "삼성물산 건설부문(래미안)", logo: clientLogosByFile.get("/images/clients/raemian.png") },
+  { name: "이오테크닉스", logo: clientLogosByFile.get("/images/clients/eo-technics.png") },
+  { name: "골든듀", logo: clientLogosByFile.get("/images/clients/golden-dew.png") },
+  { name: "조이그라이슨", logo: clientLogosByFile.get("/images/clients/joy-gryson.png") },
+  { name: "앤더슨벨", logo: clientLogosByFile.get("/images/clients/andersson-bell.png") },
+  { name: "브리즘", logo: clientLogosByFile.get("/images/clients/brism.png") },
+  { name: "오페라박물관" },
+  { name: "피스피스" },
+  { name: "광주비엔날레(광주폴리)", logo: clientLogosByFile.get("/images/clients/gwangju-biennale.png") },
 ];
 
 export const projects: { year: number; month: string; category: ProjectCategory; title: string }[] = [

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { SiteText } from "@/components/site/SiteText";
 import { Link } from "wouter";
 import { PageHead, PageSection, PhotoReveal, ScrollReveal, Subpage } from "@/components/site/PagePrimitives";
@@ -41,7 +42,14 @@ export default function Services() {
   return <Subpage className="services-page">
     <PageHead eyebrow={<SiteText k="services.hero.eyebrow" />} title={<SiteText k="services.hero.title" />} intro={<p><SiteText k="services.hero.lead" /></p>} imageKey="services.platform" actions={<Link className="btn" href="/support/booking"><SiteText k="services.hero.link" /></Link>} />
     {sections.map((section, index) => <ServiceSection key={section.key} section={section} index={index} />)}
-    <PageSection eyebrow={<SiteText k="services.clients.eyebrow" />} title={<SiteText k="services.clients.title" />} intro={<SiteText k="services.clients.lead" />} className="service-clients"><ul>{clients.map(client => <li key={client}>{client}</li>)}</ul></PageSection>
+    <PageSection eyebrow={<SiteText k="services.clients.eyebrow" />} title={<SiteText k="services.clients.title" />} intro={<SiteText k="services.clients.lead" />} className="service-clients">
+      <ul>{clients.map(({ name, logo }) => <li key={name}>
+        <div className="service-client-mark">{logo
+          ? <img src={logo.file} alt={name} width={logo.w} height={logo.h} loading="lazy" decoding="async" style={{ "--client-logo-w": `${logo.w}px`, "--client-logo-h": `${logo.h}px` } as CSSProperties} />
+          : <span>{name}</span>}
+        </div>
+      </li>)}</ul>
+    </PageSection>
     <PageSection alt eyebrow={<SiteText k="services.ai.eyebrow" />} title={<SiteText k="services.ai.title" />} intro={<p><SiteText k="services.ai.body" /></p>} center className="service-ai"><Link href="/ai-curation" className="btn"><SiteText k="services.ai.link" /></Link></PageSection>
   </Subpage>;
 }
