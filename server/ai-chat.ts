@@ -1,24 +1,39 @@
-// Using user's own Gemini API key with @google/genai
-import { GoogleGenAI } from "@google/genai";
+import Anthropic from "@anthropic-ai/sdk";
+import type { BetaMessageParam } from "@anthropic-ai/sdk/resources/beta/messages/messages";
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
+export function buildMessages(userMessage: string, history: BetaMessageParam[] = []): BetaMessageParam[] {
+  const messages: BetaMessageParam[] = [];
+  for (const message of history) {
+    if ((message.role === "user" || message.role === "assistant")
+      && typeof message.content === "string" && message.content.trim()) {
+      messages.push({ role: message.role, content: message.content });
+    }
+  }
+
+  while (messages[0]?.role === "assistant") messages.shift();
+
+  const last = messages.at(-1);
+  if (userMessage.trim() && !(last?.role === "user" && last.content === userMessage)) {
+    messages.push({ role: "user", content: userMessage });
+  }
+
+  const recent = messages.slice(-40);
+  while (recent[0]?.role === "assistant") recent.shift();
+  return recent;
 }
 
 export async function chatWithAI(
   userMessage: string,
-  history: Message[] = [],
+  history: BetaMessageParam[] = [],
   consultationType: "ai-curation" | "plant-care" = "ai-curation"
 ): Promise<string> {
-  if (!process.env.GEMINI_API_KEY) {
-    return "AI 서비스가 현재 사용 불가능합니다. GEMINI_API_KEY 환경 변수를 확인해주세요.";
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.error("AI chat unavailable: ANTHROPIC_API_KEY is not configured");
+    return "AI 상담을 잠시 쓸 수 없습니다. 잠시 후 다시 시도해주세요.";
   }
 
   try {
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
-    });
+    const client = new Anthropic();
 
     let systemPrompt = "";
 
@@ -78,44 +93,31 @@ export async function chatWithAI(
 - 5번 최종 추천까지 완료한 후 항상 마지막 줄에 "[추천완료]"를 붙이세요`;
     }
 
-    // Build contents array with system prompt and history
-    const contents = [
-      {
-        role: "user",
-        parts: [{ text: systemPrompt }],
-      },
-    ];
+    const response = await client.beta.messages.create({
+      model: "claude-opus-5-5",
+      max_tokens: 16000,
+      output_config: { effort: "low" },
+      betas: ["server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      system: systemPrompt,
+      messages: buildMessages(userMessage, history),
+    });
 
-    // Add conversation history (skip initial AI greeting)
-    for (const msg of history) {
-      if (msg.role === "user") {
-        contents.push({
-          role: "user",
-          parts: [{ text: msg.content }],
-        });
-      } else if (msg.role === "assistant" && contents.length > 1) {
-        // Only add assistant messages if there are already user messages
-        contents.push({
-          role: "model",
-          parts: [{ text: msg.content }],
-        });
-      }
+    if (response.stop_reason === "refusal") {
+      return "죄송합니다. 이 내용은 답변드리기 어려워요. 다른 질문을 해 주세요.";
     }
 
-    // Add current user message
-    contents.push({
-      role: "user",
-      parts: [{ text: userMessage }],
-    });
-
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-pro",
-      contents,
-    });
-
-    return response.text || "죄송합니다. 응답을 생성할 수 없습니다.";
+    const text = response.content
+      .filter(block => block.type === "text")
+      .map(block => block.text)
+      .join("");
+    return text.trim() ? text : "죄송합니다. 응답을 생성할 수 없습니다.";
   } catch (error) {
-    console.error("Gemini AI error:", error);
+    if (error instanceof Anthropic.APIError) {
+      console.error("Anthropic API error:", { status: error.status, name: error.name });
+    } else {
+      console.error("AI chat error:", error instanceof Error ? error.name : "Unknown error");
+    }
     return "AI 응답 생성 중 오류가 발생했습니다. 다시 시도해주세요.";
   }
 }

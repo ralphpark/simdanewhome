@@ -1,7 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { chatWithAI } from "./gemini";
+import { chatWithAI } from "./ai-chat";
+import { z } from "zod";
 import {
   sendBookingConfirmation,
   sendBookingNotification,
@@ -24,6 +25,16 @@ import { put } from "@vercel/blob";
 import { registerSiteTextRoutes } from "./site-text-routes";
 import { registerSiteImageRoutes } from "./site-image-routes";
 
+const chatRequestSchema = z.object({
+  message: z.string().min(1).max(2000).refine(value => value.trim().length > 0),
+  sessionId: z.string().min(1).max(100).refine(value => value.trim().length > 0),
+  history: z.array(z.object({
+    role: z.enum(["user", "assistant"]),
+    content: z.string().max(4000),
+  })).max(60).default([]),
+  consultationType: z.enum(["ai-curation", "plant-care"]).default("ai-curation"),
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
   setupAuth(app);
@@ -37,11 +48,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // AI Chat endpoint
   app.post("/api/chat", async (req, res) => {
     try {
-      const { message, sessionId, history = [], consultationType = "ai-curation" } = req.body;
-
-      if (!message || !sessionId) {
-        return res.status(400).json({ error: "Message and sessionId are required" });
+      const parsed = chatRequestSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ error: "상담 요청 형식이 올바르지 않습니다." });
       }
+      const { message, sessionId, history, consultationType } = parsed.data;
 
       const reply = await chatWithAI(message, history, consultationType);
 
@@ -54,7 +65,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json({ reply, sessionId });
     } catch (error) {
-      console.error("Chat error:", error);
+      console.error("Chat error:", error instanceof Error ? error.name : "Unknown error");
       res.status(500).json({ error: "Failed to process chat message" });
     }
   });
