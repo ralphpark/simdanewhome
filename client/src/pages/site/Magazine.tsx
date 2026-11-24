@@ -1,6 +1,8 @@
 import { SiteText } from "@/components/site/SiteText";
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import type { MediaMention } from "@shared/schema";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { PageHead, PageSection, SegmentedControl, Subpage } from "@/components/site/PagePrimitives";
 import { copy } from "@/content/copy";
@@ -9,6 +11,36 @@ import { ContentImage, dateLabel, PageState, usePageTitle } from "./portfolio/ui
 import { magazineCategory, newestPosts, postDate, usePosts } from "./magazine/data";
 import { PostCard } from "./magazine/PostCard";
 import "./magazine/magazine.css";
+
+function MagazineMedia() {
+  const { data, isSuccess } = useQuery<MediaMention[]>({ queryKey: ["/api/media-mentions"] });
+  if (!isSuccess || data.length === 0) return null;
+
+  return (
+    <PageSection id="magazine-media" eyebrow={<SiteText k="magazine.media.eyebrow" />} title={<SiteText k="magazine.media.title" />}>
+      <ul className="mb-media-list">
+        {data.map(({ id, date, outlet, title, url }) => {
+          const content = (
+            <>
+              <time className="mb-media-date" dateTime={date.replace(".", "-")}>{date}</time>
+              <h3>{outlet}</h3>
+              <p>{title}{url && <> <span aria-hidden="true">↗</span><span className="sr-only"> (새 창)</span></>}</p>
+            </>
+          );
+          return (
+            <li key={id} className="sp-reveal">
+              {url ? (
+                <a className="mb-media-row" href={url} target="_blank" rel="noopener noreferrer">{content}</a>
+              ) : (
+                <div className="mb-media-row">{content}</div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </PageSection>
+  );
+}
 
 export default function Magazine() {
   usePageTitle(copy.seo["/magazine"].title);
@@ -33,5 +65,6 @@ export default function Magazine() {
     {!isPending && !isError && <PageSection id="magazine-stories" title={<SiteText k="magazine.stories.title" />} alt>
       {posts.length > 0 ? <><SegmentedControl options={categories} value={category} onChange={setCategory} label="매거진 카테고리" /><p className="b-result-count" role="status" aria-live="polite">{visible.length}편의 이야기</p><motion.div layout={!reduce} className="mb-grid"><AnimatePresence initial={false} mode="popLayout">{visible.map(post => <motion.div layout={!reduce} key={post.id} initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: reduce ? 0 : 0.35, ease: [0.2, 0.8, 0.2, 1] }}><PostCard post={post} /></motion.div>)}</AnimatePresence></motion.div>{visible.length === 0 && <PageState title="이 분류의 글을 준비하고 있습니다."><button className="sp-link" onClick={() => setCategory("all")}>전체 이야기 보기 ›</button></PageState>}</> : <PageState title={copy.magazine.empty} detail="식물과 함께하는 일상의 기록을 곧 이곳에서 만나보세요."><Link href="/story" className="sp-link">심다의 이야기 먼저 만나기 ›</Link></PageState>}
     </PageSection>}
+    <MagazineMedia />
   </Subpage>;
 }

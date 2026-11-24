@@ -18,6 +18,8 @@ import type {
   InsertComment,
   Timeline,
   InsertTimeline,
+  MediaMention,
+  InsertMediaMention,
   Document,
   InsertDocument,
   User,
@@ -26,6 +28,7 @@ import type {
 import { db } from "./db";
 import * as schema from "@shared/schema";
 import { eq, desc, and } from "drizzle-orm";
+import { randomUUID } from "node:crypto";
 
 // Memory records retain their existing omitted fields; DB rows remain strict.
 // These aliases affect types only and do not normalize or mutate stored values.
@@ -87,6 +90,12 @@ export interface IStorage<StoredBooking = Booking, StoredProposal = B2bProposal,
   updateTimeline(id: string, data: Partial<InsertTimeline>): Promise<Timeline | undefined>;
   deleteTimeline(id: string): Promise<void>;
 
+  // Media mentions
+  getAllMediaMentions(): Promise<MediaMention[]>;
+  createMediaMention(data: InsertMediaMention): Promise<MediaMention>;
+  updateMediaMention(id: string, data: Partial<InsertMediaMention>): Promise<MediaMention | undefined>;
+  deleteMediaMention(id: string): Promise<boolean>;
+
   // Documents
   createDocument(data: InsertDocument): Promise<StoredDocument>;
   getAllDocuments(): Promise<StoredDocument[]>;
@@ -147,6 +156,7 @@ export class MemStorage implements IStorage<MemoryBooking, MemoryProposal, Memor
   private portfolios: Map<string, MemoryPortfolio> = new Map();
   private posts: Map<string, MemoryPost> = new Map();
   private timelines: Map<string, Timeline> = new Map();
+  private mediaMentions = new Map<string, MediaMention>();
   private documents: Map<string, MemoryDocument> = new Map();
 
   constructor() {
@@ -488,6 +498,31 @@ export class MemStorage implements IStorage<MemoryBooking, MemoryProposal, Memor
     this.timelines.delete(id);
   }
 
+  async getAllMediaMentions(): Promise<MediaMention[]> {
+    return Array.from(this.mediaMentions.values()).sort((a, b) =>
+      b.date.localeCompare(a.date) || b.createdAt.getTime() - a.createdAt.getTime()
+    );
+  }
+
+  async createMediaMention(data: InsertMediaMention): Promise<MediaMention> {
+    const now = new Date();
+    const mention = { ...data, id: randomUUID(), url: data.url ?? null, createdAt: now, updatedAt: now };
+    this.mediaMentions.set(mention.id, mention);
+    return mention;
+  }
+
+  async updateMediaMention(id: string, data: Partial<InsertMediaMention>): Promise<MediaMention | undefined> {
+    const mention = this.mediaMentions.get(id);
+    if (!mention) return undefined;
+    const updated = { ...mention, ...data, updatedAt: new Date() };
+    this.mediaMentions.set(id, updated);
+    return updated;
+  }
+
+  async deleteMediaMention(id: string): Promise<boolean> {
+    return this.mediaMentions.delete(id);
+  }
+
   // Documents
   async createDocument(data: InsertDocument): Promise<MemoryDocument> {
     const id = `doc-${Date.now()}-${Math.random()}`;
@@ -784,6 +819,31 @@ export class DbStorage implements IStorage {
 
   async deleteTimeline(id: string): Promise<void> {
     await db.delete(schema.timelines).where(eq(schema.timelines.id, id));
+  }
+
+  async getAllMediaMentions(): Promise<MediaMention[]> {
+    return db.select().from(schema.mediaMentions)
+      .orderBy(desc(schema.mediaMentions.date), desc(schema.mediaMentions.createdAt));
+  }
+
+  async createMediaMention(data: InsertMediaMention): Promise<MediaMention> {
+    const [mention] = await db.insert(schema.mediaMentions).values(data).returning();
+    return mention;
+  }
+
+  async updateMediaMention(id: string, data: Partial<InsertMediaMention>): Promise<MediaMention | undefined> {
+    const [mention] = await db.update(schema.mediaMentions)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(schema.mediaMentions.id, id))
+      .returning();
+    return mention;
+  }
+
+  async deleteMediaMention(id: string): Promise<boolean> {
+    const deleted = await db.delete(schema.mediaMentions)
+      .where(eq(schema.mediaMentions.id, id))
+      .returning({ id: schema.mediaMentions.id });
+    return deleted.length > 0;
   }
 
   // Documents

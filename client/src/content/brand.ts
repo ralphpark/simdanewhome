@@ -120,39 +120,6 @@ export const awards: { date: string; title: string; org: string }[] = [
   }
 ];
 
-export const media: { date: string; outlet: string; title: string }[] = [
-  {
-    date: "2023.11",
-    outlet: "브리크매거진",
-    title: "'일상의 큐레이터들에게 묻다' 인터뷰"
-  },
-  {
-    date: "2023.10",
-    outlet: "비즈한국",
-    title: "2023 '오브젝트 바이 프라이즈' 베스트 스페이스 부문 수상"
-  },
-  {
-    date: "2022.01",
-    outlet: "천재교육 우등생논술",
-    title: "'당신의 식물 생활을 도와 드립니다 — 식물 큐레이터 이주연' 편"
-  },
-  {
-    date: "2021.10",
-    outlet: "문화체육관광부 〈공감〉 유튜브",
-    title: "정책 주간지 〈공감〉 유튜브 채널 출연"
-  },
-  {
-    date: "2021.07",
-    outlet: "월간커피",
-    title: "식물 큐레이션 코너 연재 (~2022.01)"
-  },
-  {
-    date: "2020.11",
-    outlet: "KBS 아침1라디오",
-    title: "'나의 작은 식물원' 진행 (~현재)"
-  }
-];
-
 // Explicit file references keep service names independent from home logo names.
 // Optical sizes come only from clientLogos.ts; add a logo reference to a text-only row when available.
 const clientLogosByFile = new Map(clientLogoRows.flat().map(logo => [logo.file, logo]));

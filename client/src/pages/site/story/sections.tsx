@@ -4,7 +4,7 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import type { Timeline } from "@shared/schema";
 import { PageHead, PageSection, PhotoReveal, ScrollReveal, WaysCards } from "@/components/site/PagePrimitives";
-import { awards, founder, media, milestones } from "@/content/brand";
+import { awards, founder, milestones } from "@/content/brand";
 import { useSiteImage } from "@/hooks/useSiteImage";
 
 export function StoryOpening() {
@@ -85,12 +85,6 @@ export function StoryRecognition() {
       <ScrollReveal className="story-record story-certificates"><div className="story-record-top"><span className="story-badge">공인 인증</span></div><h3>지속적인 성장을 위한 기반.</h3><ul>{certificates.map(item => <li key={item.date}><span>{item.date.slice(0, 4)}</span>{item.title}</li>)}</ul></ScrollReveal>
       {awards.map(item => <ScrollReveal key={item.title} className="story-record"><div className="story-record-top"><span className="story-badge story-badge-award">수상</span><span>{item.date.slice(0, 4)}</span></div><h3>{item.title}</h3><p>{item.org}</p></ScrollReveal>)}
     </div>
-  </PageSection>;
-}
-
-export function StoryMedia() {
-  return <PageSection id="story-media" alt eyebrow={<SiteText k="story.media.eyebrow" />} title={<SiteText k="story.media.title" />}>
-    <ul className="story-media-list">{media.map(item => <li key={`${item.date}-${item.outlet}`}><ScrollReveal className="story-media-row"><span className="story-media-date">{item.date}</span><h3>{item.outlet}</h3><p>{item.title}</p></ScrollReveal></li>)}</ul>
   </PageSection>;
 }
 

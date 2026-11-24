@@ -17,6 +17,7 @@ import {
   insertPostSchema,
   insertCommentSchema,
   insertTimelineSchema,
+  insertMediaMentionSchema,
   insertDocumentSchema,
 } from "@shared/schema";
 import multer from "multer";
@@ -34,6 +35,11 @@ const chatRequestSchema = z.object({
   })).max(60).default([]),
   consultationType: z.enum(["ai-curation", "plant-care"]).default("ai-curation"),
 });
+
+const updateMediaMentionSchema = insertMediaMentionSchema.partial().refine(
+  (data) => Object.keys(data).length > 0,
+  "수정할 항목을 입력해주세요",
+);
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication
@@ -469,6 +475,51 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Delete timeline error:", error);
       res.status(500).json({ error: "Failed to delete timeline" });
+    }
+  });
+
+  app.get("/api/media-mentions", async (_req, res) => {
+    try {
+      res.json(await storage.getAllMediaMentions());
+    } catch (error) {
+      console.error("Get media mentions error:", error);
+      res.status(500).json({ error: "언론 보도 목록을 불러오지 못했습니다" });
+    }
+  });
+
+  app.post("/api/media-mentions", isAuthenticated, async (req, res) => {
+    const parsed = insertMediaMentionSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: parsed.error.issues[0].message });
+    try {
+      const mention = await storage.createMediaMention(parsed.data);
+      res.status(201).json(mention);
+    } catch (error) {
+      console.error("Create media mention error:", error);
+      res.status(500).json({ error: "언론 보도를 추가하지 못했습니다" });
+    }
+  });
+
+  app.patch("/api/media-mentions/:id", isAuthenticated, async (req, res) => {
+    const parsed = updateMediaMentionSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: parsed.error.issues[0].message });
+    try {
+      const mention = await storage.updateMediaMention(req.params.id, parsed.data);
+      if (!mention) return res.status(404).json({ error: "언론 보도를 찾을 수 없습니다" });
+      res.json(mention);
+    } catch (error) {
+      console.error("Update media mention error:", error);
+      res.status(500).json({ error: "언론 보도를 수정하지 못했습니다" });
+    }
+  });
+
+  app.delete("/api/media-mentions/:id", isAuthenticated, async (req, res) => {
+    try {
+      const deleted = await storage.deleteMediaMention(req.params.id);
+      if (!deleted) return res.status(404).json({ error: "언론 보도를 찾을 수 없습니다" });
+      res.status(204).end();
+    } catch (error) {
+      console.error("Delete media mention error:", error);
+      res.status(500).json({ error: "언론 보도를 삭제하지 못했습니다" });
     }
   });
 

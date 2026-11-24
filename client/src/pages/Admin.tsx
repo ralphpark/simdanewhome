@@ -2,7 +2,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Post, Comment, Booking, B2bProposal, Portfolio, Timeline } from "@shared/schema";
+import type { Post, Comment, Booking, B2bProposal, Portfolio, Timeline, MediaMention } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,8 +30,9 @@ import {
 import { Link } from "wouter";
 import { SiteTextsTab } from "@/components/admin/SiteTextsTab";
 import { SiteImagesTab } from "@/components/admin/SiteImagesTab";
+import { MediaMentionsTab, mediaMentionsQueryKey } from "@/components/admin/MediaMentionsTab";
 
-const adminTabs = ["site-images", "site-texts", "timelines", "portfolios", "posts", "comments", "bookings", "b2b"];
+const adminTabs = ["site-images", "site-texts", "timelines", "portfolios", "posts", "comments", "media-mentions", "bookings", "b2b"];
 
 export default function Admin() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -56,6 +57,7 @@ export default function Admin() {
     queryClient.invalidateQueries({ queryKey: ["/api/portfolios"] });
     queryClient.invalidateQueries({ queryKey: ["/api/timelines"] });
     queryClient.invalidateQueries({ queryKey: ["/api/admin/comments"] });
+    queryClient.invalidateQueries({ queryKey: mediaMentionsQueryKey });
   }, [queryClient]);
 
   const { data: posts = [] } = useQuery<Post[]>({
@@ -64,6 +66,11 @@ export default function Admin() {
 
   const { data: comments = [] } = useQuery<Comment[]>({
     queryKey: ["/api/admin/comments"],
+  });
+
+  const mediaMentions = useQuery<MediaMention[]>({
+    queryKey: mediaMentionsQueryKey,
+    enabled: isAuthenticated,
   });
 
   const { data: bookings = [] } = useQuery<Booking[]>({
@@ -335,12 +342,14 @@ export default function Admin() {
             <TabsTrigger value="portfolios">포트폴리오 ({portfolios.length})</TabsTrigger>
             <TabsTrigger value="posts">매거진 ({posts.length})</TabsTrigger>
             <TabsTrigger value="comments">매거진 댓글 ({comments.length})</TabsTrigger>
+            <TabsTrigger value="media-mentions">미디어 속 심다{mediaMentions.isSuccess && ` (${mediaMentions.data.length})`}</TabsTrigger>
             <TabsTrigger value="bookings">예약상담 ({bookings.length})</TabsTrigger>
             <TabsTrigger value="b2b">B2B 협업 ({b2bProposals.length})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="site-images"><SiteImagesTab /></TabsContent>
           <TabsContent value="site-texts"><SiteTextsTab onDirtyChange={setTextsDirty} /></TabsContent>
+          <TabsContent value="media-mentions"><MediaMentionsTab query={mediaMentions} /></TabsContent>
 
           {/* 포스트 탭 */}
           <TabsContent value="posts" className="space-y-6">

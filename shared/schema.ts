@@ -117,6 +117,16 @@ export const timelines = pgTable("timelines", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const mediaMentions = pgTable("media_mentions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  date: varchar("date").notNull(),
+  outlet: text("outlet").notNull(),
+  title: text("title").notNull(),
+  url: text("url"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Documents table for company introduction and proposal templates
 export const documents = pgTable("documents", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
@@ -221,6 +231,22 @@ export const insertTimelineSchema = createInsertSchema(timelines).omit({
   year: z.string().regex(/^\d{4}$/, "연도는 4자리 숫자만 입력 가능합니다"),
 });
 
+export const insertMediaMentionSchema = createInsertSchema(mediaMentions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  date: z.string().regex(/^\d{4}\.(0[1-9]|1[0-2])$/, "날짜는 YYYY.MM 형식으로 입력해주세요"),
+  outlet: z.string().trim().min(1, "매체를 입력해주세요"),
+  title: z.string().trim().min(1, "제목을 입력해주세요"),
+  url: z.preprocess(
+    (value) => typeof value === "string" ? value.trim() || null : value,
+    z.string().url("올바른 링크를 입력해주세요")
+      .regex(/^https?:\/\/[^/\\?#\s][^\\\s]*$/i, "http:// 또는 https://로 시작하는 링크를 입력해주세요")
+      .nullable().optional(),
+  ),
+}).strict();
+
 export const insertDocumentSchema = createInsertSchema(documents).omit({
   id: true,
   createdAt: true,
@@ -252,6 +278,9 @@ export type InsertComment = z.infer<typeof insertCommentSchema>;
 
 export type Timeline = typeof timelines.$inferSelect;
 export type InsertTimeline = z.infer<typeof insertTimelineSchema>;
+
+export type MediaMention = typeof mediaMentions.$inferSelect;
+export type InsertMediaMention = z.infer<typeof insertMediaMentionSchema>;
 
 export type Document = typeof documents.$inferSelect;
 export type InsertDocument = z.infer<typeof insertDocumentSchema>;
