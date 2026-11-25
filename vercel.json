@@ -1,5 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "node script/vercel-build.mjs"
+  "buildCommand": "node script/vercel-build.mjs",
+  "crons": [
+    { "path": "/api/erp/tax-invoices/sync", "schedule": "0 0 * * *" }
+  ]
 }

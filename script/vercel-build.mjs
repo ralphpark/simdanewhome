@@ -30,6 +30,7 @@ fs.writeFileSync(
   `${out}/config.json`,
   JSON.stringify({
     version: 3,
+    crons: JSON.parse(fs.readFileSync("vercel.json", "utf8")).crons,
     routes: [
       { src: "^/(api/.*|sitemap\\.xml)$", dest: "/api" },
       { handle: "filesystem" },

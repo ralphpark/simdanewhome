@@ -17,6 +17,7 @@ import express, {
 } from "express";
 
 import { registerRoutes } from "./routes";
+import { registerTaxInvoiceRoutes } from "./erp/routes";
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -30,6 +31,7 @@ export function log(message: string, source = "express") {
 }
 
 export const app = express();
+registerTaxInvoiceRoutes(app);
 
 declare module 'http' {
   interface IncomingMessage {
