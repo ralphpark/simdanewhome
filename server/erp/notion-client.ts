@@ -136,7 +136,10 @@ export function createNotionClient(token: string, fetchImpl: typeof fetch = fetc
           page_size: limit - bills.size,
           ...(cursor && { start_cursor: cursor }),
         });
-        if (!response.ok) throw new Error(`노션 청구 목록 조회 실패 (HTTP ${response.status})`);
+        if (!response.ok) {
+          const body = await response.json().catch(() => null) as { code?: string; message?: string } | null;
+          throw new Error(`노션 청구 목록 조회 실패 (HTTP ${response.status} ${body?.code ?? ""}: ${body?.message ?? ""})`);
+        }
         const page: PageList = await response.json();
         for (const row of page.results) {
           if (!row.archived && !row.in_trash) bills.set(row.id, readBill(row));

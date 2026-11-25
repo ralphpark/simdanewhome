@@ -28,6 +28,7 @@ export function registerTaxInvoiceRoutes(app: Express, sync = syncTaxInvoices, e
       return res.json(await running);
     } catch (error) {
       if (error instanceof SyncConfigurationError) return res.status(503).json({ message: error.message });
+      console.error("[erp-sync]", error instanceof Error ? `${error.name}: ${error.message}` : String(error));
       return res.status(502).json({ message: "노션 또는 볼타와 동기화하지 못했습니다. 다시 시도하세요." });
     }
   };
